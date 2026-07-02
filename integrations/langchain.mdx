@@ -1,0 +1,48 @@
+---
+title: "LangChain"
+description: "使用 LangChain 的 OpenAI 兼容客户端调用 HiLinkup。"
+keywords: ["LangChain", "ChatOpenAI", "Python", "JavaScript"]
+icon: "link"
+---
+
+<CodeGroup>
+```python Python
+import os
+from langchain_openai import ChatOpenAI
+
+model = ChatOpenAI(
+    model="qwen3.7-plus",
+    api_key=os.environ["HILINKUP_API_KEY"],
+    base_url="https://hilinkup.com/v1",
+    timeout=60,
+    max_retries=2,
+)
+
+response = model.invoke("给出三个 API 上线检查项。")
+print(response.content)
+```
+
+```javascript TypeScript
+import { ChatOpenAI } from "@langchain/openai";
+
+const model = new ChatOpenAI({
+  model: "qwen3.7-plus",
+  apiKey: process.env.HILINKUP_API_KEY,
+  configuration: {
+    baseURL: "https://hilinkup.com/v1",
+  },
+  maxRetries: 2,
+});
+
+const response = await model.invoke("给出三个 API 上线检查项。");
+console.log(response.content);
+```
+</CodeGroup>
+
+## 工具调用
+
+使用 LangChain 工具前，确认模型原生支持工具调用。不要假设所有 Chat 模型都支持相同的 JSON Schema 或并行工具调用行为。
+
+<Tip>
+  将模型 ID、Base URL 和超时放入环境配置。这样可以在不修改业务链的情况下切换模型和环境。
+</Tip>

@@ -1,0 +1,33 @@
+---
+title: "Claude Code"
+description: "在 Claude Code 中通过自定义 API 端点使用 HiLinkup。"
+keywords: ["Claude Code", "ANTHROPIC_BASE_URL", "终端", "编码助手"]
+icon: "terminal"
+---
+
+Claude Code 使用 Anthropic 风格的接口和环境变量。只有当你的 HiLinkup 账户与目标模型支持 Anthropic 兼容调用时，才使用本页配置。
+
+## 环境变量
+
+```bash
+export ANTHROPIC_AUTH_TOKEN="YOUR_HILINKUP_API_KEY"
+export ANTHROPIC_BASE_URL="https://hilinkup.com"
+export ANTHROPIC_MODEL="YOUR_CLAUDE_MODEL_ID"
+```
+
+启动 Claude Code：
+
+```bash
+claude
+```
+
+<Warning>
+  OpenAI Chat Completions 可用，不代表 Anthropic Messages 接口一定可用。配置前请在控制台确认模型和接口类型。
+</Warning>
+
+## 验证
+
+1. 执行一条不带工具的简单请求。
+2. 再验证文件读取、命令执行和多轮对话。
+3. 出现 `400` 或 `403` 时，检查工具定义、角色字段和模型权限。
+4. 不要通过删除完整任务上下文来掩盖接口不兼容。

@@ -5,7 +5,13 @@ keywords: ["Cherry Studio", "桌面客户端", "OpenAI 兼容"]
 icon: "message-square"
 ---
 
-在 Cherry Studio 的模型服务设置中添加 OpenAI 兼容 Provider：
+在 Cherry Studio 的模型服务设置中添加 OpenAI 兼容 Provider。
+
+## 前置条件
+
+- 已安装当前版本的 Cherry Studio。
+- 已创建独立的 HiLinkup API Key。
+- 已通过 `/v1/models` 确认可用模型 ID。
 
 | 字段 | 值 |
 | --- | --- |
@@ -15,18 +21,31 @@ icon: "message-square"
 
 <Steps>
   <Step title="新增模型服务">
-    选择 OpenAI 兼容类型并命名为 `HiLinkup`。
+    打开 **设置 → 模型服务**，添加 OpenAI 兼容类型并命名为 `HiLinkup`。
   </Step>
   <Step title="填写连接信息">
     输入 API 地址和 API Key。
   </Step>
   <Step title="获取并选择模型">
-    刷新模型列表，或手动填写准确模型 ID。
+    点击获取模型；如果客户端无法自动获取，则手动填写 `/v1/models` 返回的完整 ID。
   </Step>
   <Step title="测试会话">
     新建会话并发送一条短消息，确认返回和用量记录正常。
   </Step>
 </Steps>
+
+## 能力验证
+
+| 能力 | 验证方式 |
+| --- | --- |
+| 普通对话 | 发送一条短文本消息 |
+| 流式输出 | 确认内容逐段显示且最终正常结束 |
+| 图片输入 | 上传小尺寸图片并要求描述 |
+| 工具调用 | 使用明确支持工具的模型测试插件 |
+
+<Note>
+  同一模型在聊天、图片和工具模式下可能使用不同参数。普通对话成功后，仍需分别验证其他能力。
+</Note>
 
 <Warning>
   桌面客户端会在本机保存 API Key。仅在可信设备上配置，并启用系统磁盘加密和登录保护。

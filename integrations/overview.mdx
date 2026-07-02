@@ -1,0 +1,66 @@
+---
+title: "第三方应用接入总览"
+description: "在开发工具、聊天客户端和应用框架中接入 HiLinkup。"
+keywords: ["第三方集成", "OpenAI 兼容", "客户端", "开发工具"]
+icon: "blocks"
+---
+
+大多数支持自定义 OpenAI 服务的应用都可以接入 HiLinkup。核心配置只有三个：
+
+| 配置项 | 值 |
+| --- | --- |
+| API Key | 在 HiLinkup 控制台创建的密钥 |
+| Base URL | `https://hilinkup.com/v1` |
+| Model | `GET /v1/models` 返回的模型 ID |
+
+<Warning>
+  不要把 API Key 填入来源不明的网页或插件。桌面客户端会在本机保存密钥，只应在可信设备上使用。
+</Warning>
+
+## 选择接入方式
+
+<Columns cols={2}>
+  <Card title="开发工具" icon="terminal" href="/integrations/claude-code">
+    配置 Claude Code、Cursor、Cline 和 OpenClaw。
+  </Card>
+  <Card title="聊天客户端" icon="messages-square" href="/integrations/cherry-studio">
+    配置 Cherry Studio、Chatbox、LobeChat 和 Open WebUI。
+  </Card>
+  <Card title="应用框架" icon="workflow" href="/integrations/dify">
+    在 Dify 和 LangChain 中创建模型供应商。
+  </Card>
+  <Card title="排查兼容性" icon="shield-alert" href="/troubleshooting/errors">
+    处理认证、模型、参数和上游错误。
+  </Card>
+</Columns>
+
+## 通用接入流程
+
+<Steps>
+  <Step title="创建独立 API Key">
+    为第三方应用单独创建密钥，便于统计、限额和撤销。
+  </Step>
+  <Step title="确认模型 ID">
+    ```bash
+    curl https://hilinkup.com/v1/models \
+      -H "Authorization: Bearer $HILINKUP_API_KEY"
+    ```
+  </Step>
+  <Step title="填写连接参数">
+    将服务类型设为 OpenAI 或 OpenAI-compatible，填写 Base URL、API Key 和模型 ID。
+  </Step>
+  <Step title="先测试基础对话">
+    先发送不带工具的短消息，再验证流式输出、图片、工具调用和长上下文。
+  </Step>
+</Steps>
+
+## 实现兼容层时的注意事项
+
+如果你正在开发第三方客户端，而不是只填写现有应用的配置：
+
+- 允许用户自定义 Base URL，不要硬编码服务域名。
+- 从 `/v1/models` 获取模型，不要维护长期不更新的静态列表。
+- 当 `tools` 为空时，不要继续发送依赖工具的 `tool_choice`。
+- 保留 HTTP 状态码、错误正文和请求 ID。
+- 对 `429` 和部分 `5xx` 使用有限重试，不要重试认证和参数错误。
+- 按模型能力决定是否发送工具、多模态和高级推理参数。

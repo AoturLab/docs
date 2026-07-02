@@ -1,0 +1,29 @@
+---
+title: "Cursor"
+description: "在 Cursor 中配置 HiLinkup OpenAI 兼容模型。"
+keywords: ["Cursor", "AI 编程", "OpenAI Base URL"]
+icon: "mouse-pointer-2"
+---
+
+Cursor 不同版本和套餐对自定义模型的支持范围可能不同。优先使用设置中的 OpenAI API Key 和 Base URL 配置。
+
+<Steps>
+  <Step title="打开模型设置">
+    打开 **Settings → Models**，找到 API Key 或自定义 OpenAI Provider 配置。
+  </Step>
+  <Step title="填写连接信息">
+    - API Key：HiLinkup API Key
+    - Base URL：`https://hilinkup.com/v1`
+    - Model：从 `/v1/models` 获取的模型 ID
+  </Step>
+  <Step title="启用模型">
+    保存配置后，在 Cursor 的模型选择器中启用并选择该模型。
+  </Step>
+  <Step title="执行端到端测试">
+    分别测试 Chat、代码补全和 Agent 模式。它们可能使用不同接口或参数。
+  </Step>
+</Steps>
+
+<Note>
+  如果普通聊天可用但 Agent 模式失败，通常是工具调用、系统消息或高级参数存在差异。
+</Note>

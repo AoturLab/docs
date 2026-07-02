@@ -1,0 +1,31 @@
+---
+title: "LobeChat"
+description: "在 LobeChat 中使用 HiLinkup OpenAI 兼容接口。"
+keywords: ["LobeChat", "OpenAI Proxy URL", "聊天应用"]
+icon: "messages-square"
+---
+
+LobeChat 可以通过 OpenAI Provider 的自定义代理地址接入 HiLinkup。
+
+## 用户界面配置
+
+在模型服务设置中填写：
+
+| 字段 | 值 |
+| --- | --- |
+| API Key | HiLinkup API Key |
+| OpenAI Proxy URL | `https://hilinkup.com/v1` |
+| Model | 从 `/v1/models` 获取 |
+
+## 自部署环境变量
+
+环境变量名称会随 LobeChat 版本变化。常见配置包括：
+
+```bash
+OPENAI_API_KEY=YOUR_HILINKUP_API_KEY
+OPENAI_PROXY_URL=https://hilinkup.com/v1
+```
+
+<Note>
+  部署前请对照当前 LobeChat 版本的环境变量文档。更新版本后重新验证模型列表、流式响应和图片输入。
+</Note>

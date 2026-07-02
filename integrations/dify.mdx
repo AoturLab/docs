@@ -5,7 +5,7 @@ keywords: ["Dify", "OpenAI 兼容", "模型供应商"]
 icon: "workflow"
 ---
 
-在 Dify 中添加 OpenAI 兼容模型供应商，并填写：
+在 Dify 中添加 OpenAI 兼容模型供应商。建议为 Dify 单独创建 API Key。
 
 | 字段 | 值 |
 | --- | --- |
@@ -18,7 +18,7 @@ icon: "workflow"
     使用 HiLinkup API Key 调用 `/v1/models`。
   </Step>
   <Step title="添加供应商">
-    在 Dify 模型供应商设置中选择 OpenAI 兼容方式。
+    在 **设置 → 模型供应商** 中选择 OpenAI 兼容方式，填写 API Key、Base URL 和模型 ID。
   </Step>
   <Step title="测试基础对话">
     先测试不带工具的单轮对话。
@@ -27,3 +27,24 @@ icon: "workflow"
     再验证结构化输出、工具和长上下文节点。
   </Step>
 </Steps>
+
+## 参数建议
+
+- 模型类型选择 `LLM`，不要把 Chat 模型配置为 Embeddings。
+- 上下文长度和最大输出应与具体模型能力一致。
+- 凭据测试通过后，再把模型加入应用或工作流。
+- 为生产工作流设置超时和失败分支。
+
+## 工作流排查
+
+<AccordionGroup>
+  <Accordion title="凭据验证成功，但工作流失败">
+    检查工作流节点是否发送了工具、图片、结构化输出或超出模型上下文的历史内容。
+  </Accordion>
+  <Accordion title="模型不出现在选择列表">
+    确认模型 ID 完整且已在供应商配置中启用。必要时重新调用 `/v1/models`。
+  </Accordion>
+  <Accordion title="知识库检索失败">
+    Chat 模型和 Embeddings 模型需要分别配置。知识库索引应使用支持 `/v1/embeddings` 的模型。
+  </Accordion>
+</AccordionGroup>

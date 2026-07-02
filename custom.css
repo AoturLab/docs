@@ -1,0 +1,30 @@
+/* Keep the HiLinkup wordmark compact and aligned in desktop and mobile navigation. */
+nav-logo img,
+#navbar img[alt*="logo" i] {
+  width: 156px;
+  max-width: 156px;
+  height: 28px;
+  max-height: 28px;
+  object-fit: contain;
+  object-position: left center;
+}
+
+/* Temporarily hide Mintlify Assistant entry points.
+   Disable the Assistant in the Mintlify dashboard as the authoritative setting. */
+#assistant-entry,
+#assistant-entry-mobile,
+#chat-assistant-sheet,
+chat-assistant-floating-input,
+#ask-assistant-code-block-button {
+  display: none !important;
+}
+
+@media (max-width: 640px) {
+  nav-logo img,
+  #navbar img[alt*="logo" i] {
+    width: 140px;
+    max-width: 140px;
+    height: 26px;
+    max-height: 26px;
+  }
+}

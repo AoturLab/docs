@@ -1,0 +1,26 @@
+---
+title: "Open WebUI"
+description: "在 Open WebUI 中添加 HiLinkup OpenAI API 连接。"
+keywords: ["Open WebUI", "OpenAI API Connections", "自托管"]
+icon: "panel-top"
+---
+
+<Steps>
+  <Step title="打开连接设置">
+    进入管理员设置，找到 **Connections → OpenAI API**。
+  </Step>
+  <Step title="添加连接">
+    - URL：`https://hilinkup.com/v1`
+    - API Key：HiLinkup API Key
+  </Step>
+  <Step title="刷新模型">
+    保存后刷新模型列表，确认 `/v1/models` 返回的模型已经显示。
+  </Step>
+  <Step title="设置访问权限">
+    按用户或工作区限制可用模型，避免共享管理员密钥。
+  </Step>
+</Steps>
+
+<Warning>
+  公网部署 Open WebUI 时，不要把 HiLinkup API Key 暴露到浏览器端。应由 Open WebUI 服务端代发请求。
+</Warning>

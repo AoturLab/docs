@@ -7,13 +7,25 @@ icon: "bot"
 
 将 HiLinkup 配置为 OpenAI 兼容 Provider，并使用当前账户可用的模型 ID。
 
+## 环境变量
+
+```bash
+export HILINKUP_API_KEY="YOUR_HILINKUP_API_KEY"
+```
+
 ```json
 {
   "providers": {
     "hilinkup": {
       "baseUrl": "https://hilinkup.com/v1",
       "apiKey": "${HILINKUP_API_KEY}",
-      "api": "openai-completions"
+      "api": "openai-completions",
+      "models": [
+        {
+          "id": "qwen3.7-plus",
+          "name": "qwen3.7-plus"
+        }
+      ]
     }
   }
 }
@@ -22,6 +34,15 @@ icon: "bot"
 <Note>
   OpenClaw 版本和配置结构可能不同。请将示例字段合并到当前版本的 Provider 配置，不要直接覆盖完整配置文件。
 </Note>
+
+## 会话配置
+
+如果 OpenClaw 会话保存了旧的 Provider 或 Model Override，修改全局 Provider 后仍可能继续调用旧配置。验证时应：
+
+1. 检查当前 Agent 和会话的模型覆盖。
+2. 新建一次干净会话。
+3. 确认日志中的 Provider、Base URL 和 Model ID。
+4. 再执行完整 Agent 工具链。
 
 ## 验证顺序
 
@@ -36,6 +57,18 @@ icon: "bot"
     对比最小请求与完整请求的参数差异，并记录请求 ID。
   </Step>
 </Steps>
+
+## 常见兼容字段
+
+完整 Agent 请求可能额外发送：
+
+- `developer` 角色消息
+- `tools` 和 `tool_choice`
+- 推理强度或 thinking 参数
+- `store`、并行工具调用等 OpenAI 扩展字段
+- 大量工具定义和历史消息
+
+模型或上游不支持时，应在 OpenClaw 的 Provider 能力配置中显式关闭对应字段，而不是缩短用户任务或删除必要工具。
 
 <Warning>
   最小 cURL 请求成功不代表完整 Agent 路径一定成功。OpenClaw 可能附加工具、推理、存储或角色字段；上游模型不支持时可能返回 `400` 或 `403`。

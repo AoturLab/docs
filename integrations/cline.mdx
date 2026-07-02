@@ -1,0 +1,29 @@
+---
+title: "Cline"
+description: "在 VS Code 的 Cline 扩展中配置 HiLinkup。"
+keywords: ["Cline", "VS Code", "OpenAI Compatible"]
+icon: "code-2"
+---
+
+<Steps>
+  <Step title="打开 Provider 设置">
+    在 Cline 设置中选择 **OpenAI Compatible**。
+  </Step>
+  <Step title="填写参数">
+    | 字段 | 值 |
+    | --- | --- |
+    | Base URL | `https://hilinkup.com/v1` |
+    | API Key | HiLinkup API Key |
+    | Model ID | `/v1/models` 返回的模型 ID |
+  </Step>
+  <Step title="保存并测试">
+    新建任务，先让模型解释一个小文件，再测试工具调用和代码修改。
+  </Step>
+</Steps>
+
+## 常见问题
+
+- `401`：检查 API Key 和 `Bearer` 认证。
+- 模型不存在：复制完整模型 ID，不要自行缩写。
+- 工具调用失败：换用明确支持工具调用的模型。
+- 请求过长：减少无关文件上下文，保留任务所需内容。

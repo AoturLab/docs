@@ -1,8 +1,8 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "maple",
-  "name": "HiLinkup 开发者文档",
-  "description": "通过 OpenAI 兼容 API 接入 HiLinkup 的模型服务。",
+  "name": "HiLinkup Docs",
+  "description": "HiLinkup API、模型与第三方应用集成文档。",
   "colors": {
     "primary": "#2563EB",
     "light": "#60A5FA",
@@ -20,11 +20,17 @@
   "background": {
     "decoration": "gradient"
   },
+  "logo": {
+    "light": "/logo/hilinkup-light.svg",
+    "dark": "/logo/hilinkup-dark.svg",
+    "href": "https://hilinkup.com/"
+  },
+  "favicon": "/favicon.svg",
   "navbar": {
     "links": [
       {
-        "label": "模型",
-        "href": "https://hilinkup.com/console"
+        "label": "HiLinkup 主站",
+        "href": "https://hilinkup.com/"
       },
       {
         "label": "控制台",
@@ -40,10 +46,10 @@
   "navigation": {
     "tabs": [
       {
-        "tab": "文档",
+        "tab": "开始使用",
         "groups": [
           {
-            "group": "开始使用",
+            "group": "入门",
             "icon": "rocket",
             "pages": [
               "index",
@@ -53,47 +59,21 @@
             ]
           },
           {
-            "group": "开发指南",
+            "group": "核心能力",
             "icon": "book-open",
             "pages": [
               "guides/model-selection",
               "guides/streaming",
-              "guides/function-calling",
-              "guides/error-handling"
+              "guides/function-calling"
             ]
           },
           {
-            "group": "路由与可靠性",
+            "group": "可靠性",
             "icon": "route",
             "pages": [
               "routing/overview",
-              "routing/fallbacks"
-            ]
-          },
-          {
-            "group": "平台",
-            "icon": "settings",
-            "pages": [
-              "platform/billing",
-              "platform/rate-limits",
-              "platform/security"
-            ]
-          },
-          {
-            "group": "集成",
-            "icon": "blocks",
-            "pages": [
-              "integrations/openclaw",
-              "integrations/dify",
-              "integrations/cherry-studio"
-            ]
-          },
-          {
-            "group": "帮助",
-            "icon": "life-buoy",
-            "pages": [
-              "troubleshooting/errors",
-              "changelog"
+              "routing/fallbacks",
+              "guides/error-handling"
             ]
           }
         ]
@@ -102,33 +82,86 @@
         "tab": "API 参考",
         "groups": [
           {
-            "group": "概览",
+            "group": "API 基础",
             "pages": [
-              "api-reference/introduction"
-            ]
-          },
-          {
-            "group": "文本",
-            "pages": [
-              "api-reference/chat-completions"
-            ]
-          },
-          {
-            "group": "模型",
-            "pages": [
+              "api-reference/introduction",
               "api-reference/models"
             ]
           },
           {
-            "group": "向量",
+            "group": "常用 API",
             "pages": [
-              "api-reference/embeddings"
+              "api-reference/chat-completions",
+              "api-reference/embeddings",
+              "api-reference/images"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "集成指南",
+        "groups": [
+          {
+            "group": "接入总览",
+            "icon": "blocks",
+            "pages": [
+              "integrations/overview"
             ]
           },
           {
-            "group": "图像",
+            "group": "开发工具",
+            "icon": "terminal",
             "pages": [
-              "api-reference/images"
+              "integrations/claude-code",
+              "integrations/cursor",
+              "integrations/cline",
+              "integrations/openclaw"
+            ]
+          },
+          {
+            "group": "聊天客户端",
+            "icon": "messages-square",
+            "pages": [
+              "integrations/cherry-studio",
+              "integrations/chatbox",
+              "integrations/lobe-chat",
+              "integrations/open-webui"
+            ]
+          },
+          {
+            "group": "应用框架",
+            "icon": "workflow",
+            "pages": [
+              "integrations/dify",
+              "integrations/langchain"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "平台与帮助",
+        "groups": [
+          {
+            "group": "账户与平台",
+            "icon": "settings",
+            "pages": [
+              "platform/billing",
+              "platform/rate-limits",
+              "platform/security"
+            ]
+          },
+          {
+            "group": "问题排查",
+            "icon": "life-buoy",
+            "pages": [
+              "troubleshooting/errors"
+            ]
+          },
+          {
+            "group": "更新",
+            "icon": "history",
+            "pages": [
+              "changelog"
             ]
           }
         ]
@@ -139,8 +172,6 @@
     "options": [
       "copy",
       "view",
-      "chatgpt",
-      "claude",
       "mcp",
       "cursor",
       "vscode"
@@ -187,8 +218,12 @@
         ]
       },
       {
-        "header": "平台",
+        "header": "HiLinkup",
         "items": [
+          {
+            "label": "官方网站",
+            "href": "https://hilinkup.com/"
+          },
           {
             "label": "控制台",
             "href": "https://hilinkup.com/console"
