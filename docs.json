@@ -1,54 +1,139 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "mint",
-  "name": "Mintlify Starter Kit",
+  "theme": "maple",
+  "name": "HiLinkup 开发者文档",
+  "description": "通过 OpenAI 兼容 API 接入 HiLinkup 的模型服务。",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#2563EB",
+    "light": "#60A5FA",
+    "dark": "#1D4ED8"
   },
-  "favicon": "/favicon.svg",
-  "navigation": {
-    "pages": [
-      {
-        "group": "Getting Started",
-        "pages": [
-          "index",
-          "quickstart"
-        ]
-      }
-    ],
-    "global": {
-      "anchors": [
-        {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
-        },
-        {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
-        }
-      ]
-    }
+  "appearance": {
+    "default": "system"
   },
-  "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
+  "fonts": {
+    "family": "Inter"
+  },
+  "icons": {
+    "library": "lucide"
+  },
+  "background": {
+    "decoration": "gradient"
   },
   "navbar": {
     "links": [
       {
-        "label": "Support",
-        "href": "mailto:hi@mintlify.com"
+        "label": "模型",
+        "href": "https://hilinkup.com/console"
+      },
+      {
+        "label": "控制台",
+        "href": "https://hilinkup.com/console"
       }
     ],
     "primary": {
       "type": "button",
-      "label": "Dashboard",
-      "href": "https://app.mintlify.com"
+      "label": "获取 API Key",
+      "href": "https://hilinkup.com/console/token"
     }
+  },
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "文档",
+        "groups": [
+          {
+            "group": "开始使用",
+            "icon": "rocket",
+            "pages": [
+              "index",
+              "getting-started/quickstart",
+              "getting-started/authentication",
+              "getting-started/openai-compatible"
+            ]
+          },
+          {
+            "group": "开发指南",
+            "icon": "book-open",
+            "pages": [
+              "guides/model-selection",
+              "guides/streaming",
+              "guides/function-calling",
+              "guides/error-handling"
+            ]
+          },
+          {
+            "group": "路由与可靠性",
+            "icon": "route",
+            "pages": [
+              "routing/overview",
+              "routing/fallbacks"
+            ]
+          },
+          {
+            "group": "平台",
+            "icon": "settings",
+            "pages": [
+              "platform/billing",
+              "platform/rate-limits",
+              "platform/security"
+            ]
+          },
+          {
+            "group": "集成",
+            "icon": "blocks",
+            "pages": [
+              "integrations/openclaw",
+              "integrations/dify",
+              "integrations/cherry-studio"
+            ]
+          },
+          {
+            "group": "帮助",
+            "icon": "life-buoy",
+            "pages": [
+              "troubleshooting/errors",
+              "changelog"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "API 参考",
+        "groups": [
+          {
+            "group": "概览",
+            "pages": [
+              "api-reference/introduction"
+            ]
+          },
+          {
+            "group": "文本",
+            "pages": [
+              "api-reference/chat-completions"
+            ]
+          },
+          {
+            "group": "模型",
+            "pages": [
+              "api-reference/models"
+            ]
+          },
+          {
+            "group": "向量",
+            "pages": [
+              "api-reference/embeddings"
+            ]
+          },
+          {
+            "group": "图像",
+            "pages": [
+              "api-reference/images"
+            ]
+          }
+        ]
+      }
+    ]
   },
   "contextual": {
     "options": [
@@ -56,17 +141,70 @@
       "view",
       "chatgpt",
       "claude",
-      "perplexity",
       "mcp",
       "cursor",
       "vscode"
     ]
   },
+  "api": {
+    "playground": {
+      "display": "simple"
+    },
+    "examples": {
+      "languages": [
+        "curl",
+        "python",
+        "javascript"
+      ],
+      "defaults": "required"
+    }
+  },
+  "seo": {
+    "indexing": "all"
+  },
+  "search": {
+    "prompt": "搜索 HiLinkup API、模型、SDK 和错误排查"
+  },
+  "metadata": {
+    "timestamp": true
+  },
   "footer": {
     "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
+      "website": "https://hilinkup.com"
+    },
+    "links": [
+      {
+        "header": "开发者",
+        "items": [
+          {
+            "label": "快速开始",
+            "href": "https://hilinkup.com/docs/getting-started/quickstart"
+          },
+          {
+            "label": "API 参考",
+            "href": "https://hilinkup.com/docs/api-reference/introduction"
+          }
+        ]
+      },
+      {
+        "header": "平台",
+        "items": [
+          {
+            "label": "控制台",
+            "href": "https://hilinkup.com/console"
+          },
+          {
+            "label": "API Key",
+            "href": "https://hilinkup.com/console/token"
+          }
+        ]
+      }
+    ]
+  },
+  "errors": {
+    "404": {
+      "title": "页面不存在",
+      "description": "检查地址，或使用搜索查找相关文档。"
     }
   }
 }

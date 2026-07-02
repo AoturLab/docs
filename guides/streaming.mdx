@@ -1,0 +1,57 @@
+---
+title: "流式响应"
+description: "通过 Server-Sent Events 逐段接收模型输出。"
+keywords: ["stream", "SSE", "流式响应"]
+icon: "waves"
+---
+
+将 `stream` 设置为 `true` 后，服务会通过 Server-Sent Events 逐段返回内容。
+
+<CodeGroup>
+```python Python
+from openai import OpenAI
+
+client = OpenAI(
+    api_key="YOUR_HILINKUP_API_KEY",
+    base_url="https://hilinkup.com/v1",
+)
+
+stream = client.chat.completions.create(
+    model="qwen3.7-plus",
+    messages=[{"role": "user", "content": "写一段 API 上线检查清单。"}],
+    stream=True,
+)
+
+for chunk in stream:
+    delta = chunk.choices[0].delta.content
+    if delta:
+        print(delta, end="", flush=True)
+```
+
+```javascript Node.js
+import OpenAI from "openai";
+
+const client = new OpenAI({
+  apiKey: process.env.HILINKUP_API_KEY,
+  baseURL: "https://hilinkup.com/v1",
+});
+
+const stream = await client.chat.completions.create({
+  model: "qwen3.7-plus",
+  messages: [{ role: "user", content: "写一段 API 上线检查清单。" }],
+  stream: true,
+});
+
+for await (const chunk of stream) {
+  process.stdout.write(chunk.choices[0]?.delta?.content ?? "");
+}
+```
+</CodeGroup>
+
+## 客户端处理
+
+- 不要假设每个数据块都包含文本。
+- 正确处理结束标记和连接中断。
+- 不要对同一条流式请求自动无限重连，否则可能重复计费。
+- 前端断开时，服务端应中止上游请求。
+- 工具调用参数可能跨多个数据块返回，需要先拼接再解析。

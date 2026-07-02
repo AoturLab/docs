@@ -1,0 +1,54 @@
+---
+title: "工具调用"
+description: "让支持工具调用的模型请求你的应用执行函数。"
+keywords: ["function calling", "tools", "工具调用"]
+icon: "wrench"
+---
+
+工具调用允许模型生成结构化参数，由你的应用执行函数。模型不会替你执行真实操作。
+
+```python
+from openai import OpenAI
+
+client = OpenAI(
+    api_key="YOUR_HILINKUP_API_KEY",
+    base_url="https://hilinkup.com/v1",
+)
+
+response = client.chat.completions.create(
+    model="TOOL_CAPABLE_MODEL_ID",
+    messages=[
+        {"role": "user", "content": "查询上海明天的天气。"}
+    ],
+    tools=[
+        {
+            "type": "function",
+            "function": {
+                "name": "get_weather",
+                "description": "查询指定城市和日期的天气",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "city": {"type": "string"},
+                        "date": {"type": "string", "format": "date"}
+                    },
+                    "required": ["city", "date"],
+                    "additionalProperties": False
+                }
+            }
+        }
+    ],
+)
+```
+
+## 安全边界
+
+<Warning>
+  工具参数来自模型输出，必须像不可信用户输入一样校验。涉及付款、删除、发信和权限变更时，应增加服务端授权和人工确认。
+</Warning>
+
+- 使用 JSON Schema 限制字段类型和允许值。
+- 设置超时、并发和调用次数上限。
+- 不向模型暴露内部密钥。
+- 将工具执行结果作为 `tool` 消息返回后，再让模型生成最终答复。
+- 对模型不支持的工具参数提供明确降级路径。

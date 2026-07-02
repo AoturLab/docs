@@ -1,0 +1,41 @@
+---
+title: "模型回退"
+description: "在模型限流或暂时不可用时安全切换备用模型。"
+keywords: ["fallback", "模型回退", "高可用"]
+icon: "git-fork"
+---
+
+回退用于处理临时故障，不应用于掩盖请求格式或权限问题。
+
+## 推荐流程
+
+<Steps>
+  <Step title="定义等价模型组">
+    备用模型应支持主模型使用的输入类型、上下文长度、工具和输出格式。
+  </Step>
+  <Step title="限定触发条件">
+    只对 `429`、超时和部分 `5xx` 触发回退。`400`、`401` 和大多数 `403` 应直接排查。
+  </Step>
+  <Step title="限制尝试次数">
+    一次业务请求最多尝试少量候选模型，并设置整体截止时间。
+  </Step>
+  <Step title="记录实际路由">
+    日志中保留首选模型、最终模型、错误类型、请求 ID 和耗时。
+  </Step>
+</Steps>
+
+```python
+MODELS = ["PRIMARY_MODEL_ID", "FALLBACK_MODEL_ID"]
+
+for model in MODELS:
+    try:
+        return call_model(model=model)
+    except RetryableModelError:
+        continue
+
+raise RuntimeError("所有候选模型均不可用")
+```
+
+<Warning>
+  回退到能力更弱或价格显著不同的模型前，应获得明确的产品决策。不要在用户不知情时改变关键输出质量或费用。
+</Warning>

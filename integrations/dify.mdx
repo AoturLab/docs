@@ -1,0 +1,29 @@
+---
+title: "Dify"
+description: "在 Dify 中通过 OpenAI 兼容配置使用 HiLinkup。"
+keywords: ["Dify", "OpenAI 兼容", "模型供应商"]
+icon: "workflow"
+---
+
+在 Dify 中添加 OpenAI 兼容模型供应商，并填写：
+
+| 字段 | 值 |
+| --- | --- |
+| API Key | HiLinkup API Key |
+| API Base URL | `https://hilinkup.com/v1` |
+| Model name | `GET /v1/models` 返回的模型 ID |
+
+<Steps>
+  <Step title="获取模型 ID">
+    使用 HiLinkup API Key 调用 `/v1/models`。
+  </Step>
+  <Step title="添加供应商">
+    在 Dify 模型供应商设置中选择 OpenAI 兼容方式。
+  </Step>
+  <Step title="测试基础对话">
+    先测试不带工具的单轮对话。
+  </Step>
+  <Step title="测试工作流">
+    再验证结构化输出、工具和长上下文节点。
+  </Step>
+</Steps>

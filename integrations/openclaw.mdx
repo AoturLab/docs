@@ -1,0 +1,42 @@
+---
+title: "OpenClaw"
+description: "通过 OpenAI 兼容 Provider 将 OpenClaw 接入 HiLinkup。"
+keywords: ["OpenClaw", "provider", "OpenAI 兼容"]
+icon: "bot"
+---
+
+将 HiLinkup 配置为 OpenAI 兼容 Provider，并使用当前账户可用的模型 ID。
+
+```json
+{
+  "providers": {
+    "hilinkup": {
+      "baseUrl": "https://hilinkup.com/v1",
+      "apiKey": "${HILINKUP_API_KEY}",
+      "api": "openai-completions"
+    }
+  }
+}
+```
+
+<Note>
+  OpenClaw 版本和配置结构可能不同。请将示例字段合并到当前版本的 Provider 配置，不要直接覆盖完整配置文件。
+</Note>
+
+## 验证顺序
+
+<Steps>
+  <Step title="验证最小 API 请求">
+    使用同一 API Key 和模型发送最小 Chat Completions 请求。
+  </Step>
+  <Step title="验证完整 Agent 请求">
+    执行包含 system/developer 消息、工具和历史记录的真实 Agent 调用。
+  </Step>
+  <Step title="检查运行日志">
+    对比最小请求与完整请求的参数差异，并记录请求 ID。
+  </Step>
+</Steps>
+
+<Warning>
+  最小 cURL 请求成功不代表完整 Agent 路径一定成功。OpenClaw 可能附加工具、推理、存储或角色字段；上游模型不支持时可能返回 `400` 或 `403`。
+</Warning>

@@ -1,0 +1,47 @@
+---
+title: "获取模型列表"
+description: "使用 GET /v1/models 获取当前 API Key 可用的模型。"
+keywords: ["模型列表", "model ID", "GET models"]
+api: "GET /v1/models"
+---
+
+返回当前 API Key 可访问的模型。请将返回的 `data[].id` 原样用于其他 API 请求。
+
+<RequestExample>
+```bash
+curl https://hilinkup.com/v1/models \
+  -H "Authorization: Bearer $HILINKUP_API_KEY"
+```
+</RequestExample>
+
+<ResponseExample>
+```json
+{
+  "object": "list",
+  "data": [
+    {
+      "id": "qwen3.7-plus",
+      "object": "model",
+      "created": 0,
+      "owned_by": "provider"
+    }
+  ]
+}
+```
+</ResponseExample>
+
+<ResponseField name="object" type="string">
+  列表对象类型，通常为 `list`。
+</ResponseField>
+
+<ResponseField name="data" type="array">
+  当前密钥可用的模型集合。
+</ResponseField>
+
+<ResponseField name="data[].id" type="string">
+  请求其他端点时使用的模型 ID。
+</ResponseField>
+
+<Note>
+  模型列表会随账户权限和渠道状态变化。不要把抓取结果长期硬编码到客户端；定期刷新并为下线模型准备回退策略。
+</Note>

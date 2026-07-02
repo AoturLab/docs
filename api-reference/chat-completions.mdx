@@ -1,0 +1,82 @@
+---
+title: "创建对话补全"
+description: "使用 POST /v1/chat/completions 创建模型响应。"
+keywords: ["Chat Completions", "messages", "stream", "tools"]
+api: "POST /v1/chat/completions"
+---
+
+根据消息列表创建模型响应。模型能力决定是否支持图片输入、工具调用和高级参数。
+
+<ParamField body="model" type="string" required>
+  模型 ID。使用 `GET /v1/models` 获取当前可用值。
+</ParamField>
+
+<ParamField body="messages" type="array" required>
+  对话消息列表。每条消息至少包含 `role` 和 `content`。
+</ParamField>
+
+<ParamField body="stream" type="boolean" default="false">
+  是否通过 Server-Sent Events 流式返回内容。
+</ParamField>
+
+<ParamField body="temperature" type="number">
+  控制输出随机性。不同模型接受的范围可能不同。
+</ParamField>
+
+<ParamField body="max_tokens" type="integer">
+  限制本次生成的最大 Token 数。部分模型可能使用其他等价字段。
+</ParamField>
+
+<ParamField body="tools" type="array">
+  提供模型可以调用的工具定义。仅对支持工具调用的模型生效。
+</ParamField>
+
+<RequestExample>
+```json
+{
+  "model": "qwen3.7-plus",
+  "messages": [
+    {
+      "role": "system",
+      "content": "你是一个简洁的中文助手。"
+    },
+    {
+      "role": "user",
+      "content": "解释什么是流式响应。"
+    }
+  ],
+  "temperature": 0.7,
+  "stream": false
+}
+```
+</RequestExample>
+
+<ResponseExample>
+```json
+{
+  "id": "chatcmpl_example",
+  "object": "chat.completion",
+  "created": 1782972000,
+  "model": "qwen3.7-plus",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "流式响应会在模型生成过程中逐段返回内容。"
+      },
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 24,
+    "completion_tokens": 20,
+    "total_tokens": 44
+  }
+}
+```
+</ResponseExample>
+
+<Warning>
+  示例响应用于说明字段结构，ID、时间、Token 用量和模型返回内容以实际请求为准。
+</Warning>

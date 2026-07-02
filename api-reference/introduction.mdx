@@ -1,0 +1,52 @@
+---
+title: "API 概览"
+description: "了解 HiLinkup API 的 Base URL、认证、数据格式和错误结构。"
+keywords: ["API 参考", "Base URL", "JSON", "错误"]
+icon: "braces"
+---
+
+HiLinkup API 使用 HTTPS 和 JSON，并提供 OpenAI 兼容端点。
+
+## Base URL
+
+```text
+https://hilinkup.com/v1
+```
+
+## 认证
+
+```http
+Authorization: Bearer YOUR_HILINKUP_API_KEY
+Content-Type: application/json
+```
+
+## 主要端点
+
+| 方法 | 路径 | 用途 |
+| --- | --- | --- |
+| `POST` | `/chat/completions` | 创建文本或多模态对话 |
+| `GET` | `/models` | 获取当前密钥可用的模型 |
+| `POST` | `/embeddings` | 创建向量表示 |
+| `POST` | `/images/generations` | 创建图像 |
+
+<Note>
+  端点和参数是否可用取决于模型、账户和上游渠道。调用能力端点前，先确认模型列表与控制台展示。
+</Note>
+
+## 请求 ID
+
+错误响应和响应头可能包含请求 ID。联系支持时提供请求 ID、时间、端点和模型 ID，但不要提供 API Key。
+
+## 错误结构
+
+```json
+{
+  "error": {
+    "message": "Invalid token",
+    "type": "new_api_error",
+    "code": ""
+  }
+}
+```
+
+下一步查看 [Chat Completions](/api-reference/chat-completions) 或[错误处理](/guides/error-handling)。

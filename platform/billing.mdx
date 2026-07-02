@@ -1,0 +1,38 @@
+---
+title: "计费与用量"
+description: "理解 Token 用量、余额和费用核对方式。"
+keywords: ["计费", "Token", "余额", "用量"]
+icon: "receipt"
+---
+
+模型请求通常按输入和输出 Token 计费。具体价格和计费单位以 HiLinkup 控制台的实时展示为准。
+
+## 核对用量
+
+成功响应通常包含 `usage`：
+
+```json
+{
+  "usage": {
+    "prompt_tokens": 120,
+    "completion_tokens": 48,
+    "total_tokens": 168
+  }
+}
+```
+
+- `prompt_tokens`：系统提示、消息历史、工具定义等输入。
+- `completion_tokens`：模型生成的输出。
+- `total_tokens`：本次请求总 Token 数。
+
+## 控制成本
+
+- 为模型和业务设置单次最大输出。
+- 压缩不必要的历史消息，但不要破坏任务所需上下文。
+- 对可缓存的固定提示词使用应用侧缓存。
+- 按 API Key、应用、模型和环境拆分用量。
+- 为异常调用量和余额设置告警。
+
+<Note>
+  不同模型、渠道和能力可能使用不同计费方式。账单核对应以控制台记录为准，不要仅依赖客户端估算。
+</Note>

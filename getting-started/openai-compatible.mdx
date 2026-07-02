@@ -1,0 +1,61 @@
+---
+title: "OpenAI 兼容接入"
+description: "将现有 OpenAI SDK 配置迁移到 HiLinkup。"
+keywords: ["OpenAI SDK", "兼容", "迁移", "base_url"]
+icon: "refresh-cw"
+---
+
+如果应用已经使用 OpenAI SDK，通常只需修改三个值：
+
+| 配置 | HiLinkup 值 |
+| --- | --- |
+| API Key | HiLinkup 控制台创建的密钥 |
+| Base URL | `https://hilinkup.com/v1` |
+| Model | `GET /v1/models` 返回的模型 ID |
+
+<Tabs>
+  <Tab title="Python">
+    ```python
+    import os
+    from openai import OpenAI
+
+    client = OpenAI(
+        api_key=os.environ["HILINKUP_API_KEY"],
+        base_url="https://hilinkup.com/v1",
+    )
+    ```
+  </Tab>
+  <Tab title="Node.js">
+    ```javascript
+    import OpenAI from "openai";
+
+    const client = new OpenAI({
+      apiKey: process.env.HILINKUP_API_KEY,
+      baseURL: "https://hilinkup.com/v1",
+    });
+    ```
+  </Tab>
+</Tabs>
+
+## 兼容性边界
+
+不同模型和上游服务支持的参数可能不同。以下能力应按具体模型验证：
+
+- `tools` 和函数调用
+- 结构化输出
+- 图片、音频或视频输入
+- `reasoning_effort` 等推理参数
+- `logprobs`、`seed` 等高级采样参数
+
+<Tip>
+  生产接入不要只验证一个最小 cURL 请求。请使用应用的完整请求体进行端到端测试，包括 system/developer 消息、工具定义、流式响应和多轮历史。
+</Tip>
+
+## 迁移检查清单
+
+- Base URL 结尾是 `/v1`。
+- 模型 ID 来自当前账户的模型列表。
+- SDK 超时符合业务场景。
+- 只对可重试错误执行有限次数重试。
+- 日志记录请求 ID，但不记录 API Key 和敏感提示词。
+- 对工具调用、结构化输出和长上下文分别做回归测试。

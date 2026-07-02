@@ -1,0 +1,50 @@
+---
+title: "认证"
+description: "使用 Bearer Token 安全地认证 HiLinkup API 请求。"
+keywords: ["认证", "Bearer Token", "API Key", "安全"]
+icon: "key-round"
+---
+
+HiLinkup API 使用 Bearer Token。所有 `/v1` 请求都应在 `Authorization` 请求头中携带 API Key。
+
+```http
+Authorization: Bearer YOUR_HILINKUP_API_KEY
+```
+
+## 创建和使用密钥
+
+<Steps>
+  <Step title="创建密钥">
+    登录 [HiLinkup 控制台](https://hilinkup.com/console/token)，为应用创建独立密钥。
+  </Step>
+  <Step title="保存到服务端">
+    将密钥保存到环境变量或密钥管理服务，不要发送到浏览器和移动端。
+  </Step>
+  <Step title="添加请求头">
+    ```bash
+    curl https://hilinkup.com/v1/models \
+      -H "Authorization: Bearer $HILINKUP_API_KEY"
+    ```
+  </Step>
+</Steps>
+
+## 密钥管理建议
+
+- 为开发、测试和生产环境创建不同密钥。
+- 为不同应用或团队创建不同密钥，便于审计和撤销。
+- 不要在日志中输出完整密钥。
+- 怀疑泄露时立即撤销旧密钥并创建新密钥。
+- 在 CI/CD 中使用平台的 Secret 功能，不要提交 `.env`。
+
+<Warning>
+  API Key 代表你的账户权限和可用额度。前端代码、公开仓库、截图和聊天记录都不是安全的保存位置。
+</Warning>
+
+## 认证错误
+
+| 状态码 | 常见原因 | 处理方式 |
+| --- | --- | --- |
+| `401` | 缺少、无效或已撤销的密钥 | 检查 `Authorization` 格式并更换有效密钥 |
+| `403` | 请求被策略或上游服务拒绝 | 检查请求参数、模型权限和调用环境 |
+
+完整处理流程参见[错误排查](/troubleshooting/errors)。

@@ -1,33 +1,45 @@
-> **First-time setup**: Customize this file for your project. Prompt the user to customize this file for their project.
-> For Mintlify product knowledge (components, configuration, writing standards),
-> install the Mintlify skill: `npx skills add https://mintlify.com/docs`
+# HiLinkup Mintlify documentation
 
-# Documentation project instructions
+## Project context
 
-## About this project
+- This is the Chinese developer documentation for HiLinkup.
+- The production origin is `https://hilinkup.com`.
+- The OpenAI-compatible API base URL is `https://hilinkup.com/v1`.
+- Navigation and site settings are defined in `docs.json`.
+- Documentation pages use MDX with YAML frontmatter.
 
-- This is a documentation site built on [Mintlify](https://mintlify.com)
-- Pages are MDX files with YAML frontmatter
-- Configuration lives in `docs.json`
-- Use the Mintlify MCP server, `https://mcp.mintlify.com`, to edit content and settings via MCP
-- Use the Mintlify docs MCP server, `https://www.mintlify.com/docs/mcp`, to query information about using Mintlify via MCP
+## Writing standards
 
-## Terminology
+- Write concise Simplified Chinese in second person.
+- Use active voice and sentence-case headings.
+- Explain what a feature does before showing how to use it.
+- Put prerequisites before procedural steps.
+- Use current model IDs only when verified; otherwise instruct readers to call `GET /v1/models`.
+- Do not invent prices, limits, supported models, or account permissions.
+- Mark unverified operational values with a TODO comment.
 
-{/* Add product-specific terms and preferred usage */}
-{/* Example: Use "workspace" not "project", "member" not "user" */}
+## API examples
 
-## Style preferences
+- Use `https://hilinkup.com/v1` as the base URL.
+- Use `HILINKUP_API_KEY` for environment variable examples.
+- Never include a real API Key.
+- Include language tags on every code block.
+- Treat response IDs, timestamps, usage, URLs, and model output as illustrative.
+- Note when capability depends on the selected model or upstream channel.
 
-{/* Add any project-specific style rules below */}
+## Mintlify conventions
 
-- Use active voice and second person ("you")
-- Keep sentences concise — one idea per sentence
-- Use sentence case for headings
-- Bold for UI elements: Click **Settings**
-- Code formatting for file names, commands, paths, and code references
+- Add every new user-facing page to `docs.json`.
+- Use root-relative internal links without file extensions.
+- Prefer built-in Mintlify components.
+- Use `<Steps>` for sequential procedures.
+- Use `<CodeGroup>` for equivalent language examples.
+- Use `<ParamField>` and `<ResponseField>` on API pages.
+- Use `<Warning>` for security, billing, or destructive-operation risks.
 
-## Content boundaries
+## Verification
 
-{/* Define what should and shouldn't be documented */}
-{/* Example: Don't document internal admin features */}
+- Run `mint broken-links`.
+- Run `mint validate`.
+- Check that every page has `title`, `description`, and `keywords`.
+- Check that examples never contain secrets.

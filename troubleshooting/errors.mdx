@@ -1,0 +1,49 @@
+---
+title: "错误排查"
+description: "按状态码和请求链路排查 HiLinkup API 调用失败。"
+keywords: ["故障排查", "401", "403", "429", "5xx"]
+icon: "life-buoy"
+---
+
+排查时保留以下信息：发生时间、端点、模型 ID、HTTP 状态码和请求 ID。不要发送 API Key。
+
+## 401 Invalid token
+
+1. 检查请求头是否为 `Authorization: Bearer <API_KEY>`。
+2. 确认没有多余引号、空格或换行。
+3. 确认密钥未撤销且属于当前账户。
+4. 使用同一密钥调用 `/v1/models`。
+
+## 403 Request blocked
+
+1. 使用最小 Chat Completions 请求确认基础连接。
+2. 逐步加入 system/developer 消息、工具、图片和高级参数。
+3. 检查模型是否支持完整请求中的所有字段。
+4. 对比 SDK、Agent 框架与 cURL 的实际请求体。
+5. 提供请求 ID 以便定位上游拒绝原因。
+
+## 429 Too many requests
+
+1. 降低请求并发。
+2. 使用指数退避和随机抖动。
+3. 检查账户余额和模型限制。
+4. 必要时使用已经验证的备用模型。
+
+## 5xx 或超时
+
+1. 使用有限次数重试。
+2. 检查请求体大小和上下文长度。
+3. 测试另一个已验证模型。
+4. 记录请求 ID、总耗时和重试次数。
+
+<AccordionGroup>
+  <Accordion title="cURL 成功，但 SDK 或 Agent 失败">
+    通常表示完整请求体、默认参数、代理或超时设置不同。记录 SDK 实际发送的端点、请求头和 JSON 字段，并与成功请求逐项对比。
+  </Accordion>
+  <Accordion title="模型列表正常，但生成请求失败">
+    模型可见不代表所有参数都兼容。先移除高级参数验证基本消息，再逐项恢复工具、结构化输出和多模态输入。
+  </Accordion>
+  <Accordion title="流式请求中途断开">
+    检查客户端、反向代理和应用服务器的读取超时。不要把断开的请求无条件重放，否则可能产生重复调用和费用。
+  </Accordion>
+</AccordionGroup>

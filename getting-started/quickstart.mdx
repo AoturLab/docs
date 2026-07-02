@@ -1,0 +1,108 @@
+---
+title: "快速开始"
+description: "创建 API Key，并在 5 分钟内完成第一次 HiLinkup API 请求。"
+keywords: ["快速开始", "API Key", "Python", "Node.js", "cURL"]
+icon: "rocket"
+---
+
+本指南使用 Chat Completions 接口完成第一次模型调用。
+
+## 前置条件
+
+- 一个 HiLinkup 账户
+- Python 3.9+、Node.js 18+ 或可用的 cURL
+- 已在控制台创建 API Key
+
+<Steps>
+  <Step title="保存 API Key">
+    将密钥存入环境变量，不要写入代码或提交到版本库。
+
+    ```bash
+    export HILINKUP_API_KEY="你的 API Key"
+    ```
+  </Step>
+
+  <Step title="获取可用模型">
+    ```bash
+    curl https://hilinkup.com/v1/models \
+      -H "Authorization: Bearer $HILINKUP_API_KEY"
+    ```
+
+    从返回的 `data[].id` 中选择模型 ID。
+  </Step>
+
+  <Step title="发送请求">
+    <CodeGroup>
+    ```python Python
+    from openai import OpenAI
+
+    client = OpenAI(
+        api_key="YOUR_HILINKUP_API_KEY",
+        base_url="https://hilinkup.com/v1",
+    )
+
+    completion = client.chat.completions.create(
+        model="qwen3.7-plus",
+        messages=[
+            {"role": "system", "content": "你是一个简洁的中文助手。"},
+            {"role": "user", "content": "给我三个 API 稳定性检查项。"},
+        ],
+    )
+
+    print(completion.choices[0].message.content)
+    ```
+
+    ```javascript Node.js
+    import OpenAI from "openai";
+
+    const client = new OpenAI({
+      apiKey: process.env.HILINKUP_API_KEY,
+      baseURL: "https://hilinkup.com/v1",
+    });
+
+    const completion = await client.chat.completions.create({
+      model: "qwen3.7-plus",
+      messages: [
+        { role: "system", content: "你是一个简洁的中文助手。" },
+        { role: "user", content: "给我三个 API 稳定性检查项。" },
+      ],
+    });
+
+    console.log(completion.choices[0].message.content);
+    ```
+
+    ```bash cURL
+    curl https://hilinkup.com/v1/chat/completions \
+      -H "Authorization: Bearer $HILINKUP_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "model": "qwen3.7-plus",
+        "messages": [
+          {"role": "system", "content": "你是一个简洁的中文助手。"},
+          {"role": "user", "content": "给我三个 API 稳定性检查项。"}
+        ]
+      }'
+    ```
+    </CodeGroup>
+  </Step>
+
+  <Step title="检查返回结果">
+    成功响应包含 `choices`。主要文本位于
+    `choices[0].message.content`，Token 用量位于 `usage`。
+
+    <Check>
+      收到 HTTP `200` 且 `choices` 非空，表示第一次调用完成。
+    </Check>
+  </Step>
+</Steps>
+
+## 常见下一步
+
+<Columns cols={2}>
+  <Card title="启用流式响应" icon="waves" href="/guides/streaming">
+    逐段显示生成内容，降低用户感知延迟。
+  </Card>
+  <Card title="处理错误和重试" icon="shield-alert" href="/guides/error-handling">
+    为限流、超时和上游故障设置有边界的重试。
+  </Card>
+</Columns>

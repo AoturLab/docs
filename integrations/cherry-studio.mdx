@@ -1,0 +1,33 @@
+---
+title: "Cherry Studio"
+description: "在 Cherry Studio 中添加 HiLinkup OpenAI 兼容服务。"
+keywords: ["Cherry Studio", "桌面客户端", "OpenAI 兼容"]
+icon: "message-square"
+---
+
+在 Cherry Studio 的模型服务设置中添加 OpenAI 兼容 Provider：
+
+| 字段 | 值 |
+| --- | --- |
+| API Key | HiLinkup API Key |
+| API 地址 | `https://hilinkup.com/v1` |
+| 模型 ID | 从 `/v1/models` 获取 |
+
+<Steps>
+  <Step title="新增模型服务">
+    选择 OpenAI 兼容类型并命名为 `HiLinkup`。
+  </Step>
+  <Step title="填写连接信息">
+    输入 API 地址和 API Key。
+  </Step>
+  <Step title="获取并选择模型">
+    刷新模型列表，或手动填写准确模型 ID。
+  </Step>
+  <Step title="测试会话">
+    新建会话并发送一条短消息，确认返回和用量记录正常。
+  </Step>
+</Steps>
+
+<Warning>
+  桌面客户端会在本机保存 API Key。仅在可信设备上配置，并启用系统磁盘加密和登录保护。
+</Warning>

@@ -1,0 +1,52 @@
+---
+title: "创建向量"
+description: "使用 POST /v1/embeddings 将文本转换为向量。"
+keywords: ["Embeddings", "向量", "语义检索", "RAG"]
+api: "POST /v1/embeddings"
+---
+
+将文本转换为向量，可用于语义检索、聚类和 RAG。
+
+<ParamField body="model" type="string" required>
+  支持 Embeddings 的模型 ID。
+</ParamField>
+
+<ParamField body="input" type="string | array" required>
+  要转换的单条文本或文本数组。
+</ParamField>
+
+<RequestExample>
+```json
+{
+  "model": "BAAI/bge-m3",
+  "input": [
+    "HiLinkup 提供 OpenAI 兼容 API。",
+    "向量可以用于语义检索。"
+  ]
+}
+```
+</RequestExample>
+
+<ResponseExample>
+```json
+{
+  "object": "list",
+  "data": [
+    {
+      "object": "embedding",
+      "index": 0,
+      "embedding": [0.012, -0.034, 0.056]
+    }
+  ],
+  "model": "BAAI/bge-m3",
+  "usage": {
+    "prompt_tokens": 18,
+    "total_tokens": 18
+  }
+}
+```
+</ResponseExample>
+
+<Warning>
+  示例模型仅用于说明请求格式。请先通过模型列表或控制台确认当前账户可用的 Embeddings 模型。
+</Warning>
