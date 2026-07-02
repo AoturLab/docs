@@ -1,52 +1,182 @@
 ---
 title: "Cherry Studio"
-description: "在 Cherry Studio 中添加 HiLinkup OpenAI 兼容服务。"
-keywords: ["Cherry Studio", "桌面客户端", "OpenAI 兼容"]
+description: "在 Cherry Studio 中添加 HiLinkup、同步模型并验证对话与多模态能力。"
+keywords: ["Cherry Studio", "桌面客户端", "OpenAI 兼容", "模型配置"]
 icon: "message-square"
 ---
 
-在 Cherry Studio 的模型服务设置中添加 OpenAI 兼容 Provider。
+Cherry Studio 是多模型桌面客户端。你可以把 HiLinkup 添加为 OpenAI-compatible Provider，在同一客户端中使用账户可访问的模型。
 
-## 前置条件
+## 配置前准备
 
-- 已安装当前版本的 Cherry Studio。
-- 已创建独立的 HiLinkup API Key。
-- 已通过 `/v1/models` 确认可用模型 ID。
+- 安装当前版本的 [Cherry Studio](https://www.cherry-ai.com/)。
+- 在 [HiLinkup 控制台](https://hilinkup.com/console/token) 创建独立 API Key。
+- 完成[快速开始](/getting-started/quickstart)，确认 API Key 和模型列表可用。
 
-| 字段 | 值 |
+## 配置值
+
+| Cherry Studio 字段 | 填写内容 |
 | --- | --- |
-| API Key | HiLinkup API Key |
+| 提供商名称 | `HiLinkup` |
+| 提供商类型 | OpenAI / OpenAI-compatible |
+| API Key | 你的 HiLinkup API Key |
 | API 地址 | `https://hilinkup.com/v1` |
-| 模型 ID | 从 `/v1/models` 获取 |
+| 模型 ID | `/v1/models` 返回的完整 ID |
+
+## 第一步：打开模型服务设置
 
 <Steps>
-  <Step title="新增模型服务">
-    打开 **设置 → 模型服务**，添加 OpenAI 兼容类型并命名为 `HiLinkup`。
+  <Step title="进入设置">
+    打开 Cherry Studio，点击左下角或应用菜单中的 **设置**。
   </Step>
-  <Step title="填写连接信息">
-    输入 API 地址和 API Key。
+  <Step title="打开模型服务">
+    在设置侧栏选择 **模型服务** 或 **模型供应商**。不同版本的名称可能略有差异。
   </Step>
-  <Step title="获取并选择模型">
-    点击获取模型；如果客户端无法自动获取，则手动填写 `/v1/models` 返回的完整 ID。
-  </Step>
-  <Step title="测试会话">
-    新建会话并发送一条短消息，确认返回和用量记录正常。
+  <Step title="添加自定义供应商">
+    选择添加供应商。如果列表中没有 HiLinkup，选择 **OpenAI-compatible** 或复制一个允许自定义 API 地址的 OpenAI 供应商。
   </Step>
 </Steps>
 
-## 能力验证
+## 第二步：填写连接信息
 
-| 能力 | 验证方式 |
-| --- | --- |
-| 普通对话 | 发送一条短文本消息 |
-| 流式输出 | 确认内容逐段显示且最终正常结束 |
-| 图片输入 | 上传小尺寸图片并要求描述 |
-| 工具调用 | 使用明确支持工具的模型测试插件 |
+<Steps>
+  <Step title="命名供应商">
+    将名称设置为 `HiLinkup`，方便与官方 OpenAI 或其他服务区分。
+  </Step>
+  <Step title="粘贴 API Key">
+    填入为 Cherry Studio 单独创建的 HiLinkup API Key。注意不要复制前后空格。
+  </Step>
+  <Step title="填写 API 地址">
+    填写：
 
-<Note>
-  同一模型在聊天、图片和工具模式下可能使用不同参数。普通对话成功后，仍需分别验证其他能力。
-</Note>
+    ```text
+    https://hilinkup.com/v1
+    ```
+
+    不要在末尾添加 `/chat/completions`。
+  </Step>
+  <Step title="测试连接">
+    点击 **检查**、**测试** 或类似按钮。
+
+    <Check>
+      显示连接成功，或者客户端能够拉取模型列表，表示 Base URL 和 API Key 正确。
+    </Check>
+  </Step>
+</Steps>
+
+## 第三步：同步或添加模型
+
+### 自动获取
+
+如果当前 Cherry Studio 版本支持获取模型，点击 **获取模型** 或刷新按钮，从 HiLinkup 同步可用模型。
+
+### 手动添加
+
+如果没有自动获取按钮，或列表为空：
+
+1. 在终端调用 `/v1/models`。
+2. 从 `data[].id` 复制完整模型 ID。
+3. 在 Cherry Studio 中点击 **添加模型**。
+4. 将 ID 同时填入模型 ID；显示名称可以按需设置。
+5. 保存模型。
+
+```bash
+curl https://hilinkup.com/v1/models \
+  -H "Authorization: Bearer $HILINKUP_API_KEY"
+```
 
 <Warning>
-  桌面客户端会在本机保存 API Key。仅在可信设备上配置，并启用系统磁盘加密和登录保护。
+  模型显示名称不能代替模型 ID。请求中的 `model` 必须与 `/v1/models` 返回值一致。
 </Warning>
+
+## 第四步：开始第一次对话
+
+<Steps>
+  <Step title="启用供应商">
+    确认 HiLinkup 供应商已开启，并保存设置。
+  </Step>
+  <Step title="新建助手或话题">
+    返回对话页，新建一个空白会话。
+  </Step>
+  <Step title="选择模型">
+    在模型选择器中选择刚添加的 HiLinkup 模型。
+  </Step>
+  <Step title="发送测试消息">
+    输入：
+
+    ```text
+    请只回复：HiLinkup 连接成功
+    ```
+  </Step>
+  <Step title="核对结果">
+    确认收到非空回复，并在控制台中看到对应请求或用量记录。
+  </Step>
+</Steps>
+
+## 第五步：验证模型能力
+
+普通文本成功后，再按需验证其他能力。
+
+| 能力 | 配置与验证方式 |
+| --- | --- |
+| 流式输出 | 开启流式响应，确认文字逐段出现且正常结束 |
+| 图片理解 | 选择支持视觉的模型，启用模型的“图片/视觉”能力后上传图片 |
+| 工具调用 | 选择支持工具的模型，启用一个低风险工具并检查参数 |
+| 长上下文 | 从短文档开始，逐步增加输入，不要第一次就上传大型文件 |
+| 知识库 | 先确认嵌入模型和聊天模型分别可用，再创建索引 |
+
+<Note>
+  Cherry Studio 中的模型能力标签会影响客户端发送的请求格式。模型支持图片但客户端未勾选视觉能力时，图片可能不会发送给模型。
+</Note>
+
+## 推荐设置
+
+- 为 Cherry Studio 使用独立 API Key。
+- 默认开启流式响应，出现兼容问题时再单独关闭验证。
+- 将并发设置在合理范围，避免多个助手同时触发 `429`。
+- 对高成本模型启用对话确认或用量提醒。
+- 不需要的 MCP 工具保持关闭，只给助手最小权限。
+
+## 常见问题
+
+<AccordionGroup>
+  <Accordion title="连接检查失败">
+    先用相同 API Key 执行本页的 `/v1/models` cURL 请求。cURL 也失败时，处理账户、密钥或网络问题；cURL 成功时，检查 Cherry Studio 的 API 地址是否重复包含 `/v1`。
+  </Accordion>
+  <Accordion title="模型列表为空">
+    手动添加 `/v1/models` 返回的完整 ID。部分版本不会自动同步自定义供应商的模型。
+  </Accordion>
+  <Accordion title="提示模型不存在">
+    删除手动输入的显示名称，重新复制 `data[].id`。检查大小写、空格和前后缀。
+  </Accordion>
+  <Accordion title="图片上传后模型看不到">
+    确认模型支持视觉，并在模型设置中启用图片或视觉能力。新建会话后再次测试，避免旧会话沿用错误能力配置。
+  </Accordion>
+  <Accordion title="工具或 MCP 调用失败">
+    先关闭工具验证普通对话，再选择明确支持工具调用的模型。检查工具参数是否为合法 JSON，并降低工具数量。
+  </Accordion>
+  <Accordion title="返回 401">
+    重新粘贴 API Key，确认没有把引号一起复制。检查该密钥是否被撤销。
+  </Accordion>
+  <Accordion title="返回 429">
+    降低并发和自动重试次数，检查账户余额与额度。等待后重新发送单条消息。
+  </Accordion>
+  <Accordion title="响应一直加载">
+    暂时关闭流式响应并发送短消息。如果非流式正常，更新 Cherry Studio 后再测试流式；同时检查代理和防火墙。
+  </Accordion>
+</AccordionGroup>
+
+## 安全说明
+
+Cherry Studio 会在本机保存 Provider 配置。只在可信设备中使用，并启用操作系统登录保护和磁盘加密。
+
+如果设备丢失、配置被导出或截图中出现密钥，请立即在 HiLinkup 控制台撤销该密钥并创建新密钥。
+
+<Columns cols={2}>
+  <Card title="其他聊天客户端" icon="messages-square" href="/integrations/chatbox">
+    配置 Chatbox、LobeChat、Open WebUI 等客户端。
+  </Card>
+  <Card title="错误排查" icon="life-buoy" href="/troubleshooting/errors">
+    按状态码检查认证、模型、限流和上游错误。
+  </Card>
+</Columns>

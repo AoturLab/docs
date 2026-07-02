@@ -1,0 +1,40 @@
+---
+title: "LibreChat"
+description: "在 LibreChat 中添加 HiLinkup 自定义 OpenAI 端点。"
+keywords: ["LibreChat", "自定义端点", "OpenAI compatible"]
+icon: "message-circle"
+---
+
+LibreChat 可通过自定义端点接入 OpenAI-compatible API。配置文件字段会随版本变化，以下是必须映射的连接值。
+
+| 目的 | 值 |
+| --- | --- |
+| 端点名称 | `HiLinkup` |
+| API Key | 从服务端环境变量读取 |
+| Base URL | `https://hilinkup.com/v1` |
+| 模型列表 | `/v1/models` 返回的 ID |
+
+## 配置流程
+
+<Steps>
+  <Step title="创建服务端密钥变量">
+    将 HiLinkup API Key 写入 LibreChat 服务端的私有环境变量。
+  </Step>
+  <Step title="新增自定义 OpenAI 端点">
+    在 LibreChat 配置中添加 HiLinkup，映射 Base URL、密钥变量和允许使用的模型。
+  </Step>
+  <Step title="重启服务">
+    配置文件或环境变量修改后，重启 LibreChat 容器或服务。
+  </Step>
+  <Step title="从界面验证">
+    选择 HiLinkup 端点和模型，发送短消息；同时检查服务端日志和 HiLinkup 用量。
+  </Step>
+</Steps>
+
+## 多用户部署建议
+
+- 不向浏览器返回真实 API Key。
+- 通过 LibreChat 身份验证限制访问。
+- 设置模型白名单，不允许用户提交任意未经验证的模型 ID。
+- 对每个工作区设置并发和用量限制。
+- 日志中隐藏 Authorization 请求头。

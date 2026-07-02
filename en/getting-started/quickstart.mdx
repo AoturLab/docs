@@ -1,36 +1,151 @@
 ---
 title: "Quickstart"
-description: "Create an API key and make your first HiLinkup request."
-keywords: ["quickstart", "API key", "OpenAI SDK"]
+description: "Create an API key, list available models, and make your first HiLinkup request."
+keywords: ["quickstart", "API key", "OpenAI SDK", "cURL"]
 icon: "rocket"
 ---
 
-## Prerequisites
+This guide takes you from a new account to a verified model response.
 
-- A HiLinkup account
-- An API key from the [console](https://hilinkup.com/console/token)
-- Python 3.9+, Node.js 18+, or cURL
+<Info>API base URL: `https://hilinkup.com/v1`</Info>
+
+## 1. Create an API key
 
 <Steps>
-  <Step title="Save your API key">
-    ```bash
-    export HILINKUP_API_KEY="your-api-key"
-    ```
+  <Step title="Sign in">
+    Open [HiLinkup](https://hilinkup.com/) and sign in.
   </Step>
-  <Step title="List available models">
-    ```bash
-    curl https://hilinkup.com/v1/models \
-      -H "Authorization: Bearer $HILINKUP_API_KEY"
-    ```
+  <Step title="Open API key management">
+    Go to the [API key page](https://hilinkup.com/console/token).
   </Step>
-  <Step title="Send a request">
-    ```bash
-    curl https://hilinkup.com/v1/chat/completions \
-      -H "Authorization: Bearer $HILINKUP_API_KEY" \
-      -H "Content-Type: application/json" \
-      -d '{"model":"qwen3.7-plus","messages":[{"role":"user","content":"Hello"}]}'
-    ```
+  <Step title="Create a dedicated key">
+    Name it after the application and environment, such as `local-development`. Copy it immediately and store it in a password manager or secret manager.
   </Step>
 </Steps>
 
-<Check>A successful request returns HTTP `200` and a non-empty `choices` array.</Check>
+<Warning>Never commit an API key, send it in chat, or expose it to browser code.</Warning>
+
+## 2. Save the key
+
+<Tabs>
+  <Tab title="macOS / Linux">
+    ```bash
+    export HILINKUP_API_KEY="your-api-key"
+    ```
+  </Tab>
+  <Tab title="Windows PowerShell">
+    ```powershell
+    $env:HILINKUP_API_KEY="your-api-key"
+    ```
+  </Tab>
+  <Tab title=".env">
+    ```dotenv
+    HILINKUP_API_KEY=your-api-key
+    HILINKUP_BASE_URL=https://hilinkup.com/v1
+    ```
+  </Tab>
+</Tabs>
+
+## 3. List available models
+
+```bash
+curl https://hilinkup.com/v1/models \
+  -H "Authorization: Bearer $HILINKUP_API_KEY"
+```
+
+Copy an exact `data[].id` value. The examples use `qwen3.7-plus`; replace it if that ID is not returned for your key.
+
+<Check>HTTP `200` and a non-empty `data` array confirm that authentication and model access work.</Check>
+
+## 4. Make a request
+
+<CodeGroup>
+```bash cURL
+curl https://hilinkup.com/v1/chat/completions \
+  -H "Authorization: Bearer $HILINKUP_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "qwen3.7-plus",
+    "messages": [
+      {"role": "user", "content": "Reply with: HiLinkup connected"}
+    ]
+  }'
+```
+
+```python Python
+# Install: python -m pip install openai
+import os
+from openai import OpenAI
+
+client = OpenAI(
+    api_key=os.environ["HILINKUP_API_KEY"],
+    base_url="https://hilinkup.com/v1",
+    timeout=60.0,
+)
+
+response = client.chat.completions.create(
+    model="qwen3.7-plus",
+    messages=[
+        {"role": "user", "content": "Reply with: HiLinkup connected"}
+    ],
+)
+
+print(response.choices[0].message.content)
+print(response.usage)
+```
+
+```javascript Node.js
+// Install: npm install openai
+import OpenAI from "openai";
+
+const client = new OpenAI({
+  apiKey: process.env.HILINKUP_API_KEY,
+  baseURL: "https://hilinkup.com/v1",
+  timeout: 60_000,
+});
+
+const response = await client.chat.completions.create({
+  model: "qwen3.7-plus",
+  messages: [
+    { role: "user", content: "Reply with: HiLinkup connected" },
+  ],
+});
+
+console.log(response.choices[0].message.content);
+console.log(response.usage);
+```
+</CodeGroup>
+
+## 5. Verify the response
+
+A successful response has:
+
+- HTTP status `200`
+- A non-empty `choices` array
+- Text in `choices[0].message.content`
+- Token counts in `usage`
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="401 Unauthorized">
+    Check the Bearer token, environment variable, copied key, and whether the key was revoked.
+  </Accordion>
+  <Accordion title="403 Forbidden">
+    Check account status and model permissions. List models again and select an ID returned for this key.
+  </Accordion>
+  <Accordion title="404 Not Found">
+    The complete endpoint is `https://hilinkup.com/v1/chat/completions`. The SDK base URL is `https://hilinkup.com/v1`.
+  </Accordion>
+  <Accordion title="429 Too Many Requests">
+    Reduce concurrency, check balance and limits, then retry with bounded exponential backoff.
+  </Accordion>
+  <Accordion title="Model not found">
+    Copy the exact `data[].id` from `/v1/models`; do not use a display name from a screenshot or another account.
+  </Accordion>
+</AccordionGroup>
+
+<Columns cols={2}>
+  <Card title="Migrate from OpenAI" href="/en/getting-started/openai-compatible" icon="refresh-cw">Reuse an existing OpenAI SDK integration.</Card>
+  <Card title="Connect an application" href="/en/integrations/overview" icon="blocks">Configure developer tools, clients, and frameworks.</Card>
+</Columns>

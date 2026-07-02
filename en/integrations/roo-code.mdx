@@ -1,0 +1,19 @@
+---
+title: "Roo Code"
+description: "Configure HiLinkup as an OpenAI-compatible provider in Roo Code."
+keywords: ["Roo Code", "VS Code", "agent"]
+icon: "code-2"
+---
+
+Use these provider values:
+
+| Field | Value |
+| --- | --- |
+| Provider | OpenAI Compatible |
+| Base URL | `https://hilinkup.com/v1` |
+| API key | Your HiLinkup API key |
+| Model ID | An exact ID from `/v1/models` |
+
+Open Roo Code settings, add an OpenAI-compatible provider, enter the values, and save. Start with a read-only request that explains a file. After chat works, test file reads, edits, and commands separately.
+
+<Warning>Keep approval mode enabled until you have validated the model's tool calls in a disposable project.</Warning>

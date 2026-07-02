@@ -1,0 +1,30 @@
+---
+title: "Vercel AI SDK"
+description: "Use HiLinkup through the Vercel AI SDK OpenAI-compatible provider."
+keywords: ["Vercel AI SDK", "TypeScript", "streamText"]
+icon: "waypoints"
+---
+
+```bash
+npm install ai @ai-sdk/openai-compatible
+```
+
+```typescript
+import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
+import { generateText } from "ai";
+
+const hilinkup = createOpenAICompatible({
+  name: "hilinkup",
+  apiKey: process.env.HILINKUP_API_KEY,
+  baseURL: "https://hilinkup.com/v1",
+});
+
+const { text } = await generateText({
+  model: hilinkup("qwen3.7-plus"),
+  prompt: "Explain streaming in three points.",
+});
+
+console.log(text);
+```
+
+Keep `HILINKUP_API_KEY` in server-only environment variables.

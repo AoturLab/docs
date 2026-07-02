@@ -1,0 +1,41 @@
+---
+title: "AnythingLLM"
+description: "在 AnythingLLM 中配置 HiLinkup 聊天模型与知识库工作流。"
+keywords: ["AnythingLLM", "知识库", "RAG", "OpenAI compatible"]
+icon: "database"
+---
+
+AnythingLLM 可以使用 OpenAI-compatible 聊天模型。知识库功能还需要单独配置嵌入模型，聊天模型可用不代表嵌入模型也已配置。
+
+## 聊天模型配置
+
+| 字段 | 值 |
+| --- | --- |
+| LLM Provider | Generic OpenAI / OpenAI-compatible |
+| API Base URL | `https://hilinkup.com/v1` |
+| API Key | HiLinkup API Key |
+| Chat Model | `/v1/models` 中的聊天模型 ID |
+
+<Steps>
+  <Step title="打开 AI Providers">
+    在管理员或工作区设置中进入 AI Provider 配置。
+  </Step>
+  <Step title="配置聊天模型">
+    选择 Generic OpenAI，填写 Base URL、API Key 和 Chat Model。
+  </Step>
+  <Step title="保存并验证空白对话">
+    先在没有文档的工作区发送短消息，确认聊天模型正常。
+  </Step>
+  <Step title="单独配置嵌入模型">
+    从 `/v1/models` 选择账户可用的嵌入模型。在小型测试工作区上传一份短文档并等待索引完成。
+  </Step>
+  <Step title="验证检索">
+    提问文档中存在且答案明确的问题，检查回答是否引用正确内容。
+  </Step>
+</Steps>
+
+<Warning>
+  不要把聊天模型 ID 填入嵌入模型字段。两者请求格式和输出不同。
+</Warning>
+
+索引失败时先调用[嵌入 API](/api-reference/embeddings)验证嵌入模型，再检查 AnythingLLM 的向量数据库。

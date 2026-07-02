@@ -1,0 +1,45 @@
+---
+title: "NextChat"
+description: "在 NextChat（ChatGPT-Next-Web）中配置 HiLinkup。"
+keywords: ["NextChat", "ChatGPT-Next-Web", "聊天客户端"]
+icon: "messages-square"
+---
+
+NextChat 支持通过部署环境变量或客户端设置连接 OpenAI-compatible API。
+
+## 本地客户端配置
+
+如果当前版本允许在设置中填写自定义接口：
+
+| 字段 | 值 |
+| --- | --- |
+| API Key | HiLinkup API Key |
+| 接口地址 / Endpoint | `https://hilinkup.com/v1` |
+| 模型 | `/v1/models` 返回的模型 ID |
+
+## 自托管部署
+
+在部署平台的私有环境变量中保存密钥和接口地址。不同版本变量名可能变化，应以所用 NextChat 版本为准。
+
+```dotenv
+OPENAI_API_KEY=your-hilinkup-api-key
+BASE_URL=https://hilinkup.com
+CUSTOM_MODELS=qwen3.7-plus
+```
+
+<Warning>
+  部分版本会自动在 `BASE_URL` 后拼接 `/v1`。部署前检查最终请求是否为
+  `https://hilinkup.com/v1/chat/completions`，避免重复出现 `/v1/v1`。
+</Warning>
+
+<Steps>
+  <Step title="设置私有环境变量">
+    不要把 API Key 写入公开仓库、构建日志或浏览器可下载的配置文件。
+  </Step>
+  <Step title="重新部署">
+    修改服务端环境变量后重新构建或重启应用。
+  </Step>
+  <Step title="选择模型并测试">
+    新建会话，选择已配置模型，发送短文本并检查服务端日志中的状态码。
+  </Step>
+</Steps>

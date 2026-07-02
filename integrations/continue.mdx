@@ -1,0 +1,43 @@
+---
+title: "Continue"
+description: "在 VS Code 或 JetBrains 的 Continue 中配置 HiLinkup。"
+keywords: ["Continue", "VS Code", "JetBrains", "OpenAI"]
+icon: "play"
+---
+
+Continue 可以通过 OpenAI-compatible Provider 使用 HiLinkup 模型。不同 Continue 版本的配置界面和文件格式可能不同，但核心连接参数一致。
+
+## 配置值
+
+```text
+Provider:  OpenAI / OpenAI-compatible
+API Key:   YOUR_HILINKUP_API_KEY
+Base URL:  https://hilinkup.com/v1
+Model:     从 /v1/models 获取
+```
+
+<Steps>
+  <Step title="打开 Continue 配置">
+    在 IDE 的 Continue 面板中打开模型或配置设置。
+  </Step>
+  <Step title="新增聊天模型">
+    选择 OpenAI-compatible 类型，填写模型显示名称、模型 ID、API Key 和 Base URL。
+  </Step>
+  <Step title="保存配置">
+    如果 Continue 使用配置文件，确保 API Key 从环境变量读取，不要提交到仓库。
+  </Step>
+  <Step title="验证聊天">
+    选择该模型，要求它解释当前选中的短代码片段。
+  </Step>
+</Steps>
+
+## 配置原则
+
+- 聊天模型和代码补全模型可以使用不同配置；不要默认所有模型都支持补全协议。
+- 先验证 Chat，再配置 Edit、Apply 或 Agent 功能。
+- 索引代码库时避免包含 `.env`、密钥文件和大型生成目录。
+- 团队共享配置只提交 Provider、Base URL 和模型 ID，不提交 API Key。
+
+<Note>
+  如果当前版本要求 JSON/YAML 配置，请以 Continue 的版本文档字段为准，将本页四个连接值映射到对应字段。
+</Note>

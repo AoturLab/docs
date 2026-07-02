@@ -1,0 +1,52 @@
+---
+title: "Roo Code"
+description: "在 VS Code 的 Roo Code 扩展中配置 HiLinkup OpenAI-compatible Provider。"
+keywords: ["Roo Code", "VS Code", "Agent", "OpenAI 兼容"]
+icon: "code-2"
+---
+
+Roo Code 支持自定义 OpenAI-compatible Provider。建议先用低风险、只读任务验证连接，再允许它修改文件或执行命令。
+
+## 配置参数
+
+| 字段 | 值 |
+| --- | --- |
+| API Provider | OpenAI Compatible |
+| Base URL | `https://hilinkup.com/v1` |
+| API Key | HiLinkup API Key |
+| Model ID | `/v1/models` 返回的完整 ID |
+
+<Steps>
+  <Step title="打开 Roo Code 设置">
+    在 VS Code 中打开 Roo Code 面板，点击设置或 Provider 配置。
+  </Step>
+  <Step title="选择 OpenAI Compatible">
+    不要选择只允许官方地址的 OpenAI 配置；选择可自定义 Base URL 的类型。
+  </Step>
+  <Step title="填写连接参数">
+    填入 Base URL、API Key 和模型 ID。如果有 Context Window 字段，按模型实际能力设置，不要盲目填写极大值。
+  </Step>
+  <Step title="保存并测试">
+    新建任务，要求 Roo Code 只解释当前文件，不执行命令、不修改文件。
+  </Step>
+</Steps>
+
+## 工具调用验证
+
+普通对话成功后，按顺序测试：
+
+1. 读取一个非敏感文件。
+2. 提议修改但不写入。
+3. 在测试目录修改一行文本。
+4. 执行无副作用命令。
+
+<Warning>
+  Agent 可以读取文件和执行命令。保持审批模式开启，不要向未审查的工作区开放自动执行权限。
+</Warning>
+
+## 常见问题
+
+- `401`：重新粘贴 API Key，确认没有多余空格。
+- 模型不存在：重新复制 `/v1/models` 中的 ID。
+- 能聊天但不能使用工具：模型可能不支持工具调用，或 Roo Code 的模型能力配置不正确。
+- 上下文过长：降低上下文窗口和一次发送的文件数量。

@@ -1,0 +1,61 @@
+---
+title: "Vercel AI SDK"
+description: "使用 Vercel AI SDK 的 OpenAI-compatible Provider 调用 HiLinkup。"
+keywords: ["Vercel AI SDK", "TypeScript", "streamText"]
+icon: "waypoints"
+---
+
+在 TypeScript 应用中，可以使用 `@ai-sdk/openai-compatible` 创建 HiLinkup Provider。
+
+## 安装
+
+```bash
+npm install ai @ai-sdk/openai-compatible
+```
+
+## 创建 Provider
+
+```typescript
+import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
+
+export const hilinkup = createOpenAICompatible({
+  name: "hilinkup",
+  apiKey: process.env.HILINKUP_API_KEY,
+  baseURL: "https://hilinkup.com/v1",
+});
+```
+
+## 生成文本
+
+```typescript
+import { generateText } from "ai";
+import { hilinkup } from "./hilinkup";
+
+const { text, usage } = await generateText({
+  model: hilinkup("qwen3.7-plus"),
+  prompt: "用三点解释流式响应。",
+});
+
+console.log(text);
+console.log(usage);
+```
+
+## 流式输出
+
+```typescript
+import { streamText } from "ai";
+import { hilinkup } from "./hilinkup";
+
+const result = streamText({
+  model: hilinkup("qwen3.7-plus"),
+  prompt: "写一份 API 上线检查表。",
+});
+
+for await (const part of result.textStream) {
+  process.stdout.write(part);
+}
+```
+
+<Warning>
+  只在服务端读取 `HILINKUP_API_KEY`。不要把它暴露给浏览器 Bundle 或 `NEXT_PUBLIC_*` 环境变量。
+</Warning>

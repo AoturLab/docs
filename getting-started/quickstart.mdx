@@ -1,108 +1,307 @@
 ---
 title: "快速开始"
-description: "创建 API Key，并在 5 分钟内完成第一次 HiLinkup API 请求。"
+description: "从注册、创建 API Key、获取模型到完成第一次 HiLinkup API 调用。"
 keywords: ["快速开始", "API Key", "Python", "Node.js", "cURL"]
 icon: "rocket"
 ---
 
-本指南使用 Chat Completions 接口完成第一次模型调用。
+按照本页操作，你将完成一个真实可用的 HiLinkup 接入：创建密钥、确认模型、发送请求并验证返回结果。
 
-## 前置条件
+<Info>
+  API Base URL：`https://hilinkup.com/v1`
+</Info>
 
-- 一个 HiLinkup 账户
-- Python 3.9+、Node.js 18+ 或可用的 cURL
-- 已在控制台创建 API Key
+## 完成后你会得到什么
+
+- 一个可独立撤销的 API Key
+- 当前账户真正可用的模型 ID
+- 一段可以继续开发的 Python、Node.js 或 cURL 示例
+- 一套判断请求是否成功的方法
+
+## 第一步：注册并进入控制台
 
 <Steps>
-  <Step title="保存 API Key">
-    将密钥存入环境变量，不要写入代码或提交到版本库。
-
-    ```bash
-    export HILINKUP_API_KEY="你的 API Key"
-    ```
+  <Step title="登录 HiLinkup">
+    打开 [HiLinkup 主站](https://hilinkup.com/)，登录或创建账户。
   </Step>
-
-  <Step title="获取可用模型">
-    ```bash
-    curl https://hilinkup.com/v1/models \
-      -H "Authorization: Bearer $HILINKUP_API_KEY"
-    ```
-
-    从返回的 `data[].id` 中选择模型 ID。
+  <Step title="进入 API Key 页面">
+    打开 [API Key 管理](https://hilinkup.com/console/token)。
   </Step>
-
-  <Step title="发送请求">
-    <CodeGroup>
-    ```python Python
-    from openai import OpenAI
-
-    client = OpenAI(
-        api_key="YOUR_HILINKUP_API_KEY",
-        base_url="https://hilinkup.com/v1",
-    )
-
-    completion = client.chat.completions.create(
-        model="qwen3.7-plus",
-        messages=[
-            {"role": "system", "content": "你是一个简洁的中文助手。"},
-            {"role": "user", "content": "给我三个 API 稳定性检查项。"},
-        ],
-    )
-
-    print(completion.choices[0].message.content)
-    ```
-
-    ```javascript Node.js
-    import OpenAI from "openai";
-
-    const client = new OpenAI({
-      apiKey: process.env.HILINKUP_API_KEY,
-      baseURL: "https://hilinkup.com/v1",
-    });
-
-    const completion = await client.chat.completions.create({
-      model: "qwen3.7-plus",
-      messages: [
-        { role: "system", content: "你是一个简洁的中文助手。" },
-        { role: "user", content: "给我三个 API 稳定性检查项。" },
-      ],
-    });
-
-    console.log(completion.choices[0].message.content);
-    ```
-
-    ```bash cURL
-    curl https://hilinkup.com/v1/chat/completions \
-      -H "Authorization: Bearer $HILINKUP_API_KEY" \
-      -H "Content-Type: application/json" \
-      -d '{
-        "model": "qwen3.7-plus",
-        "messages": [
-          {"role": "system", "content": "你是一个简洁的中文助手。"},
-          {"role": "user", "content": "给我三个 API 稳定性检查项。"}
-        ]
-      }'
-    ```
-    </CodeGroup>
-  </Step>
-
-  <Step title="检查返回结果">
-    成功响应包含 `choices`。主要文本位于
-    `choices[0].message.content`，Token 用量位于 `usage`。
-
-    <Check>
-      收到 HTTP `200` 且 `choices` 非空，表示第一次调用完成。
-    </Check>
+  <Step title="确认账户可用">
+    如果账户需要充值、授权或完成其他准备操作，请先在控制台完成。调用前应确保账户状态正常。
   </Step>
 </Steps>
 
-## 常见下一步
+## 第二步：创建 API Key
+
+<Steps>
+  <Step title="新建密钥">
+    点击创建 API Key。名称建议写明用途和环境，例如：
+
+    - `local-development`
+    - `customer-service-production`
+    - `cherry-studio-macbook`
+  </Step>
+  <Step title="复制并保存">
+    创建后立即复制密钥。将它保存在密码管理器、密钥管理服务或本地环境变量中。
+
+    <Warning>
+      API Key 等同于账户调用凭证。不要发送到聊天群、截图、前端代码或 Git 仓库。
+    </Warning>
+  </Step>
+  <Step title="为不同应用分配不同密钥">
+    开发环境、生产环境和第三方客户端分别使用独立密钥。出现异常时可以只撤销受影响的密钥。
+  </Step>
+</Steps>
+
+## 第三步：保存环境变量
+
+<Tabs>
+  <Tab title="macOS / Linux">
+    ```bash
+    export HILINKUP_API_KEY="你的 API Key"
+    ```
+
+    验证变量已经写入当前终端：
+
+    ```bash
+    test -n "$HILINKUP_API_KEY" && echo "API Key 已加载"
+    ```
+  </Tab>
+  <Tab title="Windows PowerShell">
+    ```powershell
+    $env:HILINKUP_API_KEY="你的 API Key"
+    ```
+
+    验证变量：
+
+    ```powershell
+    if ($env:HILINKUP_API_KEY) { "API Key 已加载" }
+    ```
+  </Tab>
+  <Tab title=".env 文件">
+    ```dotenv
+    HILINKUP_API_KEY=你的 API Key
+    HILINKUP_BASE_URL=https://hilinkup.com/v1
+    ```
+
+    将 `.env` 加入 `.gitignore`：
+
+    ```gitignore
+    .env
+    .env.*
+    ```
+  </Tab>
+</Tabs>
+
+## 第四步：获取可用模型
+
+不要从博客、截图或其他账户复制模型名称。`GET /v1/models` 返回当前 API Key 此刻可以使用的模型。
+
+```bash
+curl https://hilinkup.com/v1/models \
+  -H "Authorization: Bearer $HILINKUP_API_KEY"
+```
+
+成功响应示意：
+
+```json
+{
+  "object": "list",
+  "data": [
+    {
+      "id": "qwen3.7-plus",
+      "object": "model"
+    }
+  ]
+}
+```
+
+复制 `data[].id` 的完整值。后续示例使用 `qwen3.7-plus`，如果你的返回结果中没有这个 ID，请替换成实际可用模型。
+
+<Check>
+  收到 HTTP `200`，并且 `data` 数组至少包含一个模型，表示鉴权和模型访问正常。
+</Check>
+
+## 第五步：发送第一次请求
+
+任选一种方式即可。如果你只是验证连接，建议先使用 cURL；如果要继续开发，选择对应 SDK。
+
+<CodeGroup>
+```bash cURL
+curl https://hilinkup.com/v1/chat/completions \
+  -H "Authorization: Bearer $HILINKUP_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "qwen3.7-plus",
+    "messages": [
+      {
+        "role": "system",
+        "content": "你是一个回答简洁的技术助手。"
+      },
+      {
+        "role": "user",
+        "content": "用三点说明 API 健康检查应该包含什么。"
+      }
+    ]
+  }'
+```
+
+```python Python
+# 安装：python -m pip install openai
+import os
+from openai import OpenAI
+
+client = OpenAI(
+    api_key=os.environ["HILINKUP_API_KEY"],
+    base_url="https://hilinkup.com/v1",
+    timeout=60.0,
+)
+
+response = client.chat.completions.create(
+    model="qwen3.7-plus",
+    messages=[
+        {
+            "role": "system",
+            "content": "你是一个回答简洁的技术助手。",
+        },
+        {
+            "role": "user",
+            "content": "用三点说明 API 健康检查应该包含什么。",
+        },
+    ],
+)
+
+print(response.choices[0].message.content)
+print("usage:", response.usage)
+```
+
+```javascript Node.js
+// 安装：npm install openai
+import OpenAI from "openai";
+
+const client = new OpenAI({
+  apiKey: process.env.HILINKUP_API_KEY,
+  baseURL: "https://hilinkup.com/v1",
+  timeout: 60_000,
+});
+
+const response = await client.chat.completions.create({
+  model: "qwen3.7-plus",
+  messages: [
+    {
+      role: "system",
+      content: "你是一个回答简洁的技术助手。",
+    },
+    {
+      role: "user",
+      content: "用三点说明 API 健康检查应该包含什么。",
+    },
+  ],
+});
+
+console.log(response.choices[0].message.content);
+console.log("usage:", response.usage);
+```
+</CodeGroup>
+
+## 第六步：检查响应
+
+成功响应通常包含以下字段：
+
+| 字段 | 用途 |
+| --- | --- |
+| `id` | 本次请求的响应标识 |
+| `model` | 实际处理请求的模型 |
+| `choices[0].message.content` | 模型生成的主要文本 |
+| `choices[0].finish_reason` | 响应结束原因 |
+| `usage` | 输入、输出和总 Token 用量 |
+
+示意：
+
+```json
+{
+  "id": "chatcmpl-example",
+  "object": "chat.completion",
+  "model": "qwen3.7-plus",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "1. 可用性检查……"
+      },
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 35,
+    "completion_tokens": 68,
+    "total_tokens": 103
+  }
+}
+```
+
+<Check>
+  HTTP 状态为 `200`、`choices` 非空且 `choices[0].message.content` 有内容，表示第一次调用完成。
+</Check>
+
+## 第七步：启用流式响应
+
+普通请求成功后，再验证流式输出。
+
+```python
+stream = client.chat.completions.create(
+    model="qwen3.7-plus",
+    messages=[
+        {"role": "user", "content": "逐步解释什么是流式响应。"}
+    ],
+    stream=True,
+)
+
+for chunk in stream:
+    if chunk.choices:
+        print(chunk.choices[0].delta.content or "", end="", flush=True)
+```
+
+流式响应的完整处理方式见[流式响应](/guides/streaming)。
+
+## 常见失败及处理
+
+<AccordionGroup>
+  <Accordion title="401：API Key 无效">
+    确认请求头格式为 `Authorization: Bearer YOUR_API_KEY`。检查环境变量是否为空、密钥是否复制完整、密钥是否已被撤销。
+  </Accordion>
+  <Accordion title="403：没有访问权限">
+    检查账户状态、密钥权限和所选模型是否对当前账户开放。重新调用 `/v1/models`，不要继续使用未返回的模型 ID。
+  </Accordion>
+  <Accordion title="404：请求地址错误">
+    Chat Completions 的完整地址是 `https://hilinkup.com/v1/chat/completions`。使用 SDK 时，Base URL 应为 `https://hilinkup.com/v1`。
+  </Accordion>
+  <Accordion title="429：请求过多或额度受限">
+    降低并发，等待后使用指数退避重试。检查控制台中的余额、额度和使用情况。
+  </Accordion>
+  <Accordion title="模型不存在或不可用">
+    再次调用 `/v1/models`，复制完整 `data[].id`。模型列表可能因账户、渠道或时间变化。
+  </Accordion>
+  <Accordion title="连接超时">
+    先用 cURL 测试基础连接，再检查本机代理、DNS、防火墙和公司网络。不要无限重试。
+  </Accordion>
+</AccordionGroup>
+
+## 接下来做什么
 
 <Columns cols={2}>
-  <Card title="启用流式响应" icon="waves" href="/guides/streaming">
-    逐段显示生成内容，降低用户感知延迟。
+  <Card title="迁移 OpenAI 项目" icon="refresh-cw" href="/getting-started/openai-compatible">
+    修改现有 SDK 的 API Key、Base URL 和模型 ID。
   </Card>
-  <Card title="处理错误和重试" icon="shield-alert" href="/guides/error-handling">
-    为限流、超时和上游故障设置有边界的重试。
+  <Card title="选择模型" icon="boxes" href="/guides/model-selection">
+    根据能力、延迟、上下文和成本选择模型。
+  </Card>
+  <Card title="配置第三方应用" icon="blocks" href="/integrations/overview">
+    接入开发工具、聊天客户端和应用框架。
+  </Card>
+  <Card title="生产环境检查" icon="shield-check" href="/guides/error-handling">
+    配置超时、有限重试、日志脱敏和监控。
   </Card>
 </Columns>

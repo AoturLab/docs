@@ -1,0 +1,18 @@
+---
+title: "NextChat"
+description: "Configure HiLinkup in NextChat or ChatGPT-Next-Web."
+keywords: ["NextChat", "ChatGPT-Next-Web", "deployment"]
+icon: "messages-square"
+---
+
+For a client configuration, enter the HiLinkup API key, `https://hilinkup.com/v1`, and a model ID returned by `/v1/models`.
+
+For a self-hosted deployment, keep credentials in private server environment variables:
+
+```dotenv
+OPENAI_API_KEY=your-hilinkup-api-key
+BASE_URL=https://hilinkup.com
+CUSTOM_MODELS=qwen3.7-plus
+```
+
+<Warning>Some releases append `/v1` automatically. Confirm that the final request URL is `https://hilinkup.com/v1/chat/completions`, not `/v1/v1/chat/completions`.</Warning>

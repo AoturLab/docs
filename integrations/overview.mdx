@@ -1,66 +1,242 @@
 ---
-title: "第三方应用接入总览"
-description: "在开发工具、聊天客户端和应用框架中接入 HiLinkup。"
-keywords: ["第三方集成", "OpenAI 兼容", "客户端", "开发工具"]
+title: "第三方应用接入指南"
+description: "将 HiLinkup 接入开发工具、聊天客户端、自动化平台和应用框架。"
+keywords: ["第三方集成", "OpenAI 兼容", "客户端", "开发工具", "应用框架"]
 icon: "blocks"
 ---
 
-大多数支持自定义 OpenAI 服务的应用都可以接入 HiLinkup。核心配置只有三个：
+HiLinkup 可以接入支持自定义 OpenAI API 或 OpenAI-compatible Provider 的应用。本页先说明通用配置，再按应用类型提供具体入口。
 
-| 配置项 | 值 |
-| --- | --- |
-| API Key | 在 HiLinkup 控制台创建的密钥 |
-| Base URL | `https://hilinkup.com/v1` |
-| Model | `GET /v1/models` 返回的模型 ID |
+## 通用连接参数
+
+| 配置项 | 应填写的值 | 常见字段名称 |
+| --- | --- | --- |
+| 服务类型 | OpenAI / OpenAI-compatible / Custom OpenAI | Provider、API 类型 |
+| API Key | 在 HiLinkup 控制台创建的密钥 | API Key、Token |
+| Base URL | `https://hilinkup.com/v1` | API Host、Endpoint、Base URL |
+| Model | `/v1/models` 返回的完整 ID | Model、Model ID、Deployment |
 
 <Warning>
-  不要把 API Key 填入来源不明的网页或插件。桌面客户端会在本机保存密钥，只应在可信设备上使用。
+  不要把 Base URL 填成具体接口地址。除非应用明确要求完整路径，否则填写
+  `https://hilinkup.com/v1`，不要填写 `/chat/completions`。
 </Warning>
 
-## 选择接入方式
-
-<Columns cols={2}>
-  <Card title="开发工具" icon="terminal" href="/integrations/claude-code">
-    配置 Claude Code、Cursor、Cline 和 OpenClaw。
-  </Card>
-  <Card title="聊天客户端" icon="messages-square" href="/integrations/cherry-studio">
-    配置 Cherry Studio、Chatbox、LobeChat 和 Open WebUI。
-  </Card>
-  <Card title="应用框架" icon="workflow" href="/integrations/dify">
-    在 Dify 和 LangChain 中创建模型供应商。
-  </Card>
-  <Card title="排查兼容性" icon="shield-alert" href="/troubleshooting/errors">
-    处理认证、模型、参数和上游错误。
-  </Card>
-</Columns>
-
-## 通用接入流程
+## 接入前准备
 
 <Steps>
-  <Step title="创建独立 API Key">
-    为第三方应用单独创建密钥，便于统计、限额和撤销。
+  <Step title="为应用创建独立 API Key">
+    打开 [API Key 管理](https://hilinkup.com/console/token)，按应用创建密钥。不要在多个不相关客户端之间共用一个生产密钥。
   </Step>
   <Step title="确认模型 ID">
     ```bash
     curl https://hilinkup.com/v1/models \
       -H "Authorization: Bearer $HILINKUP_API_KEY"
     ```
+
+    从 `data[].id` 复制完整 ID。
   </Step>
-  <Step title="填写连接参数">
-    将服务类型设为 OpenAI 或 OpenAI-compatible，填写 Base URL、API Key 和模型 ID。
-  </Step>
-  <Step title="先测试基础对话">
-    先发送不带工具的短消息，再验证流式输出、图片、工具调用和长上下文。
+  <Step title="先验证基础 API">
+    在配置第三方应用前，先完成[快速开始](/getting-started/quickstart)。这样可以区分“账户/API 问题”和“客户端配置问题”。
   </Step>
 </Steps>
 
-## 实现兼容层时的注意事项
+## 选择你的应用
 
-如果你正在开发第三方客户端，而不是只填写现有应用的配置：
+### 开发工具
 
-- 允许用户自定义 Base URL，不要硬编码服务域名。
-- 从 `/v1/models` 获取模型，不要维护长期不更新的静态列表。
-- 当 `tools` 为空时，不要继续发送依赖工具的 `tool_choice`。
-- 保留 HTTP 状态码、错误正文和请求 ID。
-- 对 `429` 和部分 `5xx` 使用有限重试，不要重试认证和参数错误。
-- 按模型能力决定是否发送工具、多模态和高级推理参数。
+<Columns cols={3}>
+  <Card title="Claude Code" icon="terminal" href="/integrations/claude-code">
+    在终端编程工作流中配置模型服务。
+  </Card>
+  <Card title="Cursor" icon="mouse-pointer-2" href="/integrations/cursor">
+    配置自定义 OpenAI Base URL 和模型。
+  </Card>
+  <Card title="Cline" icon="terminal-square" href="/integrations/cline">
+    在 VS Code 中配置 OpenAI-compatible Provider。
+  </Card>
+  <Card title="Roo Code" icon="code-2" href="/integrations/roo-code">
+    配置 Roo Code 的自定义 OpenAI Provider。
+  </Card>
+  <Card title="Continue" icon="play" href="/integrations/continue">
+    在 VS Code 或 JetBrains 中配置模型。
+  </Card>
+  <Card title="OpenCode" icon="square-terminal" href="/integrations/opencode">
+    在终端 Agent 中使用 HiLinkup。
+  </Card>
+  <Card title="OpenClaw" icon="bot" href="/integrations/openclaw">
+    配置 Agent Provider 并验证完整工具链。
+  </Card>
+</Columns>
+
+### 聊天客户端与知识库
+
+<Columns cols={3}>
+  <Card title="Cherry Studio" icon="message-square" href="/integrations/cherry-studio">
+    添加 Provider、同步模型并验证多模态能力。
+  </Card>
+  <Card title="Chatbox" icon="messages-square" href="/integrations/chatbox">
+    配置桌面端 OpenAI-compatible 服务。
+  </Card>
+  <Card title="LobeChat" icon="messages-square" href="/integrations/lobe-chat">
+    配置本地或部署版 LobeChat。
+  </Card>
+  <Card title="Open WebUI" icon="panel-top" href="/integrations/open-webui">
+    在管理员设置中添加 OpenAI API 连接。
+  </Card>
+  <Card title="NextChat" icon="messages-square" href="/integrations/nextchat">
+    配置 ChatGPT-Next-Web / NextChat。
+  </Card>
+  <Card title="LibreChat" icon="message-circle" href="/integrations/librechat">
+    通过自定义端点配置模型列表。
+  </Card>
+  <Card title="AnythingLLM" icon="database" href="/integrations/anythingllm">
+    将 HiLinkup 用作聊天与知识库模型。
+  </Card>
+</Columns>
+
+### 应用框架
+
+<Columns cols={2}>
+  <Card title="Dify" icon="workflow" href="/integrations/dify">
+    在工作流和应用中配置模型供应商。
+  </Card>
+  <Card title="LangChain" icon="workflow" href="/integrations/langchain">
+    使用 `langchain-openai` 接入。
+  </Card>
+  <Card title="Vercel AI SDK" icon="waypoints" href="/integrations/vercel-ai-sdk">
+    在 TypeScript 应用中创建 OpenAI-compatible Provider。
+  </Card>
+  <Card title="LlamaIndex" icon="network" href="/integrations/llamaindex">
+    在 RAG 与 Agent 应用中配置模型。
+  </Card>
+</Columns>
+
+## 通用配置流程
+
+<Steps>
+  <Step title="选择自定义 OpenAI 服务">
+    如果应用内没有 HiLinkup，选择 **OpenAI-compatible**、**Custom OpenAI** 或允许自定义 Base URL 的 OpenAI Provider。
+  </Step>
+  <Step title="填写 API Key 和 Base URL">
+    API Key 使用为该应用创建的独立密钥；Base URL 填写 `https://hilinkup.com/v1`。
+  </Step>
+  <Step title="添加模型">
+    优先使用应用的“获取模型”或“同步模型”功能。无法同步时，手动添加 `/v1/models` 返回的完整模型 ID。
+  </Step>
+  <Step title="保存并测试连接">
+    如果应用提供连接测试，先执行测试。测试失败时保留完整状态码和错误正文。
+  </Step>
+  <Step title="新建普通对话">
+    先发送短文本，不要立即启用图片、工具、知识库、联网搜索或超长上下文。
+  </Step>
+  <Step title="逐项启用高级能力">
+    普通对话成功后，分别测试流式输出、图片输入、工具调用、结构化输出和长上下文。只启用模型真正支持的能力。
+  </Step>
+</Steps>
+
+## 第三方客户端验收清单
+
+| 检查项 | 通过标准 |
+| --- | --- |
+| 连接 | 测试请求返回 HTTP `200` |
+| 模型 | 使用 `/v1/models` 中存在的完整 ID |
+| 文本对话 | 能返回非空回答 |
+| 流式输出 | 内容逐段显示并正常结束 |
+| 用量 | 控制台可看到对应请求或用量变化 |
+| 图片 | 支持视觉的模型能读取上传图片 |
+| 工具调用 | 支持工具的模型能返回有效参数 |
+| 安全 | API Key 未出现在日志、截图和前端代码中 |
+
+## 开发第三方集成时的实现要求
+
+如果你在开发客户端或 Provider 插件，而不是只填写现有应用的设置，请遵循以下约定。
+
+### 客户端初始化
+
+<CodeGroup>
+```typescript TypeScript
+import OpenAI from "openai";
+
+export const hilinkup = new OpenAI({
+  apiKey: process.env.HILINKUP_API_KEY,
+  baseURL: process.env.HILINKUP_BASE_URL ?? "https://hilinkup.com/v1",
+  timeout: 60_000,
+  maxRetries: 2,
+});
+```
+
+```python Python
+import os
+from openai import OpenAI
+
+hilinkup = OpenAI(
+    api_key=os.environ["HILINKUP_API_KEY"],
+    base_url=os.getenv(
+        "HILINKUP_BASE_URL",
+        "https://hilinkup.com/v1",
+    ),
+    timeout=60.0,
+    max_retries=2,
+)
+```
+</CodeGroup>
+
+### 必须处理的兼容性细节
+
+- 允许用户修改 Base URL，不要把域名写死在界面逻辑中。
+- 启动或刷新时从 `/v1/models` 获取模型列表，并允许手动输入完整模型 ID。
+- 当 `tools` 为空时，不要发送依赖工具的 `tool_choice`。
+- 只向明确支持的模型发送图片、音频、工具和高级推理参数。
+- 保留 HTTP 状态码、错误正文和请求标识，方便排查。
+- 对 `429`、超时和部分 `5xx` 使用指数退避与有限重试。
+- 不要自动重试 `400`、`401`、`403` 等确定性错误。
+- API Key 只保存在服务端、操作系统安全存储或受保护的本地配置中。
+
+### 推荐环境变量
+
+```dotenv
+HILINKUP_API_KEY=your-api-key
+HILINKUP_BASE_URL=https://hilinkup.com/v1
+HILINKUP_MODEL=qwen3.7-plus
+```
+
+### 健康检查
+
+```typescript
+export async function checkHilinkup() {
+  const startedAt = Date.now();
+  const models = await hilinkup.models.list();
+
+  return {
+    ok: models.data.length > 0,
+    modelCount: models.data.length,
+    latencyMs: Date.now() - startedAt,
+  };
+}
+```
+
+不要只检查域名是否能打开。有效健康检查至少应验证鉴权和模型列表。
+
+## 常见配置错误
+
+<AccordionGroup>
+  <Accordion title="连接测试失败，但 cURL 正常">
+    检查客户端是否自动拼接 `/v1`。如果它要求 API Host，可能需要填写 `https://hilinkup.com`；如果要求 Base URL，通常填写 `https://hilinkup.com/v1`。以客户端最终请求地址为准，正确的聊天接口应为 `/v1/chat/completions`。
+  </Accordion>
+  <Accordion title="客户端没有显示模型">
+    手动添加 `/v1/models` 返回的完整模型 ID。确认没有多余空格、显示名称或供应商前缀。
+  </Accordion>
+  <Accordion title="普通对话成功，图片或工具失败">
+    这通常是能力不匹配，不是鉴权问题。换用支持对应能力的模型，并在客户端中启用正确的模型能力标记。
+  </Accordion>
+  <Accordion title="返回 401 或 403">
+    检查密钥、账户状态和模型权限。不要通过反复修改 Base URL 来掩盖鉴权问题。
+  </Accordion>
+  <Accordion title="返回 429">
+    降低并发，检查余额和额度，使用带抖动的指数退避。不要让多个插件同时无限重试。
+  </Accordion>
+</AccordionGroup>
+
+<Card title="查看完整错误排查" icon="life-buoy" href="/troubleshooting/errors">
+  按 HTTP 状态码、请求阶段和客户端行为定位问题。
+</Card>

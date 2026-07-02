@@ -126,6 +126,9 @@
                   "integrations/claude-code",
                   "integrations/cursor",
                   "integrations/cline",
+                  "integrations/roo-code",
+                  "integrations/continue",
+                  "integrations/opencode",
                   "integrations/openclaw"
                 ]
               },
@@ -136,7 +139,10 @@
                   "integrations/cherry-studio",
                   "integrations/chatbox",
                   "integrations/lobe-chat",
-                  "integrations/open-webui"
+                  "integrations/open-webui",
+                  "integrations/nextchat",
+                  "integrations/librechat",
+                  "integrations/anythingllm"
                 ]
               },
               {
@@ -144,7 +150,9 @@
                 "icon": "workflow",
                 "pages": [
                   "integrations/dify",
-                  "integrations/langchain"
+                  "integrations/langchain",
+                  "integrations/vercel-ai-sdk",
+                  "integrations/llamaindex"
                 ]
               }
             ]
@@ -272,6 +280,9 @@
                   "en/integrations/claude-code",
                   "en/integrations/cursor",
                   "en/integrations/cline",
+                  "en/integrations/roo-code",
+                  "en/integrations/continue",
+                  "en/integrations/opencode",
                   "en/integrations/openclaw"
                 ]
               },
@@ -281,14 +292,19 @@
                   "en/integrations/cherry-studio",
                   "en/integrations/chatbox",
                   "en/integrations/lobe-chat",
-                  "en/integrations/open-webui"
+                  "en/integrations/open-webui",
+                  "en/integrations/nextchat",
+                  "en/integrations/librechat",
+                  "en/integrations/anythingllm"
                 ]
               },
               {
                 "group": "Application frameworks",
                 "pages": [
                   "en/integrations/dify",
-                  "en/integrations/langchain"
+                  "en/integrations/langchain",
+                  "en/integrations/vercel-ai-sdk",
+                  "en/integrations/llamaindex"
                 ]
               }
             ]

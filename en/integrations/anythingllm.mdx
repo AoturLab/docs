@@ -1,0 +1,18 @@
+---
+title: "AnythingLLM"
+description: "Configure HiLinkup chat and embedding models in AnythingLLM."
+keywords: ["AnythingLLM", "RAG", "knowledge base"]
+icon: "database"
+---
+
+Choose a Generic OpenAI or OpenAI-compatible LLM provider:
+
+```text
+Base URL:  https://hilinkup.com/v1
+API key:   YOUR_HILINKUP_API_KEY
+Chat model: an exact chat model ID from /v1/models
+```
+
+Verify a blank workspace chat before adding documents. Configure an embedding model separately, index one short document, and test retrieval with a question whose answer appears in that document.
+
+<Warning>A chat model ID cannot be used as an embedding model unless the model explicitly supports the embeddings endpoint.</Warning>

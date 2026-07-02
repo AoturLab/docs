@@ -1,22 +1,74 @@
 ---
-title: "Integration overview"
-description: "Connect HiLinkup to developer tools, chat clients, and application frameworks."
-keywords: ["integrations", "OpenAI compatible", "clients"]
+title: "Third-party integration guide"
+description: "Connect HiLinkup to developer tools, chat clients, knowledge bases, and application frameworks."
+keywords: ["integrations", "OpenAI compatible", "clients", "frameworks"]
 icon: "blocks"
 ---
 
-Most OpenAI-compatible applications require three values:
+Any application that supports a custom OpenAI or OpenAI-compatible provider can generally connect to HiLinkup.
+
+## Connection values
 
 | Setting | Value |
 | --- | --- |
-| API key | A key from the HiLinkup console |
+| Provider type | OpenAI / OpenAI-compatible / Custom OpenAI |
+| API key | A dedicated key from the HiLinkup console |
 | Base URL | `https://hilinkup.com/v1` |
-| Model | An ID returned by `GET /v1/models` |
+| Model | An exact ID returned by `GET /v1/models` |
 
-<Columns cols={2}>
-  <Card title="Developer tools" href="/en/integrations/claude-code" icon="terminal">Claude Code, Cursor, Cline, and OpenClaw.</Card>
-  <Card title="Chat clients" href="/en/integrations/cherry-studio" icon="messages-square">Cherry Studio, Chatbox, LobeChat, and Open WebUI.</Card>
-  <Card title="Application frameworks" href="/en/integrations/dify" icon="workflow">Dify and LangChain.</Card>
+<Warning>Unless an application explicitly requests a full endpoint, do not append `/chat/completions` to the base URL.</Warning>
+
+## Integration workflow
+
+<Steps>
+  <Step title="Create a dedicated API key">
+    Use a separate key for each application and environment.
+  </Step>
+  <Step title="List models">
+    ```bash
+    curl https://hilinkup.com/v1/models \
+      -H "Authorization: Bearer $HILINKUP_API_KEY"
+    ```
+  </Step>
+  <Step title="Select an OpenAI-compatible provider">
+    Enter the key, base URL, and an exact model ID.
+  </Step>
+  <Step title="Test plain chat">
+    Send a short text message before enabling images, tools, knowledge bases, or long context.
+  </Step>
+  <Step title="Validate advanced capabilities separately">
+    Test streaming, vision, tools, and structured output only with models that support them.
+  </Step>
+</Steps>
+
+## Supported integration guides
+
+<Columns cols={3}>
+  <Card title="Developer tools" href="/en/integrations/claude-code" icon="terminal">Claude Code, Cursor, Cline, Roo Code, Continue, OpenCode, and OpenClaw.</Card>
+  <Card title="Chat clients" href="/en/integrations/cherry-studio" icon="messages-square">Cherry Studio, Chatbox, LobeChat, Open WebUI, NextChat, and LibreChat.</Card>
+  <Card title="Knowledge bases" href="/en/integrations/anythingllm" icon="database">AnythingLLM and RAG-oriented workflows.</Card>
+  <Card title="Frameworks" href="/en/integrations/dify" icon="workflow">Dify, LangChain, Vercel AI SDK, and LlamaIndex.</Card>
 </Columns>
 
-<Warning>Do not paste API keys into screenshots, public configuration files, or repositories.</Warning>
+## Acceptance checklist
+
+- Connection test returns HTTP `200`
+- The model is present in `/v1/models`
+- Plain text chat returns a non-empty response
+- Streaming completes normally
+- Usage appears in the console
+- Credentials are not exposed in client bundles, logs, or screenshots
+
+## Common failures
+
+<AccordionGroup>
+  <Accordion title="cURL works but the application fails">
+    Inspect the final URL. The correct chat endpoint is `/v1/chat/completions`; avoid missing or duplicated `/v1`.
+  </Accordion>
+  <Accordion title="The model list is empty">
+    Add an exact model ID manually. Some clients cannot discover models from custom providers.
+  </Accordion>
+  <Accordion title="Chat works but vision or tools fail">
+    Verify model capability and the application's model capability flags. Authentication is already working.
+  </Accordion>
+</AccordionGroup>

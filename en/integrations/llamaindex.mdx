@@ -1,0 +1,27 @@
+---
+title: "LlamaIndex"
+description: "Configure a HiLinkup chat model in LlamaIndex Python."
+keywords: ["LlamaIndex", "Python", "RAG"]
+icon: "network"
+---
+
+```bash
+python -m pip install llama-index-llms-openai-like
+```
+
+```python
+import os
+from llama_index.llms.openai_like import OpenAILike
+
+llm = OpenAILike(
+    model="qwen3.7-plus",
+    api_key=os.environ["HILINKUP_API_KEY"],
+    api_base="https://hilinkup.com/v1",
+    is_chat_model=True,
+    timeout=60.0,
+)
+
+print(llm.complete("Explain RAG in one sentence.").text)
+```
+
+Configure chat and embedding models separately. Rebuild an index whenever you change embedding model or vector dimensions.

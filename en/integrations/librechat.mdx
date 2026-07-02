@@ -1,0 +1,17 @@
+---
+title: "LibreChat"
+description: "Add HiLinkup as a custom OpenAI endpoint in LibreChat."
+keywords: ["LibreChat", "custom endpoint", "multi-user"]
+icon: "message-circle"
+---
+
+Create a custom OpenAI endpoint that maps:
+
+- Name: `HiLinkup`
+- Base URL: `https://hilinkup.com/v1`
+- API key: a private server environment variable
+- Models: exact IDs from `/v1/models`
+
+Restart LibreChat after changing configuration. Select the endpoint and send a short test message while reviewing server logs.
+
+For multi-user deployments, keep the key on the server, enable authentication, use a model allowlist, and redact Authorization headers from logs.

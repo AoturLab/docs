@@ -1,14 +1,71 @@
 ---
 title: "Cherry Studio"
-description: "Add HiLinkup as a model provider in Cherry Studio."
-keywords: ["Cherry Studio", "provider", "chat"]
-icon: "cherry"
+description: "Add HiLinkup to Cherry Studio, sync models, and verify chat and multimodal capabilities."
+keywords: ["Cherry Studio", "provider", "chat client"]
+icon: "message-square"
 ---
 
-Add a custom OpenAI-compatible provider:
+## Prerequisites
 
-- API host: `https://hilinkup.com/v1`
-- API key: your HiLinkup key
-- Model: import or enter an ID from `/v1/models`
+- A current Cherry Studio release
+- A dedicated HiLinkup API key
+- A successful [Quickstart](/en/getting-started/quickstart) request
 
-Run the provider connectivity test, then start a new conversation with the selected model.
+## Provider settings
+
+| Field | Value |
+| --- | --- |
+| Name | `HiLinkup` |
+| Type | OpenAI / OpenAI-compatible |
+| API key | Your HiLinkup API key |
+| API URL | `https://hilinkup.com/v1` |
+| Model ID | An exact ID from `/v1/models` |
+
+<Steps>
+  <Step title="Open model provider settings">
+    Open Cherry Studio settings and select Model services or Model providers.
+  </Step>
+  <Step title="Add a custom provider">
+    Choose an OpenAI-compatible provider and name it `HiLinkup`.
+  </Step>
+  <Step title="Enter credentials">
+    Paste the API key and `https://hilinkup.com/v1`. Do not append `/chat/completions`.
+  </Step>
+  <Step title="Test the connection">
+    Use the provider's connection check. A successful model refresh also confirms the connection.
+  </Step>
+  <Step title="Sync or add a model">
+    Refresh models or manually add an exact `data[].id` from `/v1/models`.
+  </Step>
+  <Step title="Start a new chat">
+    Select the model and ask it to reply with `HiLinkup connected`.
+  </Step>
+</Steps>
+
+## Capability validation
+
+| Capability | Test |
+| --- | --- |
+| Streaming | Confirm text appears incrementally and completes |
+| Vision | Enable the image capability on a vision model, then upload a small image |
+| Tools | Use a low-risk tool with a tool-capable model |
+| Knowledge base | Configure and test an embedding model separately |
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Connection check fails">
+    Test the same key with `/v1/models`. If cURL works, inspect the Cherry Studio API URL for missing or duplicate `/v1`.
+  </Accordion>
+  <Accordion title="No models appear">
+    Add an exact model ID manually. Custom providers are not always auto-discovered.
+  </Accordion>
+  <Accordion title="The model cannot see an image">
+    Confirm the model supports vision and enable the image or vision capability in the model settings.
+  </Accordion>
+  <Accordion title="The response keeps loading">
+    Disable streaming temporarily and test a short message. Update Cherry Studio and review proxy or firewall settings.
+  </Accordion>
+</AccordionGroup>
+
+<Warning>Cherry Studio stores provider settings locally. Use it only on trusted, encrypted devices and revoke the key if the device or configuration is exposed.</Warning>

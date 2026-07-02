@@ -1,0 +1,39 @@
+---
+title: "OpenCode"
+description: "在 OpenCode 终端 Agent 中使用 HiLinkup 模型。"
+keywords: ["OpenCode", "终端 Agent", "OpenAI compatible"]
+icon: "square-terminal"
+---
+
+OpenCode 版本更新较快。只要当前版本支持自定义 OpenAI-compatible Provider，就可以使用 HiLinkup。
+
+## 推荐环境变量
+
+```bash
+export HILINKUP_API_KEY="你的 API Key"
+export HILINKUP_BASE_URL="https://hilinkup.com/v1"
+export HILINKUP_MODEL="从 /v1/models 获取的模型 ID"
+```
+
+## 配置步骤
+
+<Steps>
+  <Step title="确认基础 API 可用">
+    先完成[快速开始](/getting-started/quickstart)，排除账户和网络问题。
+  </Step>
+  <Step title="新增自定义 Provider">
+    在 OpenCode 配置中选择 OpenAI-compatible Provider，并映射 API Key、Base URL 和模型 ID。
+  </Step>
+  <Step title="启动只读测试">
+    在临时项目中要求 Agent 总结目录结构，不允许写文件或执行危险命令。
+  </Step>
+  <Step title="检查完整 Agent 路径">
+    再测试工具调用、长提示和实际代码修改。基础 API 成功不代表完整 Agent 流程一定成功。
+  </Step>
+</Steps>
+
+<Warning>
+  不要把 API Key 直接写入可提交的 OpenCode 项目配置。使用环境变量或用户级私有配置。
+</Warning>
+
+出现 `403` 或请求被拦截时，记录最终请求地址、模型 ID、工具数量和完整状态码，再参考[错误排查](/troubleshooting/errors)。

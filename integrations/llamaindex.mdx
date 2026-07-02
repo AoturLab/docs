@@ -1,0 +1,45 @@
+---
+title: "LlamaIndex"
+description: "在 LlamaIndex Python 应用中配置 HiLinkup 聊天模型。"
+keywords: ["LlamaIndex", "Python", "RAG", "OpenAI"]
+icon: "network"
+---
+
+LlamaIndex 的 OpenAI 客户端允许自定义 API Base URL。
+
+## 安装
+
+```bash
+python -m pip install llama-index-llms-openai-like
+```
+
+## 配置聊天模型
+
+```python
+import os
+from llama_index.llms.openai_like import OpenAILike
+
+llm = OpenAILike(
+    model="qwen3.7-plus",
+    api_key=os.environ["HILINKUP_API_KEY"],
+    api_base="https://hilinkup.com/v1",
+    is_chat_model=True,
+    timeout=60.0,
+)
+
+response = llm.complete("用一句话解释什么是 RAG。")
+print(response.text)
+```
+
+## 在 RAG 中使用
+
+聊天模型和嵌入模型需要分别配置：
+
+1. 先验证本页聊天请求。
+2. 从 `/v1/models` 选择可用嵌入模型。
+3. 使用短文档建立测试索引。
+4. 检查检索结果，再检查最终生成结果。
+
+<Warning>
+  不要在同一向量索引中混用不同嵌入模型或向量维度。更换嵌入模型后应重建索引。
+</Warning>

@@ -1,0 +1,16 @@
+---
+title: "OpenCode"
+description: "Connect the OpenCode terminal agent to HiLinkup."
+keywords: ["OpenCode", "terminal agent", "OpenAI compatible"]
+icon: "square-terminal"
+---
+
+```bash
+export HILINKUP_API_KEY="your-api-key"
+export HILINKUP_BASE_URL="https://hilinkup.com/v1"
+export HILINKUP_MODEL="an-id-from-v1-models"
+```
+
+Create an OpenAI-compatible provider in the OpenCode configuration and map these values. Test a read-only task first, then verify tool calls and file edits in a temporary project.
+
+<Note>A successful standalone API call does not prove that a full agent request with tools and a large prompt will succeed. Test the complete workflow.</Note>
