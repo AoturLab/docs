@@ -29,6 +29,20 @@ chat-assistant-floating-input,
   display: none !important;
 }
 
+/* Keep external product links in the desktop header, but remove their
+   duplicated entries from the bottom of the sidebar. */
+#sidebar ul a[href="https://hilinkup.com/models"],
+#sidebar ul a[href="https://hilinkup.com/console"],
+#sidebar ul a[href="https://hilinkup.com/"],
+#sidebar ul a[href="https://hilinkup.com/console/token"] {
+  display: none !important;
+}
+
+/* Hide Mintlify's powered-by attribution in the footer. */
+a[href^="https://www.mintlify.com?utm_campaign=poweredBy"] {
+  display: none !important;
+}
+
 @media (max-width: 640px) {
   nav-logo img,
   #navbar img[alt*="logo" i] {
