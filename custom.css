@@ -29,19 +29,6 @@ chat-assistant-floating-input,
   display: none !important;
 }
 
-/* Mintlify persists the assistant panel width in local storage. Force the
-   layout back to full width even for visitors who opened the panel before. */
-:root {
-  --assistant-sheet-width: 0px !important;
-}
-
-div:has(> #chat-assistant-sheet) {
-  display: none !important;
-  width: 0 !important;
-  min-width: 0 !important;
-  flex-basis: 0 !important;
-}
-
 /* Keep external product links in the desktop header, but remove their
    duplicated entries from the bottom of the sidebar. */
 #sidebar ul a[href="https://hilinkup.com/models"],
