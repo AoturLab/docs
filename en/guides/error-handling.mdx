@@ -1,0 +1,14 @@
+---
+title: "Error handling"
+description: "Handle API errors, timeouts, and bounded retries."
+keywords: ["errors", "retry", "timeout"]
+icon: "shield-alert"
+---
+
+Retry only transient failures such as `429`, timeouts, and selected `5xx` responses. Use exponential backoff with jitter and a strict attempt limit.
+
+Do not automatically retry invalid requests or authentication failures.
+
+Log the status code, request ID, model ID, attempt count, and latency. Never log API keys or sensitive prompt content.
+
+See the [error reference](/en/troubleshooting/errors) for common status codes.

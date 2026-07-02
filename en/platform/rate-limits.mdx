@@ -1,0 +1,12 @@
+---
+title: "Rate limits"
+description: "Handle request and concurrency limits."
+keywords: ["rate limits", "429", "concurrency"]
+icon: "gauge"
+---
+
+When the API returns `429`, reduce concurrency and retry with exponential backoff and jitter.
+
+Keep retries bounded. Queue non-interactive workloads and monitor rate-limit frequency by API key and model.
+
+Contact HiLinkup support if a sustained production workload requires different limits.

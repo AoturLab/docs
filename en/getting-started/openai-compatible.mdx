@@ -1,0 +1,21 @@
+---
+title: "OpenAI compatibility"
+description: "Point an existing OpenAI SDK integration at HiLinkup."
+keywords: ["OpenAI compatible", "base URL", "migration"]
+icon: "refresh-cw"
+---
+
+HiLinkup supports the OpenAI SDK request format. Change the API key, base URL, and model ID.
+
+```python
+from openai import OpenAI
+
+client = OpenAI(
+    api_key="YOUR_HILINKUP_API_KEY",
+    base_url="https://hilinkup.com/v1",
+)
+```
+
+Use [`GET /v1/models`](/en/api-reference/models) to select a model ID supported by your key.
+
+<Note>Provider-specific features may differ. Validate streaming, tool calls, and multimodal input before production rollout.</Note>

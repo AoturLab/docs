@@ -1,0 +1,22 @@
+---
+title: "Integration overview"
+description: "Connect HiLinkup to developer tools, chat clients, and application frameworks."
+keywords: ["integrations", "OpenAI compatible", "clients"]
+icon: "blocks"
+---
+
+Most OpenAI-compatible applications require three values:
+
+| Setting | Value |
+| --- | --- |
+| API key | A key from the HiLinkup console |
+| Base URL | `https://hilinkup.com/v1` |
+| Model | An ID returned by `GET /v1/models` |
+
+<Columns cols={2}>
+  <Card title="Developer tools" href="/en/integrations/claude-code" icon="terminal">Claude Code, Cursor, Cline, and OpenClaw.</Card>
+  <Card title="Chat clients" href="/en/integrations/cherry-studio" icon="messages-square">Cherry Studio, Chatbox, LobeChat, and Open WebUI.</Card>
+  <Card title="Application frameworks" href="/en/integrations/dify" icon="workflow">Dify and LangChain.</Card>
+</Columns>
+
+<Warning>Do not paste API keys into screenshots, public configuration files, or repositories.</Warning>

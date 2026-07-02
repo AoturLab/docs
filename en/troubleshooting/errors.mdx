@@ -1,0 +1,16 @@
+---
+title: "Troubleshoot API errors"
+description: "Resolve common HiLinkup API status codes."
+keywords: ["401", "403", "429", "5xx"]
+icon: "life-buoy"
+---
+
+| Status | Meaning | Action |
+| --- | --- | --- |
+| `400` | Invalid request | Validate JSON, fields, and model ID |
+| `401` | Invalid credentials | Check the Bearer token |
+| `403` | Access denied | Check account and model permissions |
+| `429` | Rate limited | Reduce concurrency and retry with backoff |
+| `5xx` | Service or upstream failure | Retry a limited number of times |
+
+Record the request ID, status, model, and time when contacting support. Never include the full API key.

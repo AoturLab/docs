@@ -1,0 +1,17 @@
+---
+title: "Chat Completions"
+description: "Generate chat responses with an OpenAI-compatible endpoint."
+keywords: ["chat completions", "messages", "streaming"]
+icon: "message-square"
+---
+
+## `POST /v1/chat/completions`
+
+```bash
+curl https://hilinkup.com/v1/chat/completions \
+  -H "Authorization: Bearer $HILINKUP_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"model":"qwen3.7-plus","messages":[{"role":"user","content":"Hello"}]}'
+```
+
+Required fields are `model` and `messages`. Optional features include streaming and tool calls when supported by the model.

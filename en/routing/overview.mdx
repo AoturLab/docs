@@ -1,0 +1,12 @@
+---
+title: "Routing overview"
+description: "Understand model routing and provider availability."
+keywords: ["routing", "providers", "models"]
+icon: "route"
+---
+
+HiLinkup exposes models through a unified endpoint. Availability may depend on the account, selected model, and upstream provider state.
+
+Use stable model IDs returned by `/v1/models`, set explicit timeouts, and monitor latency and error rates per model.
+
+For production traffic, prepare a tested fallback strategy rather than changing models only after an outage.

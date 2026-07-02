@@ -1,0 +1,17 @@
+---
+title: "Claude Code"
+description: "Configure Claude Code to use HiLinkup."
+keywords: ["Claude Code", "integration", "API"]
+icon: "terminal"
+---
+
+Set the provider API key and base URL in the environment or provider configuration:
+
+```bash
+export HILINKUP_API_KEY="your-api-key"
+export HILINKUP_BASE_URL="https://hilinkup.com/v1"
+```
+
+Choose a compatible model returned by `/v1/models`, then run a simple prompt before enabling tools or long-running tasks.
+
+<Note>Claude Code configuration options can change between releases. Use its current provider settings when mapping these values.</Note>

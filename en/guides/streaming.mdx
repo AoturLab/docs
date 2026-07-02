@@ -1,0 +1,21 @@
+---
+title: "Streaming responses"
+description: "Receive model output incrementally."
+keywords: ["streaming", "SSE", "Chat Completions"]
+icon: "waves"
+---
+
+Set `stream: true` in a Chat Completions request. The response is delivered as Server-Sent Events.
+
+```python
+stream = client.chat.completions.create(
+    model="qwen3.7-plus",
+    messages=[{"role": "user", "content": "Explain streaming."}],
+    stream=True,
+)
+
+for chunk in stream:
+    print(chunk.choices[0].delta.content or "", end="")
+```
+
+Handle disconnects, timeouts, and a final empty delta in your client.

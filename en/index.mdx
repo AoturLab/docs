@@ -1,0 +1,36 @@
+---
+title: "HiLinkup API documentation"
+description: "Access multiple AI models through one OpenAI-compatible API."
+keywords: ["HiLinkup", "LLM API", "OpenAI compatible"]
+icon: "house"
+---
+
+HiLinkup provides a unified, OpenAI-compatible model API. In most applications, you only need to replace the API key, base URL, and model ID.
+
+<Info>API base URL: `https://hilinkup.com/v1`</Info>
+
+<Columns cols={2}>
+  <Card title="Make your first request" icon="rocket" href="/en/getting-started/quickstart">Create an API key and send a Chat Completions request.</Card>
+  <Card title="Migrate from OpenAI" icon="refresh-cw" href="/en/getting-started/openai-compatible">Reuse an existing OpenAI SDK integration.</Card>
+  <Card title="Connect an application" icon="blocks" href="/en/integrations/overview">Configure developer tools, chat clients, and frameworks.</Card>
+  <Card title="Troubleshoot errors" icon="life-buoy" href="/en/troubleshooting/errors">Resolve authentication, rate-limit, and upstream errors.</Card>
+</Columns>
+
+## Minimal example
+
+```python
+from openai import OpenAI
+
+client = OpenAI(
+    api_key="YOUR_HILINKUP_API_KEY",
+    base_url="https://hilinkup.com/v1",
+)
+
+response = client.chat.completions.create(
+    model="qwen3.7-plus",
+    messages=[{"role": "user", "content": "Hello"}],
+)
+print(response.choices[0].message.content)
+```
+
+<Tip>Call [`GET /v1/models`](/en/api-reference/models) before choosing a model. Availability can vary by account and provider channel.</Tip>

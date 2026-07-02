@@ -1,0 +1,12 @@
+---
+title: "Tool calling"
+description: "Let supported models request application-defined tools."
+keywords: ["tools", "function calling", "agents"]
+icon: "wrench"
+---
+
+Add tool definitions to the `tools` array. When the model returns `tool_calls`, validate the arguments, execute the tool in your application, and send the result back as a `tool` message.
+
+<Warning>Treat tool arguments as untrusted input. Enforce authorization and schema validation before execution.</Warning>
+
+Tool-call support varies by model. Confirm capability with the selected model before production use.

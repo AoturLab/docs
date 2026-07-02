@@ -1,0 +1,12 @@
+---
+title: "Model fallbacks"
+description: "Design safe fallback behavior for model failures."
+keywords: ["fallback", "reliability", "routing"]
+icon: "refresh-ccw"
+---
+
+A fallback model should support the same required input, context size, and tool behavior as the primary model.
+
+Use a short ordered list and trigger fallback only for known transient failures. Record which model produced each response.
+
+<Warning>Fallbacks can change quality, latency, and cost. Test them with production-like requests.</Warning>

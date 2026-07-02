@@ -1,0 +1,36 @@
+---
+title: "Quickstart"
+description: "Create an API key and make your first HiLinkup request."
+keywords: ["quickstart", "API key", "OpenAI SDK"]
+icon: "rocket"
+---
+
+## Prerequisites
+
+- A HiLinkup account
+- An API key from the [console](https://hilinkup.com/console/token)
+- Python 3.9+, Node.js 18+, or cURL
+
+<Steps>
+  <Step title="Save your API key">
+    ```bash
+    export HILINKUP_API_KEY="your-api-key"
+    ```
+  </Step>
+  <Step title="List available models">
+    ```bash
+    curl https://hilinkup.com/v1/models \
+      -H "Authorization: Bearer $HILINKUP_API_KEY"
+    ```
+  </Step>
+  <Step title="Send a request">
+    ```bash
+    curl https://hilinkup.com/v1/chat/completions \
+      -H "Authorization: Bearer $HILINKUP_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{"model":"qwen3.7-plus","messages":[{"role":"user","content":"Hello"}]}'
+    ```
+  </Step>
+</Steps>
+
+<Check>A successful request returns HTTP `200` and a non-empty `choices` array.</Check>

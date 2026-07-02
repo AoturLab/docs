@@ -1,0 +1,17 @@
+---
+title: "Embeddings"
+description: "Create vector representations of text."
+keywords: ["embeddings", "vectors", "RAG"]
+icon: "binary"
+---
+
+## `POST /v1/embeddings`
+
+```bash
+curl https://hilinkup.com/v1/embeddings \
+  -H "Authorization: Bearer $HILINKUP_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"model":"YOUR_EMBEDDING_MODEL","input":"Text to embed"}'
+```
+
+Select an embedding model returned by `/v1/models`. Keep the same model and dimensions for all vectors in one index.

@@ -1,0 +1,14 @@
+---
+title: "Image generation"
+description: "Generate images with a supported model."
+keywords: ["images", "generation", "API"]
+icon: "image"
+---
+
+## `POST /v1/images/generations`
+
+Send a prompt and an image-capable model ID. Request and response options depend on the selected model.
+
+<Note>Confirm image support through the model catalog or console before integrating this endpoint.</Note>
+
+Do not assume that text model IDs support image generation.
