@@ -13,9 +13,19 @@ nav-logo img,
    Disable the Assistant in the Mintlify dashboard as the authoritative setting. */
 #assistant-entry,
 #assistant-entry-mobile,
+[aria-label="切换助手面板"],
+[aria-label="Toggle assistant panel"],
+[data-component-part="search-ask-ai-button"],
 #chat-assistant-sheet,
+.chat-assistant-sheet,
 chat-assistant-floating-input,
+.chat-assistant-floating-input,
 #ask-assistant-code-block-button {
+  display: none !important;
+}
+
+/* Remove the sticky space reserved for the page-level assistant input. */
+[class*="sticky"][class*="bottom-0"]:has(.chat-assistant-floating-input) {
   display: none !important;
 }
 
