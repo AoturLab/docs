@@ -1,9 +1,9 @@
 <svg width="156" height="28" viewBox="0 0 156 28" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title">
   <title id="title">HiLinkup Docs</title>
-  <rect width="28" height="28" rx="8" fill="#60A5FA"/>
-  <path d="M7.5 8.25V19.75M20.5 8.25V19.75M7.5 14H20.5" stroke="#0F172A" stroke-width="2.5" stroke-linecap="round"/>
-  <circle cx="7.5" cy="8.25" r="1.75" fill="#0F172A"/>
-  <circle cx="20.5" cy="19.75" r="1.75" fill="#0F172A"/>
+  <rect width="28" height="28" rx="8" fill="#2EE6A6"/>
+  <path d="M7.5 8.25V19.75M20.5 8.25V19.75M7.5 14H20.5" stroke="#111111" stroke-width="2.5" stroke-linecap="round"/>
+  <circle cx="7.5" cy="8.25" r="1.75" fill="#111111"/>
+  <circle cx="20.5" cy="19.75" r="1.75" fill="#111111"/>
   <text x="37" y="18.2" fill="#F8FAFC" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="15.5" font-weight="700" letter-spacing="-0.35">HiLinkup</text>
-  <text x="106" y="18.2" fill="#94A3B8" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500">Docs</text>
+  <text x="106" y="18.2" fill="#D9D8D1" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500">Docs</text>
 </svg>

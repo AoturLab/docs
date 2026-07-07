@@ -1,3 +1,142 @@
+/* HiLinkup brand system
+   Accent Mint  #2EE6A6
+   Deep Ink     #2F2D46
+   Graphite     #5A5878
+   Canvas       #F5F4EF
+   Grid Gray    #D9D8D1
+   Soft Lilac   #F0C7EE
+   Action Black #111111 */
+:root {
+  --hilinkup-mint: #2ee6a6;
+  --hilinkup-mint-soft: rgba(46, 230, 166, 0.14);
+  --hilinkup-mint-line: rgba(46, 230, 166, 0.36);
+  --hilinkup-ink: #2f2d46;
+  --hilinkup-graphite: #5a5878;
+  --hilinkup-canvas: #f5f4ef;
+  --hilinkup-grid: #d9d8d1;
+  --hilinkup-lilac: #f0c7ee;
+  --hilinkup-black: #111111;
+  --primary: #2ee6a6;
+  --primary-light: #2ee6a6;
+  --primary-dark: #2f2d46;
+}
+
+::selection {
+  color: var(--hilinkup-black);
+  background: rgba(46, 230, 166, 0.32);
+}
+
+body {
+  color: var(--hilinkup-ink);
+}
+
+a,
+article a,
+[data-pagefind-body] a {
+  text-decoration-color: rgba(46, 230, 166, 0.55);
+  text-underline-offset: 3px;
+}
+
+a:hover,
+article a:hover,
+[data-pagefind-body] a:hover {
+  color: var(--hilinkup-ink);
+  text-decoration-color: var(--hilinkup-mint);
+}
+
+/* Use a subtle blueprint-style canvas behind the documentation shell. */
+body::before {
+  content: "";
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(rgba(47, 45, 70, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(47, 45, 70, 0.025) 1px, transparent 1px);
+  background-size: 24px 24px;
+  opacity: 0.7;
+}
+
+/* Navigation states: keep the OpenRouter-style layout, replace blue accents. */
+#navbar a[aria-current="page"],
+#navbar [aria-current="page"],
+#sidebar a[aria-current="page"],
+#sidebar [aria-current="page"] {
+  color: var(--hilinkup-ink) !important;
+}
+
+#navbar a[aria-current="page"]::after,
+#navbar [aria-current="page"]::after {
+  background: var(--hilinkup-mint) !important;
+}
+
+#sidebar a[aria-current="page"],
+#sidebar [aria-current="page"] {
+  background: var(--hilinkup-mint-soft) !important;
+  border-color: var(--hilinkup-mint-line) !important;
+}
+
+#sidebar svg,
+#navbar svg {
+  color: var(--hilinkup-graphite);
+}
+
+#sidebar a[aria-current="page"] svg,
+#navbar a[aria-current="page"] svg {
+  color: var(--hilinkup-mint) !important;
+}
+
+/* Cards, callouts and common interactive surfaces. */
+[class*="card"],
+[class*="Card"],
+[class*="callout"],
+[class*="Callout"],
+article [class*="border"] {
+  border-color: rgba(217, 216, 209, 0.9);
+}
+
+[class*="card"]:hover,
+[class*="Card"]:hover {
+  border-color: var(--hilinkup-mint-line);
+  box-shadow: 0 18px 40px rgba(47, 45, 70, 0.08);
+}
+
+button,
+a[role="button"],
+[class*="button"],
+[class*="Button"] {
+  border-radius: 10px;
+}
+
+a[role="button"],
+button[type="submit"],
+[class*="primary"] {
+  border-color: var(--hilinkup-mint) !important;
+}
+
+code:not(pre code) {
+  color: var(--hilinkup-ink);
+  background: rgba(245, 244, 239, 0.82);
+  border: 1px solid rgba(217, 216, 209, 0.85);
+  border-radius: 6px;
+}
+
+pre,
+[class*="codeblock"],
+[class*="CodeBlock"] {
+  border-color: rgba(217, 216, 209, 0.9) !important;
+  box-shadow: 0 12px 30px rgba(47, 45, 70, 0.06);
+}
+
+/* Right-side "On this page" indicator uses Mint instead of blue. */
+[class*="toc"] a[aria-current="true"],
+[class*="table-of-contents"] a[aria-current="true"],
+aside a[aria-current="true"] {
+  color: var(--hilinkup-ink) !important;
+  border-color: var(--hilinkup-mint) !important;
+}
+
 /* Keep the HiLinkup wordmark compact and aligned in desktop and mobile navigation. */
 nav-logo img,
 #navbar img[alt*="logo" i] {
@@ -42,6 +181,27 @@ chat-assistant-floating-input,
 footer,
 [role="contentinfo"] {
   display: none !important;
+}
+
+html.dark,
+.dark {
+  --hilinkup-mint-soft: rgba(46, 230, 166, 0.16);
+  --hilinkup-mint-line: rgba(46, 230, 166, 0.4);
+}
+
+html.dark body::before,
+.dark body::before {
+  background:
+    linear-gradient(rgba(245, 244, 239, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(245, 244, 239, 0.035) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+html.dark code:not(pre code),
+.dark code:not(pre code) {
+  color: var(--hilinkup-mint);
+  background: rgba(47, 45, 70, 0.72);
+  border-color: rgba(90, 88, 120, 0.7);
 }
 
 @media (max-width: 640px) {

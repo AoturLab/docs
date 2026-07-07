@@ -4,9 +4,9 @@
   "name": "HiLinkup Docs",
   "description": "HiLinkup API、模型与第三方应用集成文档。",
   "colors": {
-    "primary": "#2563EB",
-    "light": "#60A5FA",
-    "dark": "#1D4ED8"
+    "primary": "#2EE6A6",
+    "light": "#2EE6A6",
+    "dark": "#2F2D46"
   },
   "appearance": {
     "default": "system"
