@@ -30,7 +30,6 @@
     "languages": [
       {
         "language": "zh",
-        "default": true,
         "navbar": {
           "links": [
             {
@@ -190,6 +189,7 @@
       },
       {
         "language": "en",
+        "default": true,
         "navbar": {
           "links": [
             {
