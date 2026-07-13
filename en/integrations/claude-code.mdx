@@ -7,12 +7,16 @@ icon: "terminal"
 
 Claude Code uses Anthropic-style requests. Use this page only when your HiLinkup account and target model support [Claude Messages](/en/api-reference/claude-messages)-compatible calls.
 
+<Note>
+  Examples use the HiLinkup platform model `deepseek-v3`. This is a Chinese model example, not a requirement to use an overseas Claude model.
+</Note>
+
 ## Option 1: temporary environment variables
 
 ```bash
 export ANTHROPIC_AUTH_TOKEN="YOUR_HILINKUP_API_KEY"
 export ANTHROPIC_BASE_URL="https://hilinkup.com"
-export ANTHROPIC_MODEL="claude-sonnet-4-6"
+export ANTHROPIC_MODEL="deepseek-v3"
 ```
 
 Then start Claude Code:
@@ -31,7 +35,7 @@ Create or edit `~/.claude/settings.json`:
   "env": {
     "ANTHROPIC_AUTH_TOKEN": "YOUR_HILINKUP_API_KEY",
     "ANTHROPIC_BASE_URL": "https://hilinkup.com",
-    "ANTHROPIC_MODEL": "claude-sonnet-4-6"
+    "ANTHROPIC_MODEL": "deepseek-v3"
   }
 }
 ```
@@ -45,7 +49,7 @@ Create `.claude/settings.local.json` in the project:
   "env": {
     "ANTHROPIC_AUTH_TOKEN": "YOUR_HILINKUP_API_KEY",
     "ANTHROPIC_BASE_URL": "https://hilinkup.com",
-    "ANTHROPIC_MODEL": "claude-sonnet-4-6"
+    "ANTHROPIC_MODEL": "deepseek-v3"
   },
   "permissions": {
     "deny": [
@@ -69,7 +73,7 @@ curl https://hilinkup.com/v1/messages \
   -H "x-api-key: $HILINKUP_API_KEY" \
   -H "anthropic-version: 2023-06-01" \
   -d '{
-    "model": "claude-sonnet-4-6",
+    "model": "deepseek-v3",
     "max_tokens": 256,
     "messages": [
       {

@@ -12,6 +12,10 @@ Use the Gemini-style endpoint when your application already follows Google's Gem
   Reference format: [Gemini API text generation](https://ai.google.dev/gemini-api/docs/text-generation). HiLinkup supports common text generation structures; capabilities depend on the selected model.
 </Info>
 
+<Note>
+  “Gemini generateContent” is the protocol shape, not a requirement to use an overseas Gemini model. Examples use the HiLinkup platform model `qwen3.7-plus`; confirm available IDs with `/v1/models`.
+</Note>
+
 ## Endpoint
 
 ```text
@@ -21,7 +25,7 @@ POST https://hilinkup.com/v1beta/models/{model}:generateContent
 Replace `{model}` with an available Gemini-compatible model ID, for example:
 
 ```text
-gemini-3.1-pro-preview
+qwen3.7-plus
 ```
 
 ## Headers
@@ -34,7 +38,7 @@ x-goog-api-key: $HILINKUP_API_KEY
 ## Minimal request
 
 ```bash
-curl "https://hilinkup.com/v1beta/models/gemini-3.1-pro-preview:generateContent" \
+curl "https://hilinkup.com/v1beta/models/qwen3.7-plus:generateContent" \
   -H "x-goog-api-key: $HILINKUP_API_KEY" \
   -H "Content-Type: application/json" \
   -X POST \
@@ -57,10 +61,9 @@ curl "https://hilinkup.com/v1beta/models/gemini-3.1-pro-preview:generateContent"
 | --- | --- |
 | API key | HiLinkup API key |
 | Base URL / endpoint | `https://hilinkup.com`, final path `/v1beta/models/{model}:generateContent` |
-| Model | A Gemini-compatible model ID available to your account |
+| Model | A HiLinkup model ID that supports generateContent, such as `qwen3.7-plus` |
 | Auth header | `x-goog-api-key: $HILINKUP_API_KEY` |
 
 <Warning>
   Gemini does not use `/v1/chat/completions`. If a client asks for a full endpoint, use `https://hilinkup.com/v1beta/models/{model}:generateContent`.
 </Warning>
-

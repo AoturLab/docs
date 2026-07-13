@@ -7,6 +7,10 @@ icon: "terminal"
 
 Codex CLI can use custom model providers through `~/.codex/config.toml`. For HiLinkup, use the OpenAI-compatible base URL and the Responses wire API.
 
+<Note>
+  Examples use the HiLinkup platform model `qwen3.7-plus`, a Chinese model example. Confirm available code models with `/v1/models` and the console.
+</Note>
+
 ## Prepare
 
 ```bash
@@ -27,7 +31,7 @@ curl https://hilinkup.com/v1/models \
 ```bash
 HILINKUP_API_KEY="YOUR_HILINKUP_API_KEY" \
 codex \
-  -c model='"gpt-5.4"' \
+  -c model='"qwen3.7-plus"' \
   -c model_provider='"hilinkup"' \
   -c model_providers.hilinkup.name='"HiLinkup"' \
   -c model_providers.hilinkup.base_url='"https://hilinkup.com/v1"' \
@@ -40,7 +44,7 @@ codex \
 Edit `~/.codex/config.toml`:
 
 ```toml
-model = "gpt-5.4"
+model = "qwen3.7-plus"
 model_provider = "hilinkup"
 
 [model_providers.hilinkup]
@@ -65,7 +69,7 @@ codex
 Create `~/.codex/hilinkup.config.toml`:
 
 ```toml
-model = "gpt-5.4"
+model = "qwen3.7-plus"
 model_provider = "hilinkup"
 
 [model_providers.hilinkup]
@@ -96,4 +100,3 @@ codex exec --profile hilinkup "Only read the current directory and summarize the
 ```
 
 <Warning>Do not define `[model_providers.openai]`. `openai` is a reserved built-in provider ID. Use a custom ID such as `hilinkup`.</Warning>
-

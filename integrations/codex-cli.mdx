@@ -11,6 +11,10 @@ Codex CLI 支持通过 `~/.codex/config.toml` 配置自定义模型供应商。H
   Codex CLI 配置字段会随版本变化。以下配置基于 Codex 的 `model_providers.<id>`、`base_url`、`env_key` 和 `wire_api` 配置方式。修改后建议运行 `codex doctor` 检查配置。
 </Info>
 
+<Note>
+  本页示例模型使用 HiLinkup 平台上的中国模型 `qwen3.7-plus`。实际代码模型请以 `/v1/models` 和控制台展示为准。
+</Note>
+
 ## 接入前准备
 
 <Steps>
@@ -42,7 +46,7 @@ Codex CLI 支持通过 `~/.codex/config.toml` 配置自定义模型供应商。H
 ```bash
 HILINKUP_API_KEY="YOUR_HILINKUP_API_KEY" \
 codex \
-  -c model='"gpt-5.4"' \
+  -c model='"qwen3.7-plus"' \
   -c model_provider='"hilinkup"' \
   -c model_providers.hilinkup.name='"HiLinkup"' \
   -c model_providers.hilinkup.base_url='"https://hilinkup.com/v1"' \
@@ -59,7 +63,7 @@ codex \
 适合个人长期使用。编辑 `~/.codex/config.toml`，加入：
 
 ```toml
-model = "gpt-5.4"
+model = "qwen3.7-plus"
 model_provider = "hilinkup"
 
 [model_providers.hilinkup]
@@ -92,7 +96,7 @@ codex
 创建 `~/.codex/hilinkup.config.toml`：
 
 ```toml
-model = "gpt-5.4"
+model = "qwen3.7-plus"
 model_provider = "hilinkup"
 
 [model_providers.hilinkup]
@@ -129,7 +133,7 @@ set -euo pipefail
 : "${HILINKUP_API_KEY:?Set HILINKUP_API_KEY first}"
 
 exec codex \
-  -c model='"gpt-5.4"' \
+  -c model='"qwen3.7-plus"' \
   -c model_provider='"hilinkup"' \
   -c model_providers.hilinkup.name='"HiLinkup"' \
   -c model_providers.hilinkup.base_url='"https://hilinkup.com/v1"' \
@@ -180,4 +184,3 @@ export HILINKUP_API_KEY="YOUR_HILINKUP_API_KEY"
     不要写 `[model_providers.openai]`。`openai` 是保留 ID；自定义供应商请使用 `hilinkup`、`hilinkup-prod` 这类新 ID。
   </Accordion>
 </AccordionGroup>
-

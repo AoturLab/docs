@@ -12,16 +12,20 @@ Gemini 风格接口适合已经按 Google Gemini API 开发的应用。接入时
   参考官方格式：[Gemini API text generation](https://ai.google.dev/gemini-api/docs/text-generation)。HiLinkup 兼容常用文本生成结构；模型能力以账户可用模型为准。
 </Info>
 
+<Note>
+  “Gemini generateContent” 指接口协议，不代表必须选择海外 Gemini 模型。示例使用 HiLinkup 平台上的中国模型 `qwen3.7-plus`；实际模型 ID 以 `/v1/models` 返回为准。
+</Note>
+
 ## Endpoint
 
 ```text
 POST https://hilinkup.com/v1beta/models/{model}:generateContent
 ```
 
-其中 `{model}` 替换为 HiLinkup 可用的 Gemini 兼容模型 ID，例如：
+其中 `{model}` 替换为 HiLinkup 可用且支持 generateContent 协议的模型 ID，例如：
 
 ```text
-gemini-3.1-pro-preview
+qwen3.7-plus
 ```
 
 ## Headers
@@ -34,7 +38,7 @@ x-goog-api-key: $HILINKUP_API_KEY
 ## 最小请求
 
 ```bash
-curl "https://hilinkup.com/v1beta/models/gemini-3.1-pro-preview:generateContent" \
+curl "https://hilinkup.com/v1beta/models/qwen3.7-plus:generateContent" \
   -H "x-goog-api-key: $HILINKUP_API_KEY" \
   -H "Content-Type: application/json" \
   -X POST \
@@ -54,7 +58,7 @@ curl "https://hilinkup.com/v1beta/models/gemini-3.1-pro-preview:generateContent"
 ## 带生成参数
 
 ```bash
-curl "https://hilinkup.com/v1beta/models/gemini-3.1-pro-preview:generateContent" \
+curl "https://hilinkup.com/v1beta/models/qwen3.7-plus:generateContent" \
   -H "x-goog-api-key: $HILINKUP_API_KEY" \
   -H "Content-Type: application/json" \
   -X POST \
@@ -82,7 +86,7 @@ curl "https://hilinkup.com/v1beta/models/gemini-3.1-pro-preview:generateContent"
 | --- | --- |
 | API Key | HiLinkup API Key |
 | Base URL / Endpoint | `https://hilinkup.com`，最终路径为 `/v1beta/models/{model}:generateContent` |
-| Model | HiLinkup 可用的 Gemini 兼容模型 ID |
+| Model | HiLinkup 可用且支持 generateContent 协议的模型 ID，例如 `qwen3.7-plus` |
 | Auth header | `x-goog-api-key: $HILINKUP_API_KEY` |
 
 <Warning>
@@ -102,4 +106,3 @@ curl "https://hilinkup.com/v1beta/models/gemini-3.1-pro-preview:generateContent"
     不建议。OpenAI 客户端会拼接 OpenAI 风格路径。Gemini 风格调用应使用支持自定义 HTTP 请求或 Gemini Provider 的客户端。
   </Accordion>
 </AccordionGroup>
-

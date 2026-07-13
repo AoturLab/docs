@@ -12,6 +12,10 @@ Use Claude Messages when your application already follows Anthropic's Messages A
   Reference format: [Claude Messages API](https://platform.claude.com/docs/en/api/messages). HiLinkup supports common request shapes; tools, images, caching, and other features depend on model availability.
 </Info>
 
+<Note>
+  “Claude Messages” is the protocol shape, not a requirement to use an overseas Claude model. Examples use the HiLinkup platform model `deepseek-v3`; confirm available IDs with `/v1/models`.
+</Note>
+
 ## Endpoint
 
 ```text
@@ -34,7 +38,7 @@ curl https://hilinkup.com/v1/messages \
   -H "x-api-key: $HILINKUP_API_KEY" \
   -H "anthropic-version: 2023-06-01" \
   -d '{
-    "model": "claude-sonnet-4-6",
+    "model": "deepseek-v3",
     "max_tokens": 1024,
     "messages": [
       {
@@ -55,7 +59,7 @@ curl https://hilinkup.com/v1/messages \
   -H "x-api-key: $HILINKUP_API_KEY" \
   -H "anthropic-version: 2023-06-01" \
   -d '{
-    "model": "claude-sonnet-4-6",
+    "model": "deepseek-v3",
     "max_tokens": 1024,
     "system": "You are a concise integration assistant.",
     "messages": [
@@ -74,9 +78,8 @@ curl https://hilinkup.com/v1/messages \
 | API key | HiLinkup API key |
 | Base URL | `https://hilinkup.com`, or `https://hilinkup.com/v1` if required by the client |
 | Messages endpoint | `https://hilinkup.com/v1/messages` |
-| Model | A Claude-compatible model ID available to your account |
+| Model | A HiLinkup model ID that supports the Claude Messages protocol, such as `deepseek-v3` |
 
 <Warning>
   Claude Messages, OpenAI Chat Completions, and Gemini generateContent are different protocols. Do not send a Claude request body to `/v1/chat/completions`.
 </Warning>
-

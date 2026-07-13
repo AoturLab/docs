@@ -30,7 +30,7 @@ Not every “compatible” client uses the same protocol. Check whether the appl
 | Gemini generateContent | Gemini SDKs and Google AI-style clients | `https://hilinkup.com/v1beta/models/{model}:generateContent` | `x-goog-api-key: $HILINKUP_API_KEY` | [Gemini generateContent](/en/api-reference/gemini-generate-content) |
 
 <Tip>
-  If the app says OpenAI-compatible, use `https://hilinkup.com/v1`. If it says Anthropic, Claude, or Gemini, use the corresponding protocol page instead of forcing the OpenAI base URL.
+  Protocol names do not define model origin. Examples use HiLinkup platform Chinese models such as `qwen3.7-plus` and `deepseek-v3`. If the app says OpenAI-compatible, use `https://hilinkup.com/v1`; if it says Anthropic, Claude, or Gemini, use the corresponding protocol page.
 </Tip>
 
 ## Integration workflow
@@ -83,7 +83,7 @@ Not every “compatible” client uses the same protocol. Check whether the appl
       -H "Content-Type: application/json" \
       -H "Authorization: Bearer $HILINKUP_API_KEY" \
       -d '{
-        "model": "gpt-4o",
+        "model": "qwen3.7-plus",
         "messages": [
           {
             "role": "developer",
@@ -103,7 +103,7 @@ Not every “compatible” client uses the same protocol. Check whether the appl
       -H "Content-Type: application/json" \
       -H "Authorization: Bearer $HILINKUP_API_KEY" \
       -d '{
-        "model": "gpt-5.4",
+        "model": "qwen3.7-plus",
         "input": "Tell me a three sentence bedtime story about a unicorn."
       }'
     ```
@@ -115,7 +115,7 @@ Not every “compatible” client uses the same protocol. Check whether the appl
       -H "x-api-key: $HILINKUP_API_KEY" \
       -H "anthropic-version: 2023-06-01" \
       -d '{
-        "model": "claude-sonnet-4-6",
+        "model": "deepseek-v3",
         "max_tokens": 1024,
         "messages": [
           {
@@ -128,7 +128,7 @@ Not every “compatible” client uses the same protocol. Check whether the appl
   </Tab>
   <Tab title="Gemini">
     ```bash
-    curl "https://hilinkup.com/v1beta/models/gemini-3.1-pro-preview:generateContent" \
+    curl "https://hilinkup.com/v1beta/models/qwen3.7-plus:generateContent" \
       -H "x-goog-api-key: $HILINKUP_API_KEY" \
       -H "Content-Type: application/json" \
       -X POST \
