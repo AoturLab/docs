@@ -1,18 +1,34 @@
 ---
 title: "Claude Code"
 description: "在 Claude Code 中通过自定义 API 端点使用 HiLinkup。"
-keywords: ["Claude Code", "ANTHROPIC_BASE_URL", "终端", "编码助手"]
+keywords: ["Claude Code", "ANTHROPIC_BASE_URL", "settings.json", "终端", "编码助手"]
 icon: "terminal"
 ---
 
-Claude Code 使用 Anthropic 风格的接口和环境变量。只有当你的 HiLinkup 账户与目标模型支持 Anthropic 兼容调用时，才使用本页配置。
+Claude Code 使用 Anthropic 风格的接口。只有当你的 HiLinkup 账户与目标模型支持 [Claude Messages](/api-reference/claude-messages) 兼容调用时，才使用本页配置。
 
-## 环境变量
+<Warning>
+  OpenAI Chat Completions 可用，不代表 Anthropic Messages 接口一定可用。配置前请在控制台确认模型和接口类型。
+</Warning>
+
+## 配置方式选择
+
+| 方式 | 适用场景 | 是否推荐 |
+| --- | --- | --- |
+| 临时环境变量 | 只想测试一次，不改本机配置 | 推荐用于首次验证 |
+| Shell profile | 每次打开终端都自动生效 | 推荐个人长期使用 |
+| `~/.claude/settings.json` | 用户级固定配置，跨项目生效 | 推荐个人或团队模板 |
+| `.claude/settings.local.json` | 某个项目单独使用 HiLinkup，不提交到 Git | 推荐项目内个人配置 |
+| `apiKeyHelper` | 不想把 Key 明文写入文件，需要从脚本或密钥管理器读取 | 推荐生产环境 |
+
+## 方法一：临时环境变量
+
+在当前终端执行：
 
 ```bash
 export ANTHROPIC_AUTH_TOKEN="YOUR_HILINKUP_API_KEY"
 export ANTHROPIC_BASE_URL="https://hilinkup.com"
-export ANTHROPIC_MODEL="YOUR_CLAUDE_MODEL_ID"
+export ANTHROPIC_MODEL="claude-sonnet-4-6"
 ```
 
 启动 Claude Code：
@@ -21,13 +37,174 @@ export ANTHROPIC_MODEL="YOUR_CLAUDE_MODEL_ID"
 claude
 ```
 
+这种方式只对当前终端窗口有效。关闭终端后需要重新设置。
+
+## 方法二：写入 Shell profile
+
+如果你使用 zsh：
+
+```bash
+mkdir -p ~/.config/hilinkup
+printf '%s\n' \
+  'export ANTHROPIC_AUTH_TOKEN="YOUR_HILINKUP_API_KEY"' \
+  'export ANTHROPIC_BASE_URL="https://hilinkup.com"' \
+  'export ANTHROPIC_MODEL="claude-sonnet-4-6"' \
+  >> ~/.zshrc
+source ~/.zshrc
+```
+
+如果你使用 bash，把 `~/.zshrc` 改成 `~/.bashrc` 或 `~/.bash_profile`。
+
 <Warning>
-  OpenAI Chat Completions 可用，不代表 Anthropic Messages 接口一定可用。配置前请在控制台确认模型和接口类型。
+  Shell profile 会把 API Key 保存在本机明文文件中。不要截图、提交或同步这个文件。
 </Warning>
+
+## 方法三：用户级 `settings.json`
+
+创建或编辑 `~/.claude/settings.json`：
+
+```json
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "env": {
+    "ANTHROPIC_AUTH_TOKEN": "YOUR_HILINKUP_API_KEY",
+    "ANTHROPIC_BASE_URL": "https://hilinkup.com",
+    "ANTHROPIC_MODEL": "claude-sonnet-4-6"
+  }
+}
+```
+
+然后重新打开终端并启动：
+
+```bash
+claude
+```
+
+## 方法四：项目级本地配置
+
+如果只想让当前项目使用 HiLinkup，不影响其他项目：
+
+```bash
+mkdir -p .claude
+```
+
+创建 `.claude/settings.local.json`：
+
+```json
+{
+  "env": {
+    "ANTHROPIC_AUTH_TOKEN": "YOUR_HILINKUP_API_KEY",
+    "ANTHROPIC_BASE_URL": "https://hilinkup.com",
+    "ANTHROPIC_MODEL": "claude-sonnet-4-6"
+  },
+  "permissions": {
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(./secrets/**)"
+    ]
+  }
+}
+```
+
+把本地配置加入 `.gitignore`：
+
+```bash
+printf '%s\n' '.claude/settings.local.json' >> .gitignore
+```
+
+## 方法五：用 `apiKeyHelper` 读取密钥
+
+如果团队使用 1Password、Vault、pass、Keychain 或内部密钥服务，建议用脚本输出 API Key，避免把密钥直接写入 JSON。
+
+创建脚本：
+
+```bash
+mkdir -p ~/.claude/bin
+cat > ~/.claude/bin/hilinkup-key <<'EOF'
+#!/usr/bin/env bash
+printf '%s' "$HILINKUP_API_KEY"
+EOF
+chmod +x ~/.claude/bin/hilinkup-key
+```
+
+`~/.claude/settings.json`：
+
+```json
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "apiKeyHelper": "~/.claude/bin/hilinkup-key",
+  "env": {
+    "ANTHROPIC_BASE_URL": "https://hilinkup.com",
+    "ANTHROPIC_MODEL": "claude-sonnet-4-6"
+  }
+}
+```
+
+启动前设置密钥：
+
+```bash
+export HILINKUP_API_KEY="YOUR_HILINKUP_API_KEY"
+claude
+```
 
 ## 验证
 
-1. 执行一条不带工具的简单请求。
-2. 再验证文件读取、命令执行和多轮对话。
-3. 出现 `400` 或 `403` 时，检查工具定义、角色字段和模型权限。
-4. 不要通过删除完整任务上下文来掩盖接口不兼容。
+### 1. 先验证 HiLinkup Claude Messages 接口
+
+```bash
+curl https://hilinkup.com/v1/messages \
+  -H "content-type: application/json" \
+  -H "x-api-key: $HILINKUP_API_KEY" \
+  -H "anthropic-version: 2023-06-01" \
+  -d '{
+    "model": "claude-sonnet-4-6",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "role": "user",
+        "content": "Reply with: HiLinkup Claude route is working."
+      }
+    ]
+  }'
+```
+
+### 2. 再验证 Claude Code 配置
+
+启动 Claude Code：
+
+```bash
+claude
+```
+
+在 Claude Code 里输入：
+
+```text
+请只回复：HiLinkup Claude Code 配置成功
+```
+
+### 3. 最后验证完整 Agent 路径
+
+按顺序测试：
+
+1. 不带工具的普通问答。
+2. 读取当前目录结构。
+3. 允许读取一个非敏感文件。
+4. 在临时分支或临时目录中执行一次小改动。
+
+## 常见问题
+
+<AccordionGroup>
+  <Accordion title="Claude Code 仍然走官方 Claude 账号">
+    检查 `ANTHROPIC_BASE_URL` 是否在启动 `claude` 的同一个终端中生效。只设置 Base URL 但没有设置有效网关凭证时，某些登录态仍可能影响请求路径。
+  </Accordion>
+  <Accordion title="返回 401 或 403">
+    确认使用的是 HiLinkup API Key，并且当前模型支持 Claude Messages 兼容调用。不要把 OpenAI 官方 Key、Anthropic 官方 Key 和 HiLinkup Base URL 混用。
+  </Accordion>
+  <Accordion title="普通 cURL 成功，但 Claude Code 失败">
+    Claude Code 的完整 Agent 请求会带更多上下文、工具定义和系统字段。先关闭复杂任务，只验证普通问答；如果普通问答成功，再逐步启用文件读取和命令执行。
+  </Accordion>
+  <Accordion title="配置文件不生效">
+    用户级配置放在 `~/.claude/settings.json`；项目共享配置放在 `.claude/settings.json`；个人项目配置放在 `.claude/settings.local.json`。修改模型后建议重启 Claude Code。
+  </Accordion>
+</AccordionGroup>

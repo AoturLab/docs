@@ -15,3 +15,93 @@ curl https://hilinkup.com/v1/chat/completions \
 ```
 
 Required fields are `model` and `messages`. Optional features include streaming and tool calls when supported by the model.
+
+## Copy-ready requests
+
+Set `HILINKUP_API_KEY` first, then replace `model` with an ID returned by `/v1/models`.
+
+<Tabs>
+  <Tab title="Non-streaming">
+    ```bash
+    curl https://hilinkup.com/v1/chat/completions \
+      -H "Content-Type: application/json" \
+      -H "Authorization: Bearer $HILINKUP_API_KEY" \
+      -d '{
+        "model": "qwen3.7-plus",
+        "messages": [
+          {
+            "role": "system",
+            "content": "You are a concise assistant."
+          },
+          {
+            "role": "user",
+            "content": "Explain streaming responses."
+          }
+        ],
+        "temperature": 0.7,
+        "top_p": 1,
+        "max_tokens": 512,
+        "stream": false
+      }'
+    ```
+  </Tab>
+  <Tab title="Streaming">
+    ```bash
+    curl https://hilinkup.com/v1/chat/completions \
+      -H "Content-Type: application/json" \
+      -H "Authorization: Bearer $HILINKUP_API_KEY" \
+      -d '{
+        "model": "qwen3.7-plus",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Introduce HiLinkup in three sentences."
+          }
+        ],
+        "temperature": 0.3,
+        "max_tokens": 512,
+        "stream": true
+      }'
+    ```
+  </Tab>
+  <Tab title="Tool call">
+    ```bash
+    curl https://hilinkup.com/v1/chat/completions \
+      -H "Content-Type: application/json" \
+      -H "Authorization: Bearer $HILINKUP_API_KEY" \
+      -d '{
+        "model": "qwen3.7-plus",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Should I bring an umbrella in Beijing today?"
+          }
+        ],
+        "tools": [
+          {
+            "type": "function",
+            "function": {
+              "name": "get_weather",
+              "description": "Get weather for a city",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "city": {
+                    "type": "string",
+                    "description": "City name, such as Beijing"
+                  }
+                },
+                "required": ["city"]
+              }
+            }
+          }
+        ],
+        "tool_choice": "auto",
+        "temperature": 0.2,
+        "max_tokens": 512
+      }'
+    ```
+  </Tab>
+</Tabs>
+
+<Warning>Tools, vision, structured outputs, and advanced parameters only work with models that support them.</Warning>

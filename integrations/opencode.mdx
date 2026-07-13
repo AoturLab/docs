@@ -7,12 +7,101 @@ icon: "square-terminal"
 
 OpenCode 版本更新较快。只要当前版本支持自定义 OpenAI-compatible Provider，就可以使用 HiLinkup。
 
-## 推荐环境变量
+## 接入前准备
+
+<Steps>
+  <Step title="确认 HiLinkup API 可用">
+    ```bash
+    export HILINKUP_API_KEY="YOUR_HILINKUP_API_KEY"
+
+    curl https://hilinkup.com/v1/chat/completions \
+      -H "Content-Type: application/json" \
+      -H "Authorization: Bearer $HILINKUP_API_KEY" \
+      -d '{
+        "model": "qwen3.7-plus",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Reply with: ok"
+          }
+        ],
+        "max_tokens": 32
+      }'
+    ```
+  </Step>
+  <Step title="复制模型 ID">
+    ```bash
+    curl https://hilinkup.com/v1/models \
+      -H "Authorization: Bearer $HILINKUP_API_KEY"
+    ```
+  </Step>
+</Steps>
+
+## 方法一：环境变量
 
 ```bash
-export HILINKUP_API_KEY="你的 API Key"
+export HILINKUP_API_KEY="YOUR_HILINKUP_API_KEY"
 export HILINKUP_BASE_URL="https://hilinkup.com/v1"
-export HILINKUP_MODEL="从 /v1/models 获取的模型 ID"
+export HILINKUP_MODEL="qwen3.7-plus"
+```
+
+然后在 OpenCode 中选择 OpenAI-compatible / Custom OpenAI Provider，并映射：
+
+| OpenCode 字段 | 填写值 |
+| --- | --- |
+| Provider | OpenAI-compatible / Custom OpenAI |
+| API Key | `$HILINKUP_API_KEY` |
+| Base URL | `https://hilinkup.com/v1` |
+| Model | `qwen3.7-plus` 或 `/v1/models` 返回的模型 ID |
+
+## 方法二：用户级配置文件
+
+如果 OpenCode 版本支持配置文件，建议把 Provider 配置放在用户级配置中，把 API Key 留在环境变量中。
+
+```json
+{
+  "providers": {
+    "hilinkup": {
+      "type": "openai-compatible",
+      "name": "HiLinkup",
+      "apiKey": "${HILINKUP_API_KEY}",
+      "baseURL": "https://hilinkup.com/v1",
+      "models": {
+        "qwen3.7-plus": {
+          "name": "qwen3.7-plus"
+        }
+      }
+    }
+  },
+  "defaultProvider": "hilinkup",
+  "defaultModel": "qwen3.7-plus"
+}
+```
+
+<Note>
+  OpenCode 不同版本的配置文件名和字段可能不同。如果你的版本使用 `baseUrl`、`base_url` 或 `api_key`，按当前版本 schema 调整字段，但值保持一致：Base URL 是 `https://hilinkup.com/v1`，Key 来自 `HILINKUP_API_KEY`。
+</Note>
+
+## 方法三：项目级配置模板
+
+团队可以提交不含密钥的项目模板，例如 `.opencode.example.json`：
+
+```json
+{
+  "provider": "openai-compatible",
+  "apiKeyEnv": "HILINKUP_API_KEY",
+  "baseURL": "https://hilinkup.com/v1",
+  "model": "qwen3.7-plus",
+  "temperature": 0.2,
+  "maxTokens": 4096
+}
+```
+
+使用时复制成个人本地配置：
+
+```bash
+cp .opencode.example.json .opencode.local.json
+printf '%s\n' '.opencode.local.json' >> .gitignore
 ```
 
 ## 配置步骤
@@ -22,7 +111,7 @@ export HILINKUP_MODEL="从 /v1/models 获取的模型 ID"
     先完成[快速开始](/getting-started/quickstart)，排除账户和网络问题。
   </Step>
   <Step title="新增自定义 Provider">
-    在 OpenCode 配置中选择 OpenAI-compatible Provider，并映射 API Key、Base URL 和模型 ID。
+    在 OpenCode 配置中选择 OpenAI-compatible Provider，并映射 API Key、Base URL 和模型 ID。不要选择只能连接官方 OpenAI 地址的 Provider。
   </Step>
   <Step title="启动只读测试">
     在临时项目中要求 Agent 总结目录结构，不允许写文件或执行危险命令。
@@ -36,4 +125,16 @@ export HILINKUP_MODEL="从 /v1/models 获取的模型 ID"
   不要把 API Key 直接写入可提交的 OpenCode 项目配置。使用环境变量或用户级私有配置。
 </Warning>
 
-出现 `403` 或请求被拦截时，记录最终请求地址、模型 ID、工具数量和完整状态码，再参考[错误排查](/troubleshooting/errors)。
+## 排查
+
+<AccordionGroup>
+  <Accordion title="连接测试失败">
+    检查最终请求地址是否为 `https://hilinkup.com/v1/chat/completions`。如果出现 `/v1/v1/chat/completions`，说明客户端自动追加了 `/v1`，Base URL 应改成 `https://hilinkup.com`。
+  </Accordion>
+  <Accordion title="普通 cURL 成功，但 Agent 失败">
+    Agent 请求通常会带工具定义和更长上下文。先关闭工具或使用只读任务；如果只读成功，再逐步启用编辑、命令执行和长上下文。
+  </Accordion>
+  <Accordion title="403 或模型不可用">
+    检查模型 ID 是否来自 `/v1/models`，并确认当前 API Key 有权限调用该模型。
+  </Accordion>
+</AccordionGroup>

@@ -126,6 +126,7 @@
                 "icon": "terminal",
                 "pages": [
                   "integrations/claude-code",
+                  "integrations/codex-cli",
                   "integrations/cursor",
                   "integrations/cline",
                   "integrations/roo-code",
@@ -284,6 +285,7 @@
                 "group": "Developer tools",
                 "pages": [
                   "en/integrations/claude-code",
+                  "en/integrations/codex-cli",
                   "en/integrations/cursor",
                   "en/integrations/cline",
                   "en/integrations/roo-code",

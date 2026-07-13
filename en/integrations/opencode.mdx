@@ -5,12 +5,63 @@ keywords: ["OpenCode", "terminal agent", "OpenAI compatible"]
 icon: "square-terminal"
 ---
 
+## Prepare
+
 ```bash
-export HILINKUP_API_KEY="your-api-key"
-export HILINKUP_BASE_URL="https://hilinkup.com/v1"
-export HILINKUP_MODEL="an-id-from-v1-models"
+export HILINKUP_API_KEY="YOUR_HILINKUP_API_KEY"
+
+curl https://hilinkup.com/v1/models \
+  -H "Authorization: Bearer $HILINKUP_API_KEY"
 ```
 
-Create an OpenAI-compatible provider in the OpenCode configuration and map these values. Test a read-only task first, then verify tool calls and file edits in a temporary project.
+## Environment variables
 
-<Note>A successful standalone API call does not prove that a full agent request with tools and a large prompt will succeed. Test the complete workflow.</Note>
+```bash
+export HILINKUP_API_KEY="YOUR_HILINKUP_API_KEY"
+export HILINKUP_BASE_URL="https://hilinkup.com/v1"
+export HILINKUP_MODEL="qwen3.7-plus"
+```
+
+## Provider mapping
+
+| OpenCode field | Value |
+| --- | --- |
+| Provider | OpenAI-compatible / Custom OpenAI |
+| API key | `$HILINKUP_API_KEY` |
+| Base URL | `https://hilinkup.com/v1` |
+| Model | A model ID returned by `/v1/models` |
+
+## Configuration file template
+
+If your OpenCode version supports provider config files, keep the key in the environment and store only provider metadata in the config:
+
+```json
+{
+  "providers": {
+    "hilinkup": {
+      "type": "openai-compatible",
+      "name": "HiLinkup",
+      "apiKey": "${HILINKUP_API_KEY}",
+      "baseURL": "https://hilinkup.com/v1",
+      "models": {
+        "qwen3.7-plus": {
+          "name": "qwen3.7-plus"
+        }
+      }
+    }
+  },
+  "defaultProvider": "hilinkup",
+  "defaultModel": "qwen3.7-plus"
+}
+```
+
+<Note>OpenCode config field names can differ by release. If your version uses `baseUrl`, `base_url`, or `api_key`, keep the values the same and adapt the field names to the current schema.</Note>
+
+## Verify
+
+1. Test a plain cURL chat request.
+2. Create an OpenAI-compatible provider in OpenCode.
+3. Run a read-only task in a temporary project.
+4. Enable tool calls and file edits only after plain chat works.
+
+<Warning>A successful standalone API call does not prove that a full agent request with tools and a large prompt will succeed. Test the complete workflow.</Warning>

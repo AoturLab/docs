@@ -7,6 +7,10 @@ api: "POST /v1/chat/completions"
 
 根据消息列表创建模型响应。模型能力决定是否支持图片输入、工具调用和高级参数。
 
+<Info>
+  下面的代码块是完整请求，可以直接复制运行。先把 `HILINKUP_API_KEY` 设置为你的真实密钥，并把 `model` 替换成 `/v1/models` 返回的模型 ID。
+</Info>
+
 <ParamField body="model" type="string" required>
   模型 ID。使用 `GET /v1/models` 获取当前可用值。
 </ParamField>
@@ -31,25 +35,95 @@ api: "POST /v1/chat/completions"
   提供模型可以调用的工具定义。仅对支持工具调用的模型生效。
 </ParamField>
 
-<RequestExample>
-```json
-{
-  "model": "qwen3.7-plus",
-  "messages": [
-    {
-      "role": "system",
-      "content": "你是一个简洁的中文助手。"
-    },
-    {
-      "role": "user",
-      "content": "解释什么是流式响应。"
-    }
-  ],
-  "temperature": 0.7,
-  "stream": false
-}
-```
-</RequestExample>
+## 完整请求示例
+
+<Tabs>
+  <Tab title="非流式">
+    ```bash
+    curl https://hilinkup.com/v1/chat/completions \
+      -H "Content-Type: application/json" \
+      -H "Authorization: Bearer $HILINKUP_API_KEY" \
+      -d '{
+        "model": "qwen3.7-plus",
+        "messages": [
+          {
+            "role": "system",
+            "content": "你是一个简洁的中文助手。"
+          },
+          {
+            "role": "user",
+            "content": "解释什么是流式响应。"
+          }
+        ],
+        "temperature": 0.7,
+        "top_p": 1,
+        "max_tokens": 512,
+        "stream": false
+      }'
+    ```
+  </Tab>
+  <Tab title="流式">
+    ```bash
+    curl https://hilinkup.com/v1/chat/completions \
+      -H "Content-Type: application/json" \
+      -H "Authorization: Bearer $HILINKUP_API_KEY" \
+      -d '{
+        "model": "qwen3.7-plus",
+        "messages": [
+          {
+            "role": "user",
+            "content": "用三句话介绍 HiLinkup。"
+          }
+        ],
+        "temperature": 0.3,
+        "max_tokens": 512,
+        "stream": true
+      }'
+    ```
+  </Tab>
+  <Tab title="工具调用">
+    ```bash
+    curl https://hilinkup.com/v1/chat/completions \
+      -H "Content-Type: application/json" \
+      -H "Authorization: Bearer $HILINKUP_API_KEY" \
+      -d '{
+        "model": "qwen3.7-plus",
+        "messages": [
+          {
+            "role": "user",
+            "content": "北京现在适合带伞吗？"
+          }
+        ],
+        "tools": [
+          {
+            "type": "function",
+            "function": {
+              "name": "get_weather",
+              "description": "查询城市天气",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "city": {
+                    "type": "string",
+                    "description": "城市名称，例如 Beijing"
+                  }
+                },
+                "required": ["city"]
+              }
+            }
+          }
+        ],
+        "tool_choice": "auto",
+        "temperature": 0.2,
+        "max_tokens": 512
+      }'
+    ```
+  </Tab>
+</Tabs>
+
+<Warning>
+  `tools`、图片输入、结构化输出和部分高级参数只在支持对应能力的模型上生效。如果普通文本请求成功但工具调用失败，优先检查模型能力和客户端能力开关。
+</Warning>
 
 <ResponseExample>
 ```json

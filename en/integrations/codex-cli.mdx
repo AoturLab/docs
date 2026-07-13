@@ -1,0 +1,99 @@
+---
+title: "Codex CLI"
+description: "Configure OpenAI Codex CLI to use HiLinkup through an OpenAI-compatible provider."
+keywords: ["Codex CLI", "config.toml", "model_providers", "OpenAI compatible"]
+icon: "terminal"
+---
+
+Codex CLI can use custom model providers through `~/.codex/config.toml`. For HiLinkup, use the OpenAI-compatible base URL and the Responses wire API.
+
+## Prepare
+
+```bash
+codex --version
+codex doctor
+export HILINKUP_API_KEY="YOUR_HILINKUP_API_KEY"
+```
+
+List models:
+
+```bash
+curl https://hilinkup.com/v1/models \
+  -H "Authorization: Bearer $HILINKUP_API_KEY"
+```
+
+## Option 1: one-off command
+
+```bash
+HILINKUP_API_KEY="YOUR_HILINKUP_API_KEY" \
+codex \
+  -c model='"gpt-5.4"' \
+  -c model_provider='"hilinkup"' \
+  -c model_providers.hilinkup.name='"HiLinkup"' \
+  -c model_providers.hilinkup.base_url='"https://hilinkup.com/v1"' \
+  -c model_providers.hilinkup.env_key='"HILINKUP_API_KEY"' \
+  -c model_providers.hilinkup.wire_api='"responses"'
+```
+
+## Option 2: user config
+
+Edit `~/.codex/config.toml`:
+
+```toml
+model = "gpt-5.4"
+model_provider = "hilinkup"
+
+[model_providers.hilinkup]
+name = "HiLinkup"
+base_url = "https://hilinkup.com/v1"
+env_key = "HILINKUP_API_KEY"
+wire_api = "responses"
+request_max_retries = 2
+stream_max_retries = 5
+stream_idle_timeout_ms = 300000
+```
+
+Then run:
+
+```bash
+export HILINKUP_API_KEY="YOUR_HILINKUP_API_KEY"
+codex
+```
+
+## Option 3: profile config
+
+Create `~/.codex/hilinkup.config.toml`:
+
+```toml
+model = "gpt-5.4"
+model_provider = "hilinkup"
+
+[model_providers.hilinkup]
+name = "HiLinkup"
+base_url = "https://hilinkup.com/v1"
+env_key = "HILINKUP_API_KEY"
+wire_api = "responses"
+```
+
+Run:
+
+```bash
+export HILINKUP_API_KEY="YOUR_HILINKUP_API_KEY"
+codex --profile hilinkup
+```
+
+Non-interactive mode:
+
+```bash
+codex exec --profile hilinkup "Read the README and list the setup steps."
+```
+
+## Verify
+
+```bash
+codex doctor
+codex exec --profile hilinkup "Only read the current directory and summarize the project structure."
+```
+
+<Warning>Do not define `[model_providers.openai]`. `openai` is a reserved built-in provider ID. Use a custom ID such as `hilinkup`.</Warning>
+

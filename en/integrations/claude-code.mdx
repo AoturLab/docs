@@ -1,17 +1,85 @@
 ---
 title: "Claude Code"
 description: "Configure Claude Code to use HiLinkup."
-keywords: ["Claude Code", "integration", "API"]
+keywords: ["Claude Code", "integration", "settings.json", "ANTHROPIC_BASE_URL"]
 icon: "terminal"
 ---
 
-Set the provider API key and base URL in the environment or provider configuration:
+Claude Code uses Anthropic-style requests. Use this page only when your HiLinkup account and target model support [Claude Messages](/en/api-reference/claude-messages)-compatible calls.
+
+## Option 1: temporary environment variables
 
 ```bash
-export HILINKUP_API_KEY="your-api-key"
-export HILINKUP_BASE_URL="https://hilinkup.com/v1"
+export ANTHROPIC_AUTH_TOKEN="YOUR_HILINKUP_API_KEY"
+export ANTHROPIC_BASE_URL="https://hilinkup.com"
+export ANTHROPIC_MODEL="claude-sonnet-4-6"
 ```
 
-Choose a compatible model returned by `/v1/models`, then run a simple prompt before enabling tools or long-running tasks.
+Then start Claude Code:
 
-<Note>Claude Code configuration options can change between releases. Use its current provider settings when mapping these values.</Note>
+```bash
+claude
+```
+
+## Option 2: user settings
+
+Create or edit `~/.claude/settings.json`:
+
+```json
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "env": {
+    "ANTHROPIC_AUTH_TOKEN": "YOUR_HILINKUP_API_KEY",
+    "ANTHROPIC_BASE_URL": "https://hilinkup.com",
+    "ANTHROPIC_MODEL": "claude-sonnet-4-6"
+  }
+}
+```
+
+## Option 3: project-local settings
+
+Create `.claude/settings.local.json` in the project:
+
+```json
+{
+  "env": {
+    "ANTHROPIC_AUTH_TOKEN": "YOUR_HILINKUP_API_KEY",
+    "ANTHROPIC_BASE_URL": "https://hilinkup.com",
+    "ANTHROPIC_MODEL": "claude-sonnet-4-6"
+  },
+  "permissions": {
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(./secrets/**)"
+    ]
+  }
+}
+```
+
+Do not commit `.claude/settings.local.json`.
+
+## Verify
+
+First test the protocol directly:
+
+```bash
+curl https://hilinkup.com/v1/messages \
+  -H "content-type: application/json" \
+  -H "x-api-key: $HILINKUP_API_KEY" \
+  -H "anthropic-version: 2023-06-01" \
+  -d '{
+    "model": "claude-sonnet-4-6",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "role": "user",
+        "content": "Reply with: HiLinkup Claude route is working."
+      }
+    ]
+  }'
+```
+
+Then start Claude Code and send a plain prompt before testing file reads, shell commands, or long agent tasks.
+
+<Warning>A working OpenAI Chat Completions call does not prove the Anthropic Messages route is available. Confirm the model and protocol in the HiLinkup console.</Warning>
