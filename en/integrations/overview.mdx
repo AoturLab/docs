@@ -18,6 +18,21 @@ Any application that supports a custom OpenAI or OpenAI-compatible provider can 
 
 <Warning>Unless an application explicitly requests a full endpoint, do not append `/chat/completions` to the base URL.</Warning>
 
+## Choose the correct protocol
+
+Not every “compatible” client uses the same protocol. Check whether the application asks for OpenAI, Anthropic/Claude, or Gemini configuration.
+
+| Protocol | Use case | Base URL / endpoint | Auth | Reference |
+| --- | --- | --- | --- | --- |
+| OpenAI Chat Completions | Most chat clients, Dify, LangChain, older OpenAI SDK calls | `https://hilinkup.com/v1` | `Authorization: Bearer $HILINKUP_API_KEY` | [Chat Completions](/en/api-reference/chat-completions) |
+| OpenAI Responses | New apps, agents, unified input/output flows | `https://hilinkup.com/v1` | `Authorization: Bearer $HILINKUP_API_KEY` | [Responses](/en/api-reference/responses) |
+| Claude Messages | Anthropic SDKs and Claude-style clients | `https://hilinkup.com/v1/messages` | `x-api-key: $HILINKUP_API_KEY` | [Claude Messages](/en/api-reference/claude-messages) |
+| Gemini generateContent | Gemini SDKs and Google AI-style clients | `https://hilinkup.com/v1beta/models/{model}:generateContent` | `x-goog-api-key: $HILINKUP_API_KEY` | [Gemini generateContent](/en/api-reference/gemini-generate-content) |
+
+<Tip>
+  If the app says OpenAI-compatible, use `https://hilinkup.com/v1`. If it says Anthropic, Claude, or Gemini, use the corresponding protocol page instead of forcing the OpenAI base URL.
+</Tip>
+
 ## Integration workflow
 
 <Steps>
@@ -58,6 +73,79 @@ Any application that supports a custom OpenAI or OpenAI-compatible provider can 
 - Streaming completes normally
 - Usage appears in the console
 - Credentials are not exposed in client bundles, logs, or screenshots
+
+## cURL templates
+
+<Tabs>
+  <Tab title="OpenAI Chat">
+    ```bash
+    curl https://hilinkup.com/v1/chat/completions \
+      -H "Content-Type: application/json" \
+      -H "Authorization: Bearer $HILINKUP_API_KEY" \
+      -d '{
+        "model": "gpt-4o",
+        "messages": [
+          {
+            "role": "developer",
+            "content": "You are a helpful assistant."
+          },
+          {
+            "role": "user",
+            "content": "Hello!"
+          }
+        ]
+      }'
+    ```
+  </Tab>
+  <Tab title="Responses">
+    ```bash
+    curl https://hilinkup.com/v1/responses \
+      -H "Content-Type: application/json" \
+      -H "Authorization: Bearer $HILINKUP_API_KEY" \
+      -d '{
+        "model": "gpt-5.4",
+        "input": "Tell me a three sentence bedtime story about a unicorn."
+      }'
+    ```
+  </Tab>
+  <Tab title="Claude">
+    ```bash
+    curl https://hilinkup.com/v1/messages \
+      -H "content-type: application/json" \
+      -H "x-api-key: $HILINKUP_API_KEY" \
+      -H "anthropic-version: 2023-06-01" \
+      -d '{
+        "model": "claude-sonnet-4-6",
+        "max_tokens": 1024,
+        "messages": [
+          {
+            "role": "user",
+            "content": "Hello, Claude"
+          }
+        ]
+      }'
+    ```
+  </Tab>
+  <Tab title="Gemini">
+    ```bash
+    curl "https://hilinkup.com/v1beta/models/gemini-3.1-pro-preview:generateContent" \
+      -H "x-goog-api-key: $HILINKUP_API_KEY" \
+      -H "Content-Type: application/json" \
+      -X POST \
+      -d '{
+        "contents": [
+          {
+            "parts": [
+              {
+                "text": "Find the race condition in this multi-threaded C++ snippet: [code here]"
+              }
+            ]
+          }
+        ]
+      }'
+    ```
+  </Tab>
+</Tabs>
 
 ## Common failures
 

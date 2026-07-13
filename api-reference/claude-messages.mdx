@@ -1,0 +1,120 @@
+---
+title: "Claude Messages"
+description: "使用 Anthropic Claude Messages 兼容格式调用 HiLinkup。"
+keywords: ["Claude", "Anthropic", "Messages API", "x-api-key"]
+api: "POST /v1/messages"
+icon: "message-circle"
+---
+
+Claude Messages 适合已经按 Anthropic 官方接口开发的应用。接入时保留官方请求体结构，只替换请求域名、API Key 和模型 ID。
+
+<Info>
+  参考官方格式：[Claude Messages API](https://platform.claude.com/docs/en/api/messages)。HiLinkup 兼容常用调用结构；模型、工具、图片和缓存等能力以账户可用模型为准。
+</Info>
+
+## Endpoint
+
+```text
+POST https://hilinkup.com/v1/messages
+```
+
+## Headers
+
+```http
+content-type: application/json
+x-api-key: $HILINKUP_API_KEY
+anthropic-version: 2023-06-01
+```
+
+<Note>
+  如果某个第三方客户端只提供 API Key 和 Base URL 字段，Base URL 填 `https://hilinkup.com` 或客户端要求的 Anthropic Base URL；最终请求路径应是 `/v1/messages`。
+</Note>
+
+## 最小请求
+
+```bash
+curl https://hilinkup.com/v1/messages \
+  -H "content-type: application/json" \
+  -H "x-api-key: $HILINKUP_API_KEY" \
+  -H "anthropic-version: 2023-06-01" \
+  -d '{
+    "model": "claude-sonnet-4-6",
+    "max_tokens": 1024,
+    "messages": [
+      {
+        "role": "user",
+        "content": "Hello, Claude"
+      }
+    ]
+  }'
+```
+
+## System prompt
+
+Claude 风格接口使用顶层 `system` 字段，而不是 OpenAI Chat Completions 中的 `system` 消息。
+
+```bash
+curl https://hilinkup.com/v1/messages \
+  -H "content-type: application/json" \
+  -H "x-api-key: $HILINKUP_API_KEY" \
+  -H "anthropic-version: 2023-06-01" \
+  -d '{
+    "model": "claude-sonnet-4-6",
+    "max_tokens": 1024,
+    "system": "You are a concise integration assistant.",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Give me a checklist for validating an API key."
+      }
+    ]
+  }'
+```
+
+## 流式输出
+
+```bash
+curl https://hilinkup.com/v1/messages \
+  -H "content-type: application/json" \
+  -H "x-api-key: $HILINKUP_API_KEY" \
+  -H "anthropic-version: 2023-06-01" \
+  -d '{
+    "model": "claude-sonnet-4-6",
+    "max_tokens": 1024,
+    "stream": true,
+    "messages": [
+      {
+        "role": "user",
+        "content": "Write three bullet points about API routing."
+      }
+    ]
+  }'
+```
+
+## 配置映射
+
+| Anthropic 官方配置 | HiLinkup 配置 |
+| --- | --- |
+| API Key | HiLinkup API Key |
+| Base URL | `https://hilinkup.com`，或客户端要求时填写 `https://hilinkup.com/v1` |
+| Messages endpoint | `https://hilinkup.com/v1/messages` |
+| Model | 使用 HiLinkup 控制台或模型列表中的 Claude 兼容模型 ID |
+
+<Warning>
+  Claude Messages、OpenAI Chat Completions 和 Gemini generateContent 是不同协议。不要把 Claude 请求体发送到 `/v1/chat/completions`。
+</Warning>
+
+## 常见问题
+
+<AccordionGroup>
+  <Accordion title="401 或 403">
+    确认使用的是 HiLinkup API Key，并通过 `x-api-key` 发送。不要同时混用官方 Anthropic Key 和 HiLinkup Base URL。
+  </Accordion>
+  <Accordion title="400：messages 格式错误">
+    Claude Messages 的 `messages` 只包含 `user` 和 `assistant` 对话轮次；系统提示应放在顶层 `system` 字段。
+  </Accordion>
+  <Accordion title="客户端要求填写 Anthropic Base URL">
+    优先填写 `https://hilinkup.com`，并确认最终请求地址是 `https://hilinkup.com/v1/messages`。如果客户端不会自动拼 `/v1/messages`，则按客户端说明填写完整 Endpoint。
+  </Accordion>
+</AccordionGroup>
+

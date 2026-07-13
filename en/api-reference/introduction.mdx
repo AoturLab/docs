@@ -5,16 +5,51 @@ keywords: ["API reference", "REST", "JSON"]
 icon: "braces"
 ---
 
-Base URL:
+HiLinkup exposes OpenAI-compatible endpoints and selected provider-style compatible endpoints. Most OpenAI-compatible clients only need a new API key, base URL, and model ID. Claude-style and Gemini-style clients must use their own endpoint paths and auth headers.
+
+## Base URLs
+
+OpenAI-compatible endpoints:
 
 ```text
 https://hilinkup.com/v1
 ```
 
-Requests use JSON and Bearer-token authentication. The API follows the OpenAI-compatible format for common model endpoints.
+Gemini-compatible endpoints use the `v1beta` path:
+
+```text
+https://hilinkup.com/v1beta/models/{model}:generateContent
+```
+
+## Authentication
+
+OpenAI-compatible endpoints:
+
+```http
+Authorization: Bearer YOUR_HILINKUP_API_KEY
+Content-Type: application/json
+```
+
+Claude Messages-compatible endpoints:
+
+```http
+x-api-key: YOUR_HILINKUP_API_KEY
+anthropic-version: 2023-06-01
+Content-Type: application/json
+```
+
+Gemini-compatible endpoints:
+
+```http
+x-goog-api-key: YOUR_HILINKUP_API_KEY
+Content-Type: application/json
+```
 
 <CardGroup cols={2}>
   <Card title="Chat Completions" href="/en/api-reference/chat-completions" icon="message-square" />
+  <Card title="Responses" href="/en/api-reference/responses" icon="sparkles" />
+  <Card title="Claude Messages" href="/en/api-reference/claude-messages" icon="message-circle" />
+  <Card title="Gemini generateContent" href="/en/api-reference/gemini-generate-content" icon="gem" />
   <Card title="Models" href="/en/api-reference/models" icon="list" />
   <Card title="Embeddings" href="/en/api-reference/embeddings" icon="binary" />
   <Card title="Images" href="/en/api-reference/images" icon="image" />

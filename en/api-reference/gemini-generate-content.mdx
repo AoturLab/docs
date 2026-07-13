@@ -1,0 +1,66 @@
+---
+title: "Gemini generateContent"
+description: "Call HiLinkup with the Google Gemini generateContent-compatible format."
+keywords: ["Gemini", "generateContent", "Google AI", "v1beta"]
+api: "POST /v1beta/models/{model}:generateContent"
+icon: "gem"
+---
+
+Use the Gemini-style endpoint when your application already follows Google's Gemini API request shape. Keep `contents`, `parts`, and `generationConfig`; replace the host, API key, and model ID.
+
+<Info>
+  Reference format: [Gemini API text generation](https://ai.google.dev/gemini-api/docs/text-generation). HiLinkup supports common text generation structures; capabilities depend on the selected model.
+</Info>
+
+## Endpoint
+
+```text
+POST https://hilinkup.com/v1beta/models/{model}:generateContent
+```
+
+Replace `{model}` with an available Gemini-compatible model ID, for example:
+
+```text
+gemini-3.1-pro-preview
+```
+
+## Headers
+
+```http
+Content-Type: application/json
+x-goog-api-key: $HILINKUP_API_KEY
+```
+
+## Minimal request
+
+```bash
+curl "https://hilinkup.com/v1beta/models/gemini-3.1-pro-preview:generateContent" \
+  -H "x-goog-api-key: $HILINKUP_API_KEY" \
+  -H "Content-Type: application/json" \
+  -X POST \
+  -d '{
+    "contents": [
+      {
+        "parts": [
+          {
+            "text": "Find the race condition in this multi-threaded C++ snippet: [code here]"
+          }
+        ]
+      }
+    ]
+  }'
+```
+
+## Configuration map
+
+| Google Gemini setting | HiLinkup setting |
+| --- | --- |
+| API key | HiLinkup API key |
+| Base URL / endpoint | `https://hilinkup.com`, final path `/v1beta/models/{model}:generateContent` |
+| Model | A Gemini-compatible model ID available to your account |
+| Auth header | `x-goog-api-key: $HILINKUP_API_KEY` |
+
+<Warning>
+  Gemini does not use `/v1/chat/completions`. If a client asks for a full endpoint, use `https://hilinkup.com/v1beta/models/{model}:generateContent`.
+</Warning>
+

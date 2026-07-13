@@ -1,0 +1,82 @@
+---
+title: "Claude Messages"
+description: "Call HiLinkup with the Anthropic Claude Messages-compatible format."
+keywords: ["Claude", "Anthropic", "Messages API", "x-api-key"]
+api: "POST /v1/messages"
+icon: "message-circle"
+---
+
+Use Claude Messages when your application already follows Anthropic's Messages API. Keep the request body format and replace the host, API key, and model ID.
+
+<Info>
+  Reference format: [Claude Messages API](https://platform.claude.com/docs/en/api/messages). HiLinkup supports common request shapes; tools, images, caching, and other features depend on model availability.
+</Info>
+
+## Endpoint
+
+```text
+POST https://hilinkup.com/v1/messages
+```
+
+## Headers
+
+```http
+content-type: application/json
+x-api-key: $HILINKUP_API_KEY
+anthropic-version: 2023-06-01
+```
+
+## Minimal request
+
+```bash
+curl https://hilinkup.com/v1/messages \
+  -H "content-type: application/json" \
+  -H "x-api-key: $HILINKUP_API_KEY" \
+  -H "anthropic-version: 2023-06-01" \
+  -d '{
+    "model": "claude-sonnet-4-6",
+    "max_tokens": 1024,
+    "messages": [
+      {
+        "role": "user",
+        "content": "Hello, Claude"
+      }
+    ]
+  }'
+```
+
+## System prompt
+
+Claude-style requests use a top-level `system` field instead of an OpenAI-style system message.
+
+```bash
+curl https://hilinkup.com/v1/messages \
+  -H "content-type: application/json" \
+  -H "x-api-key: $HILINKUP_API_KEY" \
+  -H "anthropic-version: 2023-06-01" \
+  -d '{
+    "model": "claude-sonnet-4-6",
+    "max_tokens": 1024,
+    "system": "You are a concise integration assistant.",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Give me a checklist for validating an API key."
+      }
+    ]
+  }'
+```
+
+## Configuration map
+
+| Anthropic setting | HiLinkup setting |
+| --- | --- |
+| API key | HiLinkup API key |
+| Base URL | `https://hilinkup.com`, or `https://hilinkup.com/v1` if required by the client |
+| Messages endpoint | `https://hilinkup.com/v1/messages` |
+| Model | A Claude-compatible model ID available to your account |
+
+<Warning>
+  Claude Messages, OpenAI Chat Completions, and Gemini generateContent are different protocols. Do not send a Claude request body to `/v1/chat/completions`.
+</Warning>
+

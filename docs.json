@@ -101,6 +101,9 @@
                 "group": "常用 API",
                 "pages": [
                   "api-reference/chat-completions",
+                  "api-reference/responses",
+                  "api-reference/claude-messages",
+                  "api-reference/gemini-generate-content",
                   "api-reference/embeddings",
                   "api-reference/images"
                 ]
@@ -258,6 +261,9 @@
                 "group": "Endpoints",
                 "pages": [
                   "en/api-reference/chat-completions",
+                  "en/api-reference/responses",
+                  "en/api-reference/claude-messages",
+                  "en/api-reference/gemini-generate-content",
                   "en/api-reference/embeddings",
                   "en/api-reference/images"
                 ]

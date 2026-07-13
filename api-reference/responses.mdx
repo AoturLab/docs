@@ -1,0 +1,124 @@
+---
+title: "Responses"
+description: "使用 OpenAI Responses 兼容格式调用 HiLinkup 模型。"
+keywords: ["Responses API", "OpenAI 兼容", "input", "reasoning"]
+api: "POST /v1/responses"
+icon: "sparkles"
+---
+
+Responses 适合新项目或需要统一文本、工具、推理与多模态输入的应用。若你的代码、SDK 或第三方应用已经按 OpenAI Responses API 编写，通常只需要替换 API Key、Base URL 和模型 ID。
+
+<Info>
+  参考官方格式：[OpenAI Responses API](https://platform.openai.com/docs/api-reference/responses/create)。HiLinkup 保持请求结构兼容，但具体参数是否生效取决于模型能力和账户权限。
+</Info>
+
+## Endpoint
+
+```text
+POST https://hilinkup.com/v1/responses
+```
+
+## Headers
+
+```http
+Content-Type: application/json
+Authorization: Bearer $HILINKUP_API_KEY
+```
+
+## 最小请求
+
+```bash
+curl https://hilinkup.com/v1/responses \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $HILINKUP_API_KEY" \
+  -d '{
+    "model": "gpt-5.4",
+    "input": "Tell me a three sentence bedtime story about a unicorn."
+  }'
+```
+
+## 多轮输入
+
+当你需要携带角色、上下文或多段输入时，使用数组形式的 `input`。
+
+```bash
+curl https://hilinkup.com/v1/responses \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $HILINKUP_API_KEY" \
+  -d '{
+    "model": "gpt-5.4",
+    "input": [
+      {
+        "role": "developer",
+        "content": "You are a precise API assistant."
+      },
+      {
+        "role": "user",
+        "content": "Summarize the difference between Chat Completions and Responses."
+      }
+    ]
+  }'
+```
+
+## SDK 配置
+
+<CodeGroup>
+```python Python
+from openai import OpenAI
+
+client = OpenAI(
+    api_key="YOUR_HILINKUP_API_KEY",
+    base_url="https://hilinkup.com/v1",
+)
+
+response = client.responses.create(
+    model="gpt-5.4",
+    input="Write a one paragraph release note for an API gateway.",
+)
+
+print(response.output_text)
+```
+
+```typescript TypeScript
+import OpenAI from "openai";
+
+const client = new OpenAI({
+  apiKey: process.env.HILINKUP_API_KEY,
+  baseURL: "https://hilinkup.com/v1",
+});
+
+const response = await client.responses.create({
+  model: "gpt-5.4",
+  input: "Write a one paragraph release note for an API gateway.",
+});
+
+console.log(response.output_text);
+```
+</CodeGroup>
+
+## 迁移检查
+
+| 原 OpenAI 配置 | HiLinkup 配置 |
+| --- | --- |
+| `https://api.openai.com/v1` | `https://hilinkup.com/v1` |
+| OpenAI API Key | HiLinkup API Key |
+| OpenAI 模型 ID | `/v1/models` 返回的可用模型 ID |
+
+<Warning>
+  不要把 Base URL 填成 `https://hilinkup.com/v1/responses`。SDK 的 Base URL 只填写到 `/v1`，具体路径由 SDK 拼接。
+</Warning>
+
+## 常见问题
+
+<AccordionGroup>
+  <Accordion title="Responses 和 Chat Completions 应该选哪个？">
+    新项目优先使用 Responses。已有聊天客户端、OpenAI 兼容插件或旧 SDK 配置通常继续使用 Chat Completions，迁移成本更低。
+  </Accordion>
+  <Accordion title="返回 404 或路径不存在">
+    检查最终请求地址是否为 `/v1/responses`。如果客户端自动拼路径，Base URL 应填写 `https://hilinkup.com/v1`。
+  </Accordion>
+  <Accordion title="某些推理或工具参数没有效果">
+    先确认目标模型是否支持这些能力。不同模型对推理、工具、图片和结构化输出的支持范围不同。
+  </Accordion>
+</AccordionGroup>
+

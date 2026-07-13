@@ -1,0 +1,87 @@
+---
+title: "Responses"
+description: "Call HiLinkup with the OpenAI Responses-compatible format."
+keywords: ["Responses API", "OpenAI compatible", "input", "reasoning"]
+api: "POST /v1/responses"
+icon: "sparkles"
+---
+
+Use Responses for new applications that already follow the OpenAI Responses API shape. Keep the request body format and replace the API key, base URL, and model ID.
+
+<Info>
+  Reference format: [OpenAI Responses API](https://platform.openai.com/docs/api-reference/responses/create). HiLinkup keeps the common request structure compatible; specific parameters depend on model capability and account access.
+</Info>
+
+## Endpoint
+
+```text
+POST https://hilinkup.com/v1/responses
+```
+
+## Headers
+
+```http
+Content-Type: application/json
+Authorization: Bearer $HILINKUP_API_KEY
+```
+
+## Minimal request
+
+```bash
+curl https://hilinkup.com/v1/responses \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $HILINKUP_API_KEY" \
+  -d '{
+    "model": "gpt-5.4",
+    "input": "Tell me a three sentence bedtime story about a unicorn."
+  }'
+```
+
+## SDK setup
+
+<CodeGroup>
+```python Python
+from openai import OpenAI
+
+client = OpenAI(
+    api_key="YOUR_HILINKUP_API_KEY",
+    base_url="https://hilinkup.com/v1",
+)
+
+response = client.responses.create(
+    model="gpt-5.4",
+    input="Write a one paragraph release note for an API gateway.",
+)
+
+print(response.output_text)
+```
+
+```typescript TypeScript
+import OpenAI from "openai";
+
+const client = new OpenAI({
+  apiKey: process.env.HILINKUP_API_KEY,
+  baseURL: "https://hilinkup.com/v1",
+});
+
+const response = await client.responses.create({
+  model: "gpt-5.4",
+  input: "Write a one paragraph release note for an API gateway.",
+});
+
+console.log(response.output_text);
+```
+</CodeGroup>
+
+## Migration map
+
+| OpenAI setting | HiLinkup setting |
+| --- | --- |
+| `https://api.openai.com/v1` | `https://hilinkup.com/v1` |
+| OpenAI API key | HiLinkup API key |
+| OpenAI model ID | Available model ID from `/v1/models` |
+
+<Warning>
+  Do not set the SDK base URL to `https://hilinkup.com/v1/responses`. SDK base URLs stop at `/v1`; the SDK appends the endpoint path.
+</Warning>
+

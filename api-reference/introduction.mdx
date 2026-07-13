@@ -5,18 +5,43 @@ keywords: ["API 参考", "Base URL", "JSON", "错误"]
 icon: "braces"
 ---
 
-HiLinkup API 使用 HTTPS 和 JSON，并提供 OpenAI 兼容端点。
+HiLinkup API 使用 HTTPS 和 JSON，并提供多种常见模型协议的兼容端点。多数 OpenAI 兼容应用只需要替换 API Key、Base URL 和模型 ID；Claude 与 Gemini 风格应用需要使用各自协议的路径和鉴权头。
 
 ## Base URL
+
+OpenAI 兼容端点：
 
 ```text
 https://hilinkup.com/v1
 ```
 
+Gemini 兼容端点使用 `v1beta` 路径，例如：
+
+```text
+https://hilinkup.com/v1beta/models/{model}:generateContent
+```
+
 ## 认证
+
+OpenAI 兼容接口：
 
 ```http
 Authorization: Bearer YOUR_HILINKUP_API_KEY
+Content-Type: application/json
+```
+
+Claude Messages 兼容接口：
+
+```http
+x-api-key: YOUR_HILINKUP_API_KEY
+anthropic-version: 2023-06-01
+Content-Type: application/json
+```
+
+Gemini 兼容接口：
+
+```http
+x-goog-api-key: YOUR_HILINKUP_API_KEY
 Content-Type: application/json
 ```
 
@@ -25,6 +50,9 @@ Content-Type: application/json
 | 方法 | 路径 | 用途 |
 | --- | --- | --- |
 | `POST` | `/chat/completions` | 创建文本或多模态对话 |
+| `POST` | `/responses` | 使用 OpenAI Responses 兼容格式创建响应 |
+| `POST` | `/messages` | 使用 Claude Messages 兼容格式创建响应 |
+| `POST` | `/v1beta/models/{model}:generateContent` | 使用 Gemini 兼容格式生成内容 |
 | `GET` | `/models` | 获取当前密钥可用的模型 |
 | `POST` | `/embeddings` | 创建向量表示 |
 | `POST` | `/images/generations` | 创建图像 |
@@ -49,4 +77,21 @@ Content-Type: application/json
 }
 ```
 
-下一步查看 [Chat Completions](/api-reference/chat-completions) 或[错误处理](/guides/error-handling)。
+## 按协议选择文档
+
+<Columns cols={2}>
+  <Card title="Chat Completions" icon="message-square" href="/api-reference/chat-completions">
+    适合大多数 OpenAI 兼容聊天客户端和旧版 SDK。
+  </Card>
+  <Card title="Responses" icon="sparkles" href="/api-reference/responses">
+    适合按 OpenAI Responses API 编写的新项目。
+  </Card>
+  <Card title="Claude Messages" icon="message-circle" href="/api-reference/claude-messages">
+    适合按 Anthropic Messages API 编写的客户端。
+  </Card>
+  <Card title="Gemini generateContent" icon="gem" href="/api-reference/gemini-generate-content">
+    适合按 Google Gemini API 编写的客户端。
+  </Card>
+</Columns>
+
+下一步查看 [Chat Completions](/api-reference/chat-completions)、[Responses](/api-reference/responses) 或[错误处理](/guides/error-handling)。

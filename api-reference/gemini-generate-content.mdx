@@ -1,0 +1,105 @@
+---
+title: "Gemini generateContent"
+description: "使用 Google Gemini generateContent 兼容格式调用 HiLinkup。"
+keywords: ["Gemini", "generateContent", "Google AI", "v1beta"]
+api: "POST /v1beta/models/{model}:generateContent"
+icon: "gem"
+---
+
+Gemini 风格接口适合已经按 Google Gemini API 开发的应用。接入时保留 `contents`、`parts`、`generationConfig` 等请求结构，只替换域名、API Key 和模型 ID。
+
+<Info>
+  参考官方格式：[Gemini API text generation](https://ai.google.dev/gemini-api/docs/text-generation)。HiLinkup 兼容常用文本生成结构；模型能力以账户可用模型为准。
+</Info>
+
+## Endpoint
+
+```text
+POST https://hilinkup.com/v1beta/models/{model}:generateContent
+```
+
+其中 `{model}` 替换为 HiLinkup 可用的 Gemini 兼容模型 ID，例如：
+
+```text
+gemini-3.1-pro-preview
+```
+
+## Headers
+
+```http
+Content-Type: application/json
+x-goog-api-key: $HILINKUP_API_KEY
+```
+
+## 最小请求
+
+```bash
+curl "https://hilinkup.com/v1beta/models/gemini-3.1-pro-preview:generateContent" \
+  -H "x-goog-api-key: $HILINKUP_API_KEY" \
+  -H "Content-Type: application/json" \
+  -X POST \
+  -d '{
+    "contents": [
+      {
+        "parts": [
+          {
+            "text": "Find the race condition in this multi-threaded C++ snippet: [code here]"
+          }
+        ]
+      }
+    ]
+  }'
+```
+
+## 带生成参数
+
+```bash
+curl "https://hilinkup.com/v1beta/models/gemini-3.1-pro-preview:generateContent" \
+  -H "x-goog-api-key: $HILINKUP_API_KEY" \
+  -H "Content-Type: application/json" \
+  -X POST \
+  -d '{
+    "contents": [
+      {
+        "role": "user",
+        "parts": [
+          {
+            "text": "Write a short product FAQ for an AI API gateway."
+          }
+        ]
+      }
+    ],
+    "generationConfig": {
+      "temperature": 0.3,
+      "maxOutputTokens": 512
+    }
+  }'
+```
+
+## 配置映射
+
+| Google Gemini 官方配置 | HiLinkup 配置 |
+| --- | --- |
+| API Key | HiLinkup API Key |
+| Base URL / Endpoint | `https://hilinkup.com`，最终路径为 `/v1beta/models/{model}:generateContent` |
+| Model | HiLinkup 可用的 Gemini 兼容模型 ID |
+| Auth header | `x-goog-api-key: $HILINKUP_API_KEY` |
+
+<Warning>
+  Gemini 接口路径不是 `/v1/chat/completions`。如果客户端要求填写完整接口地址，应填写 `https://hilinkup.com/v1beta/models/{model}:generateContent`。
+</Warning>
+
+## 常见问题
+
+<AccordionGroup>
+  <Accordion title="404 或模型路径错误">
+    检查 URL 中是否包含 `/v1beta/models/`，并且模型 ID 后面紧跟 `:generateContent`。不要在模型 ID 前额外添加 `models/` 两次。
+  </Accordion>
+  <Accordion title="401 或 403">
+    确认使用 HiLinkup API Key，并通过 `x-goog-api-key` 传递。不要把 Key 放在 OpenAI 的 `Authorization: Bearer` 头里。
+  </Accordion>
+  <Accordion title="OpenAI 客户端可以直接调用 Gemini 路径吗？">
+    不建议。OpenAI 客户端会拼接 OpenAI 风格路径。Gemini 风格调用应使用支持自定义 HTTP 请求或 Gemini Provider 的客户端。
+  </Accordion>
+</AccordionGroup>
+
