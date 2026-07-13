@@ -15,6 +15,19 @@ Codex CLI 支持通过用户级 `config.toml` 配置自定义模型供应商。H
   本页示例模型使用 HiLinkup 平台上的中国模型 `qwen3.7-plus`。实际代码模型请以 `/v1/models` 和控制台展示为准。
 </Note>
 
+## 选择 Codex 协议
+
+Codex CLI 的自定义供应商配置里，`wire_api` 决定请求会走哪个接口。先按你当前 Codex 版本和模型支持情况选择：
+
+| 场景 | 推荐配置 | 说明 |
+| --- | --- | --- |
+| 新版 Codex CLI | `wire_api = "responses"` | 推荐路径，对应 `POST /v1/responses`。 |
+| 旧版 Codex CLI 或只支持 Chat Completions 的模型 | `wire_api = "chat"` | 对应 `POST /v1/chat/completions`。如果 Responses 不通，再切到这个配置。 |
+
+<Info>
+  如果你不确定当前 Codex 版本应该选哪个协议，先使用 `responses`。请求失败时，再切换到 `chat` 并用 Chat Completions 的 cURL 示例验证。
+</Info>
+
 ## 先确认 API 可用
 
 先在终端验证 API Key 和模型列表。
@@ -315,7 +328,7 @@ Codex CLI 支持通过用户级 `config.toml` 配置自定义模型供应商。H
     确认 `env_key = "HILINKUP_API_KEY"`，并且启动 Codex 的同一个 shell 中能读取该变量。macOS/Linux 执行 `echo $HILINKUP_API_KEY`；Windows PowerShell 执行 `echo $env:HILINKUP_API_KEY`。
   </Accordion>
   <Accordion title="Responses 路径不通">
-    Codex 的自定义 provider 建议使用 `wire_api = "responses"`。先用 [Responses](/api-reference/responses) 页面里的 cURL 验证 `https://hilinkup.com/v1/responses`。
+    Codex 的自定义 provider 优先使用 `wire_api = "responses"`。先用 [Responses](/api-reference/responses) 页面里的 cURL 验证 `https://hilinkup.com/v1/responses`。如果当前模型或旧版本 Codex 只支持 Chat Completions，把配置里的 `wire_api` 改成 `"chat"`，并先用 [创建对话补全](/api-reference/chat-completions) 验证。
   </Accordion>
   <Accordion title="不要把 provider 写到项目级 .codex/config.toml">
     Codex 官方文档说明项目级 `.codex/config.toml` 不能覆盖 `model_provider` 和 `model_providers` 等 Provider 鉴权相关配置。请把这些配置写到用户级 `~/.codex/config.toml` 或 `~/.codex/hilinkup.config.toml`。

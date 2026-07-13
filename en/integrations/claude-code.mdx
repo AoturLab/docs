@@ -1,28 +1,43 @@
 ---
 title: "Claude Code"
-description: "Configure Claude Code to use HiLinkup."
+description: "Configure Claude Code to use HiLinkup through a custom Anthropic-compatible endpoint."
 keywords: ["Claude Code", "integration", "settings.json", "ANTHROPIC_BASE_URL", "Windows", "macOS", "Linux"]
 icon: "terminal"
 ---
 
-Claude Code uses Anthropic-style requests. Use this page only when your HiLinkup account and target model support [Claude Messages](/en/api-reference/claude-messages)-compatible calls.
+Claude Code sends Anthropic-style requests. Use this guide only when your HiLinkup account and target Chinese model support [Claude Messages](/en/api-reference/claude-messages)-compatible calls.
+
+<Warning>
+  A working OpenAI Chat Completions request does not prove that the Anthropic Messages route is available. Confirm the model and protocol in the HiLinkup console before configuring Claude Code.
+</Warning>
 
 <Note>
-  Examples use the HiLinkup platform model `deepseek-v3`. This is a Chinese model example, not a requirement to use an overseas Claude model.
+  Examples use the HiLinkup platform model `deepseek-v3`. This is a Chinese model example, not a requirement to use an overseas Claude model. Confirm available models with `/v1/models` and the console.
 </Note>
 
-## Recommended: user settings
+## Choose a configuration method
 
-Claude Code official settings use `~/.claude/settings.json` for user settings. On Windows, `~/.claude` resolves to `%USERPROFILE%\.claude`.
+| Method | Best for | Location |
+| --- | --- | --- |
+| User settings | Recommended for long-term personal use | macOS/Linux: `~/.claude/settings.json`; Windows: `%USERPROFILE%\.claude\settings.json` |
+| Project-local settings | Current project only; do not commit | `.claude/settings.local.json` |
+| Environment variables | One-time verification | Current terminal or PowerShell window |
+| `apiKeyHelper` | Read the key from a secret manager or script | `~/.claude/settings.json` |
+
+## Option 1: user `settings.json`
+
+Claude Code official settings use `~/.claude/settings.json` for user-level settings. On Windows, `~/.claude` resolves to `%USERPROFILE%\.claude`.
 
 <Tabs>
   <Tab title="macOS">
+    1. Open the settings file:
+
     ```bash
     mkdir -p ~/.claude
     nano ~/.claude/settings.json
     ```
 
-    Paste:
+    2. Paste:
 
     ```json
     {
@@ -35,15 +50,23 @@ Claude Code official settings use `~/.claude/settings.json` for user settings. O
     }
     ```
 
-    Save with `Ctrl + O`, press Enter, then exit with `Ctrl + X`.
+    3. Save with `Ctrl + O`, press Enter, then exit with `Ctrl + X`.
+
+    4. Start Claude Code:
+
+    ```bash
+    claude
+    ```
   </Tab>
   <Tab title="Linux">
+    1. Open the settings file:
+
     ```bash
     mkdir -p ~/.claude
     nano ~/.claude/settings.json
     ```
 
-    Paste:
+    2. Paste:
 
     ```json
     {
@@ -56,15 +79,28 @@ Claude Code official settings use `~/.claude/settings.json` for user settings. O
     }
     ```
 
-    Save with `Ctrl + O`, press Enter, then exit with `Ctrl + X`.
+    3. Save with `Ctrl + O`, press Enter, then exit with `Ctrl + X`.
+
+    4. Start Claude Code:
+
+    ```bash
+    claude
+    ```
   </Tab>
   <Tab title="Windows PowerShell">
+    1. Create the settings directory:
+
     ```powershell
     New-Item -ItemType Directory -Force "$env:USERPROFILE\.claude"
+    ```
+
+    2. Open the settings file:
+
+    ```powershell
     notepad "$env:USERPROFILE\.claude\settings.json"
     ```
 
-    Paste and save:
+    3. Paste and save:
 
     ```json
     {
@@ -75,13 +111,23 @@ Claude Code official settings use `~/.claude/settings.json` for user settings. O
         "ANTHROPIC_MODEL": "deepseek-v3"
       }
     }
+    ```
+
+    4. Close and reopen PowerShell, then start:
+
+    ```powershell
+    claude
     ```
   </Tab>
 </Tabs>
 
-## Project-local settings
+<Warning>
+  This method stores the API key in a local config file. Do not screenshot, commit, or sync `settings.json`.
+</Warning>
 
-Use `.claude/settings.local.json` when only the current project should use HiLinkup.
+## Option 2: project-local settings
+
+Use `.claude/settings.local.json` when only the current project should use HiLinkup. This file is for personal local settings and should not be committed.
 
 <Tabs>
   <Tab title="macOS / Linux">
@@ -89,37 +135,68 @@ Use `.claude/settings.local.json` when only the current project should use HiLin
     mkdir -p .claude
     nano .claude/settings.local.json
     ```
+
+    Paste:
+
+    ```json
+    {
+      "env": {
+        "ANTHROPIC_AUTH_TOKEN": "YOUR_HILINKUP_API_KEY",
+        "ANTHROPIC_BASE_URL": "https://hilinkup.com",
+        "ANTHROPIC_MODEL": "deepseek-v3"
+      },
+      "permissions": {
+        "deny": [
+          "Read(./.env)",
+          "Read(./.env.*)",
+          "Read(./secrets/**)"
+        ]
+      }
+    }
+    ```
+
+    Add it to `.gitignore`:
+
+    ```bash
+    printf '%s\n' '.claude/settings.local.json' >> .gitignore
+    ```
   </Tab>
   <Tab title="Windows PowerShell">
     ```powershell
     New-Item -ItemType Directory -Force ".claude"
     notepad ".claude\settings.local.json"
     ```
+
+    Paste:
+
+    ```json
+    {
+      "env": {
+        "ANTHROPIC_AUTH_TOKEN": "YOUR_HILINKUP_API_KEY",
+        "ANTHROPIC_BASE_URL": "https://hilinkup.com",
+        "ANTHROPIC_MODEL": "deepseek-v3"
+      },
+      "permissions": {
+        "deny": [
+          "Read(./.env)",
+          "Read(./.env.*)",
+          "Read(./secrets/**)"
+        ]
+      }
+    }
+    ```
+
+    Add it to `.gitignore`:
+
+    ```powershell
+    Add-Content .gitignore ".claude/settings.local.json"
+    ```
   </Tab>
 </Tabs>
 
-Paste:
+## Option 3: temporary environment variables
 
-```json
-{
-  "env": {
-    "ANTHROPIC_AUTH_TOKEN": "YOUR_HILINKUP_API_KEY",
-    "ANTHROPIC_BASE_URL": "https://hilinkup.com",
-    "ANTHROPIC_MODEL": "deepseek-v3"
-  },
-  "permissions": {
-    "deny": [
-      "Read(./.env)",
-      "Read(./.env.*)",
-      "Read(./secrets/**)"
-    ]
-  }
-}
-```
-
-Do not commit `.claude/settings.local.json`.
-
-## Temporary environment variables
+Use this for first-time verification when you do not want to modify config files.
 
 <Tabs>
   <Tab title="macOS / Linux">
@@ -140,9 +217,104 @@ Do not commit `.claude/settings.local.json`.
   </Tab>
 </Tabs>
 
+## Option 4: read the key with `apiKeyHelper`
+
+If your team uses 1Password, Vault, pass, Keychain, or an internal secret service, use a helper script so the key is not stored directly in JSON. Claude Code runs `apiKeyHelper` through the system shell and uses the command output as the request credential.
+
+<Tabs>
+  <Tab title="macOS / Linux">
+    Create the helper script:
+
+    ```bash
+    mkdir -p ~/.claude/bin
+    nano ~/.claude/bin/hilinkup-key
+    ```
+
+    Paste:
+
+    ```bash
+    #!/usr/bin/env bash
+    printf '%s' "$HILINKUP_API_KEY"
+    ```
+
+    Make it executable:
+
+    ```bash
+    chmod +x ~/.claude/bin/hilinkup-key
+    ```
+
+    Edit `~/.claude/settings.json`:
+
+    ```bash
+    nano ~/.claude/settings.json
+    ```
+
+    Paste:
+
+    ```json
+    {
+      "$schema": "https://json.schemastore.org/claude-code-settings.json",
+      "apiKeyHelper": "~/.claude/bin/hilinkup-key",
+      "env": {
+        "ANTHROPIC_BASE_URL": "https://hilinkup.com",
+        "ANTHROPIC_MODEL": "deepseek-v3"
+      }
+    }
+    ```
+
+    Set the key before starting Claude Code:
+
+    ```bash
+    export HILINKUP_API_KEY="YOUR_HILINKUP_API_KEY"
+    claude
+    ```
+  </Tab>
+  <Tab title="Windows PowerShell">
+    Create the helper script:
+
+    ```powershell
+    New-Item -ItemType Directory -Force "$env:USERPROFILE\.claude\bin"
+    notepad "$env:USERPROFILE\.claude\bin\hilinkup-key.cmd"
+    ```
+
+    Paste and save:
+
+    ```bat
+    @echo off
+    <nul set /p=%HILINKUP_API_KEY%
+    ```
+
+    Edit `settings.json`:
+
+    ```powershell
+    notepad "$env:USERPROFILE\.claude\settings.json"
+    ```
+
+    Paste:
+
+    ```json
+    {
+      "$schema": "https://json.schemastore.org/claude-code-settings.json",
+      "apiKeyHelper": "%USERPROFILE%\\.claude\\bin\\hilinkup-key.cmd",
+      "env": {
+        "ANTHROPIC_BASE_URL": "https://hilinkup.com",
+        "ANTHROPIC_MODEL": "deepseek-v3"
+      }
+    }
+    ```
+
+    Set the key before starting Claude Code:
+
+    ```powershell
+    $env:HILINKUP_API_KEY = "YOUR_HILINKUP_API_KEY"
+    claude
+    ```
+  </Tab>
+</Tabs>
+
 ## Verify
 
-First test the protocol directly:
+### 1. Verify the HiLinkup Claude Messages route
 
 <Tabs>
   <Tab title="macOS / Linux">
@@ -183,6 +355,40 @@ First test the protocol directly:
   </Tab>
 </Tabs>
 
-Then start Claude Code and send a plain prompt before testing file reads, shell commands, or long agent tasks.
+### 2. Verify Claude Code
 
-<Warning>A working OpenAI Chat Completions call does not prove the Anthropic Messages route is available. Confirm the model and protocol in the HiLinkup console.</Warning>
+```bash
+claude
+```
+
+Send:
+
+```text
+Reply only with: HiLinkup Claude Code is configured
+```
+
+### 3. Verify the full agent path
+
+Test in this order:
+
+1. Plain question without tools.
+2. Read the current directory structure.
+3. Read one non-sensitive file.
+4. Make one small change in a temporary branch or temporary directory.
+
+## Common issues
+
+<AccordionGroup>
+  <Accordion title="Claude Code still uses the official Claude account">
+    Check that `ANTHROPIC_BASE_URL` is available in the same terminal that starts `claude`. If a login session is still active but the custom gateway credential is missing, requests may not use the expected route.
+  </Accordion>
+  <Accordion title="401 or 403">
+    Confirm that you are using a HiLinkup API key and that the selected model supports Claude Messages-compatible calls. Do not mix an OpenAI key or Anthropic key with the HiLinkup base URL.
+  </Accordion>
+  <Accordion title="cURL works but Claude Code fails">
+    Claude Code agent requests include more context, tool definitions, and system fields. First verify a plain prompt, then gradually test file reads and shell commands.
+  </Accordion>
+  <Accordion title="Settings file does not apply">
+    User settings live in `~/.claude/settings.json`; project settings live in `.claude/settings.json`; personal local project settings live in `.claude/settings.local.json`. On Windows, `~/.claude` resolves to `%USERPROFILE%\.claude`. Restart Claude Code after model or base URL changes.
+  </Accordion>
+</AccordionGroup>
