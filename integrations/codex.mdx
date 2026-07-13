@@ -1,0 +1,56 @@
+---
+title: "Codex"
+---
+
+在Codex中可以很方便的使用HILinkup提供多模型, 可以自由的在不同模型之间切换.
+
+通过简单的配置就可以实现这一个
+
+正常情况下,我们运行Codex时候,就是在命令行启动:
+
+```shellscript
+codex
+```
+
+这样启动就是直接连接使用OPENAI的官方GPT-5.x等模型.
+
+当运行 /model 命令的时候,选择的都是OPENAI的官方模型
+
+```shellscript
+Select Model and Effort
+  Access legacy models by running codex -m <model_name> or in your config.toml
+ 
+› 1. gpt-5.6-sol (current)  Latest frontier agentic coding model.
+  2. gpt-5.6-terra          Balanced agentic coding model for everyday work.
+  3. gpt-5.6-luna           Fast and affordable agentic coding model.
+  4. gpt-5.5                Frontier model for complex coding, research, and real-world work.
+  5. gpt-5.4                Strong model for everyday coding.
+  6. gpt-5.4-mini           Small, fast, and cost-efficient model for simpler coding tasks.
+```
+
+为了使用HILinkup的模型列表, 可以配置实现:
+
+- 在 ~/.codex/ 目录下增加一个配置文件: hilinkup.config.toml, 内容:
+  ```text
+  model = "MiniMax-M2.5"
+  model_provider = "hilinkup_local"
+  model_reasoning_effort = "medium"
+  personality = "pragmatic"
+  model_catalog_json = "~/.codex/hilinkup-model-catalog.json"
+  approvals_reviewer = "user"
+  [model_providers.hilinkup_local]
+  name = "HiLinkup local responses proxy"
+  base_url = "https://hilinkup.com/v1"
+  wire_api = "responses"
+  [model_providers.hilinkup_local.auth]
+  command = "~/.codex/hilinkup-auth-token.sh"
+  timeout_ms = 5000
+  refresh_interval_ms = 0
+  [notice]
+  hide_full_access_warning = true
+  [notice.model_migrations]
+  "glm-5.2" = "gpt-5.5"
+  deepseek-chat = "gpt-5.5"
+  [projects."/Users/churchy/.codex"]
+  trust_level = "trusted"
+  ```

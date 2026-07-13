@@ -118,7 +118,8 @@
                 "group": "接入总览",
                 "icon": "blocks",
                 "pages": [
-                  "integrations/overview"
+                  "integrations/overview",
+                  "integrations/cc-switch"
                 ]
               },
               {
@@ -126,7 +127,7 @@
                 "icon": "terminal",
                 "pages": [
                   "integrations/claude-code",
-                  "integrations/cc-switch",
+                  "integrations/codex",
                   "integrations/codex-cli",
                   "integrations/cursor",
                   "integrations/cline",
