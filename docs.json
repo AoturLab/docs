@@ -127,7 +127,6 @@
                 "icon": "terminal",
                 "pages": [
                   "integrations/claude-code",
-                  "integrations/codex",
                   "integrations/codex-cli",
                   "integrations/cursor",
                   "integrations/cline",
@@ -280,14 +279,14 @@
               {
                 "group": "Overview",
                 "pages": [
-                  "en/integrations/overview"
+                  "en/integrations/overview",
+                  "en/integrations/cc-switch"
                 ]
               },
               {
                 "group": "Developer tools",
                 "pages": [
                   "en/integrations/claude-code",
-                  "en/integrations/cc-switch",
                   "en/integrations/codex-cli",
                   "en/integrations/cursor",
                   "en/integrations/cline",
