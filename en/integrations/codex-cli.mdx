@@ -1,109 +1,262 @@
 ---
 title: "Codex CLI"
 description: "Configure OpenAI Codex CLI to use HiLinkup through an OpenAI-compatible provider."
-keywords: ["Codex CLI", "config.toml", "model_providers", "OpenAI compatible"]
+keywords: ["Codex CLI", "config.toml", "model_providers", "OpenAI compatible", "Windows", "macOS", "Linux"]
 icon: "terminal"
 ---
 
-Codex CLI can use custom model providers through `~/.codex/config.toml`. For HiLinkup, use the OpenAI-compatible base URL and the Responses wire API.
+Codex CLI can use custom model providers through the user-level `config.toml`. For HiLinkup, use the OpenAI-compatible base URL and the Responses wire API.
+
+<Info>
+  Codex configuration uses `~/.codex/config.toml` for user-level settings. A named profile loads `~/.codex/config.toml` first, then overlays `~/.codex/<profile>.config.toml`. Provider settings should be kept in user-level config or a profile, not in project `.codex/config.toml`.
+</Info>
 
 <Note>
   Examples use the HiLinkup platform model `qwen3.7-plus`, a Chinese model example. Confirm available code models with `/v1/models` and the console.
 </Note>
 
-## Prepare
+## Verify the API first
 
-```bash
-codex --version
-codex doctor
-export HILINKUP_API_KEY="YOUR_HILINKUP_API_KEY"
-```
+<Tabs>
+  <Tab title="macOS / Linux">
+    ```bash
+    export HILINKUP_API_KEY="YOUR_HILINKUP_API_KEY"
 
-List models:
+    curl https://hilinkup.com/v1/models \
+      -H "Authorization: Bearer $HILINKUP_API_KEY"
+    ```
+  </Tab>
+  <Tab title="Windows PowerShell">
+    ```powershell
+    $env:HILINKUP_API_KEY = "YOUR_HILINKUP_API_KEY"
 
-```bash
-curl https://hilinkup.com/v1/models \
-  -H "Authorization: Bearer $HILINKUP_API_KEY"
-```
+    curl.exe https://hilinkup.com/v1/models `
+      -H "Authorization: Bearer $env:HILINKUP_API_KEY"
+    ```
+  </Tab>
+</Tabs>
 
-## Option 1: one-off command
+## Option 1: edit user config
 
-```bash
-HILINKUP_API_KEY="YOUR_HILINKUP_API_KEY" \
-codex \
-  -c model='"qwen3.7-plus"' \
-  -c model_provider='"hilinkup"' \
-  -c model_providers.hilinkup.name='"HiLinkup"' \
-  -c model_providers.hilinkup.base_url='"https://hilinkup.com/v1"' \
-  -c model_providers.hilinkup.env_key='"HILINKUP_API_KEY"' \
-  -c model_providers.hilinkup.wire_api='"responses"'
-```
+Recommended for long-term use.
 
-## Option 2: user config
+<Tabs>
+  <Tab title="macOS">
+    ```bash
+    mkdir -p ~/.codex
+    nano ~/.codex/config.toml
+    ```
 
-Edit `~/.codex/config.toml`:
+    Paste:
 
-```toml
-model = "qwen3.7-plus"
-model_provider = "hilinkup"
+    ```toml
+    model = "qwen3.7-plus"
+    model_provider = "hilinkup"
 
-[model_providers.hilinkup]
-name = "HiLinkup"
-base_url = "https://hilinkup.com/v1"
-env_key = "HILINKUP_API_KEY"
-wire_api = "responses"
-request_max_retries = 2
-stream_max_retries = 5
-stream_idle_timeout_ms = 300000
-```
+    [model_providers.hilinkup]
+    name = "HiLinkup"
+    base_url = "https://hilinkup.com/v1"
+    env_key = "HILINKUP_API_KEY"
+    wire_api = "responses"
+    request_max_retries = 2
+    stream_max_retries = 5
+    stream_idle_timeout_ms = 300000
+    ```
 
-Save the API key in your shell profile:
+    Save with `Ctrl + O`, press Enter, then exit with `Ctrl + X`.
 
-```bash
-printf "HiLinkup API Key: "
-stty -echo
-IFS= read -r HILINKUP_API_KEY
-stty echo
-printf "\n"
-printf '\nexport HILINKUP_API_KEY="%s"\n' "$HILINKUP_API_KEY" >> ~/.zshrc
-source ~/.zshrc
-```
+    Store the key:
 
-If you use bash, replace `~/.zshrc` with `~/.bashrc` or `~/.bash_profile`.
+    ```bash
+    nano ~/.zshrc
+    ```
 
-Then run:
+    Add:
+
+    ```bash
+    export HILINKUP_API_KEY="YOUR_HILINKUP_API_KEY"
+    ```
+
+    Reload:
+
+    ```bash
+    source ~/.zshrc
+    ```
+  </Tab>
+  <Tab title="Linux">
+    ```bash
+    mkdir -p ~/.codex
+    nano ~/.codex/config.toml
+    ```
+
+    Paste:
+
+    ```toml
+    model = "qwen3.7-plus"
+    model_provider = "hilinkup"
+
+    [model_providers.hilinkup]
+    name = "HiLinkup"
+    base_url = "https://hilinkup.com/v1"
+    env_key = "HILINKUP_API_KEY"
+    wire_api = "responses"
+    request_max_retries = 2
+    stream_max_retries = 5
+    stream_idle_timeout_ms = 300000
+    ```
+
+    Save with `Ctrl + O`, press Enter, then exit with `Ctrl + X`.
+
+    Store the key in your shell profile:
+
+    ```bash
+    nano ~/.bashrc
+    ```
+
+    or:
+
+    ```bash
+    nano ~/.zshrc
+    ```
+
+    Add:
+
+    ```bash
+    export HILINKUP_API_KEY="YOUR_HILINKUP_API_KEY"
+    ```
+  </Tab>
+  <Tab title="Windows PowerShell">
+    ```powershell
+    New-Item -ItemType Directory -Force "$env:USERPROFILE\.codex"
+    notepad "$env:USERPROFILE\.codex\config.toml"
+    ```
+
+    Paste and save:
+
+    ```toml
+    model = "qwen3.7-plus"
+    model_provider = "hilinkup"
+
+    [model_providers.hilinkup]
+    name = "HiLinkup"
+    base_url = "https://hilinkup.com/v1"
+    env_key = "HILINKUP_API_KEY"
+    wire_api = "responses"
+    request_max_retries = 2
+    stream_max_retries = 5
+    stream_idle_timeout_ms = 300000
+    ```
+
+    Store the API key:
+
+    ```powershell
+    [Environment]::SetEnvironmentVariable(
+      "HILINKUP_API_KEY",
+      "YOUR_HILINKUP_API_KEY",
+      "User"
+    )
+    ```
+
+    Restart PowerShell, or set it for the current window:
+
+    ```powershell
+    $env:HILINKUP_API_KEY = "YOUR_HILINKUP_API_KEY"
+    ```
+  </Tab>
+</Tabs>
+
+Run:
 
 ```bash
 codex
 ```
 
-## Option 3: profile config
+## Option 2: profile config
 
-Create `~/.codex/hilinkup.config.toml`:
+<Tabs>
+  <Tab title="macOS / Linux">
+    ```bash
+    mkdir -p ~/.codex
+    nano ~/.codex/hilinkup.config.toml
+    ```
 
-```toml
-model = "qwen3.7-plus"
-model_provider = "hilinkup"
+    Paste:
 
-[model_providers.hilinkup]
-name = "HiLinkup"
-base_url = "https://hilinkup.com/v1"
-env_key = "HILINKUP_API_KEY"
-wire_api = "responses"
-```
+    ```toml
+    model = "qwen3.7-plus"
+    model_provider = "hilinkup"
 
-Run:
+    [model_providers.hilinkup]
+    name = "HiLinkup"
+    base_url = "https://hilinkup.com/v1"
+    env_key = "HILINKUP_API_KEY"
+    wire_api = "responses"
+    ```
 
-```bash
-export HILINKUP_API_KEY="YOUR_HILINKUP_API_KEY"
-codex --profile hilinkup
-```
+    Run:
 
-Non-interactive mode:
+    ```bash
+    export HILINKUP_API_KEY="YOUR_HILINKUP_API_KEY"
+    codex --profile hilinkup
+    ```
+  </Tab>
+  <Tab title="Windows PowerShell">
+    ```powershell
+    New-Item -ItemType Directory -Force "$env:USERPROFILE\.codex"
+    notepad "$env:USERPROFILE\.codex\hilinkup.config.toml"
+    ```
 
-```bash
-codex exec --profile hilinkup "Read the README and list the setup steps."
-```
+    Paste:
+
+    ```toml
+    model = "qwen3.7-plus"
+    model_provider = "hilinkup"
+
+    [model_providers.hilinkup]
+    name = "HiLinkup"
+    base_url = "https://hilinkup.com/v1"
+    env_key = "HILINKUP_API_KEY"
+    wire_api = "responses"
+    ```
+
+    Run:
+
+    ```powershell
+    $env:HILINKUP_API_KEY = "YOUR_HILINKUP_API_KEY"
+    codex --profile hilinkup
+    ```
+  </Tab>
+</Tabs>
+
+## Option 3: one-off command
+
+<Tabs>
+  <Tab title="macOS / Linux">
+    ```bash
+    HILINKUP_API_KEY="YOUR_HILINKUP_API_KEY" \
+    codex \
+      -c model='"qwen3.7-plus"' \
+      -c model_provider='"hilinkup"' \
+      -c model_providers.hilinkup.name='"HiLinkup"' \
+      -c model_providers.hilinkup.base_url='"https://hilinkup.com/v1"' \
+      -c model_providers.hilinkup.env_key='"HILINKUP_API_KEY"' \
+      -c model_providers.hilinkup.wire_api='"responses"'
+    ```
+  </Tab>
+  <Tab title="Windows PowerShell">
+    ```powershell
+    $env:HILINKUP_API_KEY = "YOUR_HILINKUP_API_KEY"
+
+    codex `
+      -c model='"qwen3.7-plus"' `
+      -c model_provider='"hilinkup"' `
+      -c model_providers.hilinkup.name='"HiLinkup"' `
+      -c model_providers.hilinkup.base_url='"https://hilinkup.com/v1"' `
+      -c model_providers.hilinkup.env_key='"HILINKUP_API_KEY"' `
+      -c model_providers.hilinkup.wire_api='"responses"'
+    ```
+  </Tab>
+</Tabs>
 
 ## Verify
 

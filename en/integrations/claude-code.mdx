@@ -1,7 +1,7 @@
 ---
 title: "Claude Code"
 description: "Configure Claude Code to use HiLinkup."
-keywords: ["Claude Code", "integration", "settings.json", "ANTHROPIC_BASE_URL"]
+keywords: ["Claude Code", "integration", "settings.json", "ANTHROPIC_BASE_URL", "Windows", "macOS", "Linux"]
 icon: "terminal"
 ---
 
@@ -11,38 +11,94 @@ Claude Code uses Anthropic-style requests. Use this page only when your HiLinkup
   Examples use the HiLinkup platform model `deepseek-v3`. This is a Chinese model example, not a requirement to use an overseas Claude model.
 </Note>
 
-## Option 1: temporary environment variables
+## Recommended: user settings
 
-```bash
-export ANTHROPIC_AUTH_TOKEN="YOUR_HILINKUP_API_KEY"
-export ANTHROPIC_BASE_URL="https://hilinkup.com"
-export ANTHROPIC_MODEL="deepseek-v3"
-```
+Claude Code official settings use `~/.claude/settings.json` for user settings. On Windows, `~/.claude` resolves to `%USERPROFILE%\.claude`.
 
-Then start Claude Code:
+<Tabs>
+  <Tab title="macOS">
+    ```bash
+    mkdir -p ~/.claude
+    nano ~/.claude/settings.json
+    ```
 
-```bash
-claude
-```
+    Paste:
 
-## Option 2: user settings
+    ```json
+    {
+      "$schema": "https://json.schemastore.org/claude-code-settings.json",
+      "env": {
+        "ANTHROPIC_AUTH_TOKEN": "YOUR_HILINKUP_API_KEY",
+        "ANTHROPIC_BASE_URL": "https://hilinkup.com",
+        "ANTHROPIC_MODEL": "deepseek-v3"
+      }
+    }
+    ```
 
-Create or edit `~/.claude/settings.json`:
+    Save with `Ctrl + O`, press Enter, then exit with `Ctrl + X`.
+  </Tab>
+  <Tab title="Linux">
+    ```bash
+    mkdir -p ~/.claude
+    nano ~/.claude/settings.json
+    ```
 
-```json
-{
-  "$schema": "https://json.schemastore.org/claude-code-settings.json",
-  "env": {
-    "ANTHROPIC_AUTH_TOKEN": "YOUR_HILINKUP_API_KEY",
-    "ANTHROPIC_BASE_URL": "https://hilinkup.com",
-    "ANTHROPIC_MODEL": "deepseek-v3"
-  }
-}
-```
+    Paste:
 
-## Option 3: project-local settings
+    ```json
+    {
+      "$schema": "https://json.schemastore.org/claude-code-settings.json",
+      "env": {
+        "ANTHROPIC_AUTH_TOKEN": "YOUR_HILINKUP_API_KEY",
+        "ANTHROPIC_BASE_URL": "https://hilinkup.com",
+        "ANTHROPIC_MODEL": "deepseek-v3"
+      }
+    }
+    ```
 
-Create `.claude/settings.local.json` in the project:
+    Save with `Ctrl + O`, press Enter, then exit with `Ctrl + X`.
+  </Tab>
+  <Tab title="Windows PowerShell">
+    ```powershell
+    New-Item -ItemType Directory -Force "$env:USERPROFILE\.claude"
+    notepad "$env:USERPROFILE\.claude\settings.json"
+    ```
+
+    Paste and save:
+
+    ```json
+    {
+      "$schema": "https://json.schemastore.org/claude-code-settings.json",
+      "env": {
+        "ANTHROPIC_AUTH_TOKEN": "YOUR_HILINKUP_API_KEY",
+        "ANTHROPIC_BASE_URL": "https://hilinkup.com",
+        "ANTHROPIC_MODEL": "deepseek-v3"
+      }
+    }
+    ```
+  </Tab>
+</Tabs>
+
+## Project-local settings
+
+Use `.claude/settings.local.json` when only the current project should use HiLinkup.
+
+<Tabs>
+  <Tab title="macOS / Linux">
+    ```bash
+    mkdir -p .claude
+    nano .claude/settings.local.json
+    ```
+  </Tab>
+  <Tab title="Windows PowerShell">
+    ```powershell
+    New-Item -ItemType Directory -Force ".claude"
+    notepad ".claude\settings.local.json"
+    ```
+  </Tab>
+</Tabs>
+
+Paste:
 
 ```json
 {
@@ -63,26 +119,69 @@ Create `.claude/settings.local.json` in the project:
 
 Do not commit `.claude/settings.local.json`.
 
+## Temporary environment variables
+
+<Tabs>
+  <Tab title="macOS / Linux">
+    ```bash
+    export ANTHROPIC_AUTH_TOKEN="YOUR_HILINKUP_API_KEY"
+    export ANTHROPIC_BASE_URL="https://hilinkup.com"
+    export ANTHROPIC_MODEL="deepseek-v3"
+    claude
+    ```
+  </Tab>
+  <Tab title="Windows PowerShell">
+    ```powershell
+    $env:ANTHROPIC_AUTH_TOKEN = "YOUR_HILINKUP_API_KEY"
+    $env:ANTHROPIC_BASE_URL = "https://hilinkup.com"
+    $env:ANTHROPIC_MODEL = "deepseek-v3"
+    claude
+    ```
+  </Tab>
+</Tabs>
+
 ## Verify
 
 First test the protocol directly:
 
-```bash
-curl https://hilinkup.com/v1/messages \
-  -H "content-type: application/json" \
-  -H "x-api-key: $HILINKUP_API_KEY" \
-  -H "anthropic-version: 2023-06-01" \
-  -d '{
-    "model": "deepseek-v3",
-    "max_tokens": 256,
-    "messages": [
-      {
-        "role": "user",
-        "content": "Reply with: HiLinkup Claude route is working."
-      }
-    ]
-  }'
-```
+<Tabs>
+  <Tab title="macOS / Linux">
+    ```bash
+    curl https://hilinkup.com/v1/messages \
+      -H "content-type: application/json" \
+      -H "x-api-key: $HILINKUP_API_KEY" \
+      -H "anthropic-version: 2023-06-01" \
+      -d '{
+        "model": "deepseek-v3",
+        "max_tokens": 256,
+        "messages": [
+          {
+            "role": "user",
+            "content": "Reply with: HiLinkup Claude route is working."
+          }
+        ]
+      }'
+    ```
+  </Tab>
+  <Tab title="Windows PowerShell">
+    ```powershell
+    curl.exe https://hilinkup.com/v1/messages `
+      -H "content-type: application/json" `
+      -H "x-api-key: $env:HILINKUP_API_KEY" `
+      -H "anthropic-version: 2023-06-01" `
+      -d '{
+        "model": "deepseek-v3",
+        "max_tokens": 256,
+        "messages": [
+          {
+            "role": "user",
+            "content": "Reply with: HiLinkup Claude route is working."
+          }
+        ]
+      }'
+    ```
+  </Tab>
+</Tabs>
 
 Then start Claude Code and send a plain prompt before testing file reads, shell commands, or long agent tasks.
 

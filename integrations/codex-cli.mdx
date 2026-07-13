@@ -1,161 +1,291 @@
 ---
 title: "Codex CLI"
 description: "在 OpenAI Codex CLI 中配置 HiLinkup OpenAI 兼容模型服务。"
-keywords: ["Codex CLI", "config.toml", "model_providers", "OpenAI compatible"]
+keywords: ["Codex CLI", "config.toml", "model_providers", "OpenAI compatible", "Windows", "macOS", "Linux"]
 icon: "terminal"
 ---
 
-Codex CLI 支持通过 `~/.codex/config.toml` 配置自定义模型供应商。HiLinkup 作为 OpenAI 兼容服务时，应使用 `https://hilinkup.com/v1` 和 Responses 协议。
+Codex CLI 支持通过用户级 `config.toml` 配置自定义模型供应商。HiLinkup 作为 OpenAI 兼容服务时，使用 `https://hilinkup.com/v1` 和 Responses 协议。
 
 <Info>
-  Codex CLI 配置字段会随版本变化。以下配置基于 Codex 的 `model_providers.<id>`、`base_url`、`env_key` 和 `wire_api` 配置方式。修改后建议运行 `codex doctor` 检查配置。
+  Codex 官方配置说明：`~/.codex/config.toml` 是用户级配置；`--profile hilinkup` 会加载 `~/.codex/config.toml`，再叠加 `~/.codex/hilinkup.config.toml`；Provider 相关配置应放在用户级配置或 profile 中，不应放在项目级 `.codex/config.toml`。
 </Info>
 
 <Note>
   本页示例模型使用 HiLinkup 平台上的中国模型 `qwen3.7-plus`。实际代码模型请以 `/v1/models` 和控制台展示为准。
 </Note>
 
-## 接入前准备
+## 先确认 API 可用
 
-<Steps>
-  <Step title="确认 Codex CLI 可用">
-    ```bash
-    codex --version
-    codex doctor
-    ```
-  </Step>
-  <Step title="设置 API Key">
+先在终端验证 API Key 和模型列表。
+
+<Tabs>
+  <Tab title="macOS / Linux">
     ```bash
     export HILINKUP_API_KEY="YOUR_HILINKUP_API_KEY"
-    ```
-  </Step>
-  <Step title="确认模型 ID">
-    ```bash
+
     curl https://hilinkup.com/v1/models \
       -H "Authorization: Bearer $HILINKUP_API_KEY"
     ```
+  </Tab>
+  <Tab title="Windows PowerShell">
+    ```powershell
+    $env:HILINKUP_API_KEY = "YOUR_HILINKUP_API_KEY"
 
-    从返回的 `data[].id` 中选择适合代码任务的模型。
-  </Step>
-</Steps>
+    curl.exe https://hilinkup.com/v1/models `
+      -H "Authorization: Bearer $env:HILINKUP_API_KEY"
+    ```
+  </Tab>
+</Tabs>
 
-## 方法一：临时命令行配置
+从返回的 `data[].id` 中选择模型。下面示例使用 `qwen3.7-plus`。
+
+## 方法一：编辑用户级配置文件
+
+这是推荐方式。配置保存后，以后直接运行 `codex` 即可。
+
+<Tabs>
+  <Tab title="macOS">
+    1. 打开配置文件：
+
+    ```bash
+    mkdir -p ~/.codex
+    nano ~/.codex/config.toml
+    ```
+
+    2. 粘贴以下内容：
+
+    ```toml
+    model = "qwen3.7-plus"
+    model_provider = "hilinkup"
+
+    [model_providers.hilinkup]
+    name = "HiLinkup"
+    base_url = "https://hilinkup.com/v1"
+    env_key = "HILINKUP_API_KEY"
+    wire_api = "responses"
+    request_max_retries = 2
+    stream_max_retries = 5
+    stream_idle_timeout_ms = 300000
+    ```
+
+    3. 保存：按 `Ctrl + O`，回车，再按 `Ctrl + X` 退出。
+
+    4. 保存 API Key：
+
+    ```bash
+    nano ~/.zshrc
+    ```
+
+    在文件末尾添加：
+
+    ```bash
+    export HILINKUP_API_KEY="YOUR_HILINKUP_API_KEY"
+    ```
+
+    保存退出后执行：
+
+    ```bash
+    source ~/.zshrc
+    ```
+  </Tab>
+  <Tab title="Linux">
+    1. 打开配置文件：
+
+    ```bash
+    mkdir -p ~/.codex
+    nano ~/.codex/config.toml
+    ```
+
+    2. 粘贴以下内容：
+
+    ```toml
+    model = "qwen3.7-plus"
+    model_provider = "hilinkup"
+
+    [model_providers.hilinkup]
+    name = "HiLinkup"
+    base_url = "https://hilinkup.com/v1"
+    env_key = "HILINKUP_API_KEY"
+    wire_api = "responses"
+    request_max_retries = 2
+    stream_max_retries = 5
+    stream_idle_timeout_ms = 300000
+    ```
+
+    3. 保存：按 `Ctrl + O`，回车，再按 `Ctrl + X` 退出。
+
+    4. 保存 API Key。bash 用户编辑：
+
+    ```bash
+    nano ~/.bashrc
+    ```
+
+    zsh 用户编辑：
+
+    ```bash
+    nano ~/.zshrc
+    ```
+
+    添加：
+
+    ```bash
+    export HILINKUP_API_KEY="YOUR_HILINKUP_API_KEY"
+    ```
+
+    保存退出后执行对应命令：
+
+    ```bash
+    source ~/.bashrc
+    ```
+
+    或：
+
+    ```bash
+    source ~/.zshrc
+    ```
+  </Tab>
+  <Tab title="Windows PowerShell">
+    1. 创建配置目录：
+
+    ```powershell
+    New-Item -ItemType Directory -Force "$env:USERPROFILE\.codex"
+    ```
+
+    2. 打开配置文件：
+
+    ```powershell
+    notepad "$env:USERPROFILE\.codex\config.toml"
+    ```
+
+    3. 粘贴以下内容并保存：
+
+    ```toml
+    model = "qwen3.7-plus"
+    model_provider = "hilinkup"
+
+    [model_providers.hilinkup]
+    name = "HiLinkup"
+    base_url = "https://hilinkup.com/v1"
+    env_key = "HILINKUP_API_KEY"
+    wire_api = "responses"
+    request_max_retries = 2
+    stream_max_retries = 5
+    stream_idle_timeout_ms = 300000
+    ```
+
+    4. 设置用户级环境变量：
+
+    ```powershell
+    [Environment]::SetEnvironmentVariable(
+      "HILINKUP_API_KEY",
+      "YOUR_HILINKUP_API_KEY",
+      "User"
+    )
+    ```
+
+    5. 关闭并重新打开 PowerShell，或者在当前窗口临时设置：
+
+    ```powershell
+    $env:HILINKUP_API_KEY = "YOUR_HILINKUP_API_KEY"
+    ```
+  </Tab>
+</Tabs>
+
+## 方法二：创建独立 profile
+
+如果你不想把默认 Codex 配置切到 HiLinkup，可以创建 `hilinkup` profile。运行时使用 `codex --profile hilinkup`。
+
+<Tabs>
+  <Tab title="macOS / Linux">
+    ```bash
+    mkdir -p ~/.codex
+    nano ~/.codex/hilinkup.config.toml
+    ```
+
+    粘贴：
+
+    ```toml
+    model = "qwen3.7-plus"
+    model_provider = "hilinkup"
+
+    [model_providers.hilinkup]
+    name = "HiLinkup"
+    base_url = "https://hilinkup.com/v1"
+    env_key = "HILINKUP_API_KEY"
+    wire_api = "responses"
+    ```
+
+    启动：
+
+    ```bash
+    export HILINKUP_API_KEY="YOUR_HILINKUP_API_KEY"
+    codex --profile hilinkup
+    ```
+  </Tab>
+  <Tab title="Windows PowerShell">
+    ```powershell
+    New-Item -ItemType Directory -Force "$env:USERPROFILE\.codex"
+    notepad "$env:USERPROFILE\.codex\hilinkup.config.toml"
+    ```
+
+    粘贴：
+
+    ```toml
+    model = "qwen3.7-plus"
+    model_provider = "hilinkup"
+
+    [model_providers.hilinkup]
+    name = "HiLinkup"
+    base_url = "https://hilinkup.com/v1"
+    env_key = "HILINKUP_API_KEY"
+    wire_api = "responses"
+    ```
+
+    启动：
+
+    ```powershell
+    $env:HILINKUP_API_KEY = "YOUR_HILINKUP_API_KEY"
+    codex --profile hilinkup
+    ```
+  </Tab>
+</Tabs>
+
+## 方法三：临时命令行配置
 
 适合首次验证，不改任何配置文件。
 
-```bash
-HILINKUP_API_KEY="YOUR_HILINKUP_API_KEY" \
-codex \
-  -c model='"qwen3.7-plus"' \
-  -c model_provider='"hilinkup"' \
-  -c model_providers.hilinkup.name='"HiLinkup"' \
-  -c model_providers.hilinkup.base_url='"https://hilinkup.com/v1"' \
-  -c model_providers.hilinkup.env_key='"HILINKUP_API_KEY"' \
-  -c model_providers.hilinkup.wire_api='"responses"'
-```
+<Tabs>
+  <Tab title="macOS / Linux">
+    ```bash
+    HILINKUP_API_KEY="YOUR_HILINKUP_API_KEY" \
+    codex \
+      -c model='"qwen3.7-plus"' \
+      -c model_provider='"hilinkup"' \
+      -c model_providers.hilinkup.name='"HiLinkup"' \
+      -c model_providers.hilinkup.base_url='"https://hilinkup.com/v1"' \
+      -c model_providers.hilinkup.env_key='"HILINKUP_API_KEY"' \
+      -c model_providers.hilinkup.wire_api='"responses"'
+    ```
+  </Tab>
+  <Tab title="Windows PowerShell">
+    ```powershell
+    $env:HILINKUP_API_KEY = "YOUR_HILINKUP_API_KEY"
+
+    codex `
+      -c model='"qwen3.7-plus"' `
+      -c model_provider='"hilinkup"' `
+      -c model_providers.hilinkup.name='"HiLinkup"' `
+      -c model_providers.hilinkup.base_url='"https://hilinkup.com/v1"' `
+      -c model_providers.hilinkup.env_key='"HILINKUP_API_KEY"' `
+      -c model_providers.hilinkup.wire_api='"responses"'
+    ```
+  </Tab>
+</Tabs>
 
 <Note>
-  `-c` 的值按 TOML 解析，所以字符串值外面需要带引号。上面的写法可以直接复制到 shell。
+  `-c` 的值按 TOML 解析，所以字符串值外面需要带引号。PowerShell 中换行符是反引号 `` ` ``，不要替换成反斜杠。
 </Note>
-
-## 方法二：用户级 `~/.codex/config.toml`
-
-适合个人长期使用。编辑 `~/.codex/config.toml`，加入：
-
-```toml
-model = "qwen3.7-plus"
-model_provider = "hilinkup"
-
-[model_providers.hilinkup]
-name = "HiLinkup"
-base_url = "https://hilinkup.com/v1"
-env_key = "HILINKUP_API_KEY"
-wire_api = "responses"
-request_max_retries = 2
-stream_max_retries = 5
-stream_idle_timeout_ms = 300000
-```
-
-然后在 shell profile 中保存密钥。下面的命令可以直接复制运行，会提示你输入 API Key：
-
-```bash
-printf "HiLinkup API Key: "
-stty -echo
-IFS= read -r HILINKUP_API_KEY
-stty echo
-printf "\n"
-printf '\nexport HILINKUP_API_KEY="%s"\n' "$HILINKUP_API_KEY" >> ~/.zshrc
-source ~/.zshrc
-```
-
-如果你使用 bash，把 `~/.zshrc` 改成 `~/.bashrc` 或 `~/.bash_profile`。
-
-启动：
-
-```bash
-codex
-```
-
-## 方法三：Profile 配置
-
-如果你不想把默认 Codex 配置切到 HiLinkup，可以创建一个独立 profile。
-
-创建 `~/.codex/hilinkup.config.toml`：
-
-```toml
-model = "qwen3.7-plus"
-model_provider = "hilinkup"
-
-[model_providers.hilinkup]
-name = "HiLinkup"
-base_url = "https://hilinkup.com/v1"
-env_key = "HILINKUP_API_KEY"
-wire_api = "responses"
-```
-
-启动时指定 profile：
-
-```bash
-export HILINKUP_API_KEY="YOUR_HILINKUP_API_KEY"
-codex --profile hilinkup
-```
-
-非交互模式：
-
-```bash
-export HILINKUP_API_KEY="YOUR_HILINKUP_API_KEY"
-codex exec --profile hilinkup "阅读 README，并列出项目启动步骤。"
-```
-
-## 方法四：项目级启动脚本
-
-团队项目可以提交一个不含密钥的脚本，方便成员统一使用。
-
-创建 `scripts/codex-hilinkup`：
-
-```bash
-#!/usr/bin/env bash
-set -euo pipefail
-
-: "${HILINKUP_API_KEY:?Set HILINKUP_API_KEY first}"
-
-exec codex \
-  -c model='"qwen3.7-plus"' \
-  -c model_provider='"hilinkup"' \
-  -c model_providers.hilinkup.name='"HiLinkup"' \
-  -c model_providers.hilinkup.base_url='"https://hilinkup.com/v1"' \
-  -c model_providers.hilinkup.env_key='"HILINKUP_API_KEY"' \
-  -c model_providers.hilinkup.wire_api='"responses"' \
-  "$@"
-```
-
-授权并运行：
-
-```bash
-chmod +x scripts/codex-hilinkup
-export HILINKUP_API_KEY="YOUR_HILINKUP_API_KEY"
-./scripts/codex-hilinkup "总结这个仓库的目录结构。"
-```
 
 ## 验证
 
@@ -179,13 +309,16 @@ export HILINKUP_API_KEY="YOUR_HILINKUP_API_KEY"
 
 <AccordionGroup>
   <Accordion title="配置后仍然没有走 HiLinkup">
-    检查 `model_provider = "hilinkup"` 是否设置在当前生效的配置层。使用 `--profile hilinkup` 时，文件名必须是 `~/.codex/hilinkup.config.toml`。
+    检查 `model_provider = "hilinkup"` 是否设置在当前生效的配置层。使用 `--profile hilinkup` 时，文件名必须是 `~/.codex/hilinkup.config.toml`，Windows 下对应 `%USERPROFILE%\.codex\hilinkup.config.toml`。
   </Accordion>
   <Accordion title="提示找不到 API Key">
-    确认 `env_key = "HILINKUP_API_KEY"`，并且启动 Codex 的同一个 shell 中能执行 `echo $HILINKUP_API_KEY`。
+    确认 `env_key = "HILINKUP_API_KEY"`，并且启动 Codex 的同一个 shell 中能读取该变量。macOS/Linux 执行 `echo $HILINKUP_API_KEY`；Windows PowerShell 执行 `echo $env:HILINKUP_API_KEY`。
   </Accordion>
   <Accordion title="Responses 路径不通">
     Codex 的自定义 provider 建议使用 `wire_api = "responses"`。先用 [Responses](/api-reference/responses) 页面里的 cURL 验证 `https://hilinkup.com/v1/responses`。
+  </Accordion>
+  <Accordion title="不要把 provider 写到项目级 .codex/config.toml">
+    Codex 官方文档说明项目级 `.codex/config.toml` 不能覆盖 `model_provider` 和 `model_providers` 等 Provider 鉴权相关配置。请把这些配置写到用户级 `~/.codex/config.toml` 或 `~/.codex/hilinkup.config.toml`。
   </Accordion>
   <Accordion title="不要覆盖内置 openai provider">
     不要写 `[model_providers.openai]`。`openai` 是保留 ID；自定义供应商请使用 `hilinkup`、`hilinkup-prod` 这类新 ID。
