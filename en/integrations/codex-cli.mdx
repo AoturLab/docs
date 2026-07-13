@@ -57,10 +57,23 @@ stream_max_retries = 5
 stream_idle_timeout_ms = 300000
 ```
 
+Save the API key in your shell profile:
+
+```bash
+printf "HiLinkup API Key: "
+stty -echo
+IFS= read -r HILINKUP_API_KEY
+stty echo
+printf "\n"
+printf '\nexport HILINKUP_API_KEY="%s"\n' "$HILINKUP_API_KEY" >> ~/.zshrc
+source ~/.zshrc
+```
+
+If you use bash, replace `~/.zshrc` with `~/.bashrc` or `~/.bash_profile`.
+
 Then run:
 
 ```bash
-export HILINKUP_API_KEY="YOUR_HILINKUP_API_KEY"
 codex
 ```
 

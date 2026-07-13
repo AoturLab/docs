@@ -76,12 +76,19 @@ stream_max_retries = 5
 stream_idle_timeout_ms = 300000
 ```
 
-然后在 shell profile 中保存密钥：
+然后在 shell profile 中保存密钥。下面的命令可以直接复制运行，会提示你输入 API Key：
 
 ```bash
-printf '%s\n' 'export HILINKUP_API_KEY="YOUR_HILINKUP_API_KEY"' >> ~/.zshrc
+printf "HiLinkup API Key: "
+stty -echo
+IFS= read -r HILINKUP_API_KEY
+stty echo
+printf "\n"
+printf '\nexport HILINKUP_API_KEY="%s"\n' "$HILINKUP_API_KEY" >> ~/.zshrc
 source ~/.zshrc
 ```
+
+如果你使用 bash，把 `~/.zshrc` 改成 `~/.bashrc` 或 `~/.bash_profile`。
 
 启动：
 
