@@ -1,0 +1,183 @@
+---
+title: "CC Switch"
+description: "Use CC Switch to route Claude Code through HiLinkup."
+keywords: ["CC Switch", "Claude Code", "ANTHROPIC_AUTH_TOKEN", "model mapping", "Chinese models"]
+icon: "toggle-right"
+---
+
+CC Switch lets you manage Claude Code providers in one place. Add HiLinkup as a provider, then map Claude Code roles such as Sonnet, Opus, Fable, and Haiku to models available on the HiLinkup platform.
+
+Official references:
+
+- [CC Switch interface overview](https://ccswitch.io/en/docs?section=getting-started&item=interface)
+- [Add provider](https://ccswitch.io/en/docs?section=providers&item=add)
+- [Switch provider](https://ccswitch.io/en/docs?section=providers&item=switch)
+- [Edit provider](https://ccswitch.io/en/docs?section=providers&item=edit)
+
+<Warning>
+  CC Switch is for Claude Code-style requests. Before configuring it, confirm that your HiLinkup account and target model support [Claude Messages](/en/api-reference/claude-messages)-compatible calls.
+</Warning>
+
+<Note>
+  Examples use Chinese models such as `deepseek-v4-pro`, `deepseek-v4-flash`, and `MiniMax-M2.1`. The actual model list depends on the HiLinkup console and the model list returned inside CC Switch.
+</Note>
+
+## Before you start
+
+Prepare:
+
+- CC Switch installed and open.
+- A HiLinkup API key.
+- HiLinkup request URL: `https://hilinkup.com/v1`
+- At least one model that supports Claude Messages-compatible calls.
+
+Verify the key and model list first:
+
+<Tabs>
+  <Tab title="macOS / Linux">
+    ```bash
+    export HILINKUP_API_KEY="YOUR_HILINKUP_API_KEY"
+
+    curl https://hilinkup.com/v1/models \
+      -H "Authorization: Bearer $HILINKUP_API_KEY"
+    ```
+  </Tab>
+  <Tab title="Windows PowerShell">
+    ```powershell
+    $env:HILINKUP_API_KEY = "YOUR_HILINKUP_API_KEY"
+
+    curl.exe https://hilinkup.com/v1/models `
+      -H "Authorization: Bearer $env:HILINKUP_API_KEY"
+    ```
+  </Tab>
+</Tabs>
+
+## Add HiLinkup as a provider
+
+![CC Switch provider list with the add-provider button in the upper-right corner](/images/cc-switch/provider-list.png)
+
+<Steps>
+  <Step title="Open provider management">
+    Open CC Switch and select Claude Code in the app switcher. The official docs describe the app switcher as the place to switch between Claude, Claude Desktop, Codex, Gemini, OpenCode, OpenClaw, Hermes, and other supported apps.
+  </Step>
+  <Step title="Add a provider">
+    Click the `+` button in the upper-right corner to open the add-provider page.
+  </Step>
+  <Step title="Choose the provider type">
+    Select "App-specific Provider". If your CC Switch version supports "Universal Provider", you can use it for shared config across apps; this guide uses a Claude Code-specific provider.
+  </Step>
+  <Step title="Fill in provider details">
+    Use these values:
+
+    | Field | Value |
+    | --- | --- |
+    | Provider name | `HiLinkup` |
+    | Website | `https://hilinkup.com` |
+    | API Key | Your HiLinkup API key |
+    | Request URL | `https://hilinkup.com/v1` |
+  </Step>
+  <Step title="Confirm the auth field">
+    Keep the default auth environment variable as `ANTHROPIC_AUTH_TOKEN`. CC Switch writes the key into the corresponding provider config.
+  </Step>
+  <Step title="Save the provider">
+    Click Add or Save. Return to the provider list and confirm that HiLinkup appears.
+  </Step>
+</Steps>
+
+![Adding HiLinkup as a provider in CC Switch](/images/cc-switch/add-provider.png)
+
+<Info>
+  Use the Claude-compatible server URL and avoid a trailing slash. The recommended request URL is `https://hilinkup.com/v1`.
+</Info>
+
+## Fetch models and map roles
+
+After adding the provider, open the HiLinkup edit page in CC Switch.
+
+![Fetching models and configuring model mapping in CC Switch](/images/cc-switch/model-mapping.png)
+
+<Steps>
+  <Step title="Fetch the model list">
+    Click "Get model list". The official docs state that CC Switch uses the configured API key to call the OpenAI-compatible `/v1/models` endpoint and then shows models in a grouped dropdown.
+  </Step>
+  <Step title="Map Sonnet">
+    For `Sonnet`, choose a model suitable for daily coding and agent work, such as `deepseek-v4-pro`.
+  </Step>
+  <Step title="Map Opus">
+    For `Opus`, choose a stronger model for complex refactors, architecture analysis, or long-context work, such as `MiniMax-M2.1`.
+  </Step>
+  <Step title="Map Fable and Haiku">
+    For `Fable` and `Haiku`, choose a faster or lower-cost model, such as `deepseek-v4-flash`.
+  </Step>
+  <Step title="Set a fallback model">
+    Choose a stable default fallback model. Requests that do not clearly map to Sonnet, Opus, Fable, or Haiku will use this model.
+  </Step>
+  <Step title="Save the mapping">
+    Click Save and return to the CC Switch provider list.
+  </Step>
+</Steps>
+
+## Recommended mapping
+
+| Claude Code role | Best for | HiLinkup model example |
+| --- | --- | --- |
+| Sonnet | Daily coding, file edits, regular agent tasks | `deepseek-v4-pro` |
+| Opus | Complex refactors, long-context reasoning, architecture analysis | `MiniMax-M2.1` |
+| Fable | Fast Q&A, lightweight edits, lower-cost tasks | `deepseek-v4-flash` |
+| Haiku | Classification, summaries, small tasks | `deepseek-v4-flash` |
+| Default fallback | Requests that do not match a role | `deepseek-v4-pro` |
+
+<Tip>
+  If you are not sure which models to choose, map both Sonnet and the fallback model to one stable model first. After Claude Code works, tune Opus, Fable, and Haiku separately.
+</Tip>
+
+## Switch to HiLinkup
+
+<Steps>
+  <Step title="Return to the provider list">
+    Find the `HiLinkup` provider on the CC Switch home screen.
+  </Step>
+  <Step title="Set it as the active provider">
+    Select HiLinkup. Confirm that the active provider is `HiLinkup` and the request URL shows `https://hilinkup.com` or `https://hilinkup.com/v1`.
+  </Step>
+  <Step title="Confirm it takes effect">
+    The official docs state that Claude Code supports hot reload, so switching providers usually takes effect immediately. If requests still use the old provider, close and reopen Claude Code.
+  </Step>
+  <Step title="Send a test prompt">
+    In Claude Code, send:
+
+    ```text
+    Reply only with: HiLinkup via CC Switch is configured
+    ```
+  </Step>
+</Steps>
+
+## Verification order
+
+Test in this order instead of starting with a complex agent task:
+
+1. Plain text question.
+2. Read the current directory structure.
+3. Read one non-sensitive file.
+4. Make one small change in a temporary directory or temporary branch.
+5. Test long context, tool use, and multi-file edits.
+
+## Common issues
+
+<AccordionGroup>
+  <Accordion title="Get model list fails">
+    Check that the API key is a HiLinkup key and that the request URL is `https://hilinkup.com/v1`. Browser or system proxy settings can also cause an empty model list.
+  </Accordion>
+  <Accordion title="Models appear, but Claude Code requests fail">
+    A model returned by `/v1/models` is not guaranteed to support Claude Messages-compatible calls. Switch to a model that explicitly supports Claude Code or Claude Messages, or verify with the [Claude Messages](/en/api-reference/claude-messages) cURL example first.
+  </Accordion>
+  <Accordion title="Claude Code still uses the old provider">
+    Claude Code usually hot-reloads config. If it still uses the old provider, first confirm that HiLinkup is the active provider; if it still does not apply, close and reopen Claude Code.
+  </Accordion>
+  <Accordion title="Should the URL be https://hilinkup.com or https://hilinkup.com/v1?">
+    In the CC Switch provider request URL, use `https://hilinkup.com/v1`. If your CC Switch version explicitly says not to include `/v1`, follow the app prompt and use `https://hilinkup.com`.
+  </Accordion>
+  <Accordion title="How should I choose model mappings?">
+    Start stable: use the same reliable model for Sonnet and the fallback model; use a stronger model for Opus; use faster or lower-cost models for Fable and Haiku. Tune later based on latency, cost, and success rate.
+  </Accordion>
+</AccordionGroup>
