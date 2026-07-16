@@ -1,0 +1,108 @@
+---
+title: "WorkBuddy"
+description: "在 WorkBuddy 中添加 HiLinkup 自定义模型，并通过 OpenAI 兼容接口开始使用。"
+keywords: ["WorkBuddy", "自定义模型", "OpenAI compatible", "Chat Completions", "HiLinkup"]
+icon: "briefcase-business"
+---
+
+WorkBuddy 支持添加 OpenAI 兼容的自定义模型。将 HiLinkup 的完整 Chat Completions 地址、API Key 和模型 ID 写入模型设置后，你可以直接在 WorkBuddy 的模型菜单中选择该模型。
+
+<Card title="下载 WorkBuddy" icon="download" href="https://www.codebuddy.cn/work/">
+  前往 WorkBuddy 官网下载并安装客户端。
+</Card>
+
+## 配置前准备
+
+你需要：
+
+- 已安装并登录 WorkBuddy。
+- 从 [HiLinkup 控制台](https://hilinkup.com/console/token) 获取的 API Key。
+- 完整接口地址：`https://hilinkup.com/v1/chat/completions`
+- 一个当前可用的 HiLinkup 模型 ID。
+
+<Warning>
+  API Key 只应填写在 WorkBuddy 的 API Key 字段中。不要把真实密钥写入截图、聊天消息或项目文件。
+</Warning>
+
+<Note>
+  模型名称必须使用 HiLinkup 返回的完整模型 ID。请先查看[获取模型列表](/api-reference/models)，不要根据示例名称猜测。
+</Note>
+
+## 添加 HiLinkup 自定义模型
+
+<Steps>
+  <Step title="打开设置">
+    打开 WorkBuddy，点击左下角的头像或账户区域，在展开的菜单中点击 **Settings**。
+
+    <Frame caption="从 WorkBuddy 账户菜单进入 Settings">
+      <img src="/images/workbuddy/01-open-settings.png" alt="WorkBuddy 左下角账户菜单中的 Settings 入口" />
+    </Frame>
+  </Step>
+
+  <Step title="进入模型设置">
+    在设置窗口左侧选择 **Models**，进入自定义模型管理页面，然后点击右上角的 **Add Model**。
+
+    <Frame caption="打开 Models 页面并点击 Add Model">
+      <img src="/images/workbuddy/02-model-settings.png" alt="WorkBuddy 设置中的 Models 页面和 Add Model 按钮" />
+    </Frame>
+
+    <Info>
+      WorkBuddy 会把自定义模型设置保存在本机 `~/.workbuddy/models.json`。通常不需要直接编辑这个文件。
+    </Info>
+  </Step>
+
+  <Step title="填写 HiLinkup 模型配置">
+    在添加或编辑模型窗口中填写：
+
+    | 字段 | 填写内容 |
+    | --- | --- |
+    | Provider | `Custom` |
+    | Endpoint | `https://hilinkup.com/v1/chat/completions` |
+    | API Key | 从 HiLinkup 控制台获取的 API Key |
+    | Model Name | HiLinkup 返回的完整模型 ID |
+
+    <Frame caption="选择 Custom 并填写 HiLinkup Endpoint、API Key 和模型名称">
+      <img src="/images/workbuddy/03-add-custom-model.png" alt="WorkBuddy 自定义模型窗口中的 HiLinkup Endpoint、API Key 和模型名称" />
+    </Frame>
+
+    “Advanced Settings”中的工具调用、图片输入和推理选项取决于所选模型能力。只启用模型明确支持的功能；不确定时先保持默认值。
+
+    确认配置后点击 **Save**。如果需要多个模型，请为每个模型重复添加一次。
+  </Step>
+
+  <Step title="在 WorkBuddy 中使用模型">
+    回到 WorkBuddy 主界面，点击输入框旁的模型菜单。在 **Custom Models** 下选择刚保存的模型，然后发送一条简短消息进行测试。
+
+    <Frame caption="从 Custom Models 中选择 HiLinkup 模型">
+      <img src="/images/workbuddy/04-use-custom-model.png" alt="WorkBuddy 模型菜单中的 qwen3.7-plus、glm-5.2 和 mimo-v2.5-pro 自定义模型" />
+    </Frame>
+  </Step>
+</Steps>
+
+<Check>
+  如果自定义模型出现在模型菜单中，并且能够正常返回内容，配置已经生效。
+</Check>
+
+## 常见问题
+
+<AccordionGroup>
+  <Accordion title="模型保存后没有出现在菜单中">
+    先确认已经点击 **Save**。关闭模型菜单后重新打开；仍未显示时，完全退出并重新启动 WorkBuddy。
+  </Accordion>
+
+  <Accordion title="请求返回 401 或 403">
+    检查 API Key 是否完整、是否仍然有效，以及当前账户是否有权访问所选模型。不要在 API Key 前后加入空格或引号。
+  </Accordion>
+
+  <Accordion title="请求返回 404">
+    WorkBuddy 的 Endpoint 需要填写完整接口路径：`https://hilinkup.com/v1/chat/completions`，不能只填写 `https://hilinkup.com/v1`。
+  </Accordion>
+
+  <Accordion title="模型名称错误或模型不可用">
+    使用 `GET /v1/models` 返回的 `data[].id` 作为 Model Name。模型列表可能更新，因此请以 [HiLinkup 模型列表接口](/api-reference/models)的实时结果为准。
+  </Accordion>
+
+  <Accordion title="工具调用、图片或推理功能失败">
+    这些能力取决于模型和上游通道。先关闭对应高级选项验证普通文本请求，再选择明确支持该能力的模型重新测试。
+  </Accordion>
+</AccordionGroup>

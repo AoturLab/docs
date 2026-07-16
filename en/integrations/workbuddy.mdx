@@ -1,0 +1,108 @@
+---
+title: "WorkBuddy"
+description: "Add HiLinkup custom models to WorkBuddy through its OpenAI-compatible model settings."
+keywords: ["WorkBuddy", "custom model", "OpenAI compatible", "Chat Completions", "HiLinkup"]
+icon: "briefcase-business"
+---
+
+WorkBuddy supports custom OpenAI-compatible models. Enter the full HiLinkup Chat Completions endpoint, an API key, and an exact model ID to make the model available in the WorkBuddy model menu.
+
+<Card title="Download WorkBuddy" icon="download" href="https://www.codebuddy.cn/work/">
+  Download and install the WorkBuddy desktop app.
+</Card>
+
+## Prerequisites
+
+You need:
+
+- WorkBuddy installed and signed in.
+- A HiLinkup API key from the [HiLinkup console](https://hilinkup.com/console/token).
+- The full endpoint: `https://hilinkup.com/v1/chat/completions`
+- A currently available HiLinkup model ID.
+
+<Warning>
+  Enter your API key only in the WorkBuddy API Key field. Do not expose a real key in screenshots, chat messages, or project files.
+</Warning>
+
+<Note>
+  The model name must exactly match a model ID returned by HiLinkup. Check [List models](/en/api-reference/models) instead of guessing from the examples.
+</Note>
+
+## Add a HiLinkup custom model
+
+<Steps>
+  <Step title="Open settings">
+    Open WorkBuddy and click the avatar or account area in the lower-left corner. Select **Settings** from the account menu.
+
+    <Frame caption="Open Settings from the WorkBuddy account menu">
+      <img src="/images/workbuddy/01-open-settings.png" alt="Settings entry in the WorkBuddy account menu" />
+    </Frame>
+  </Step>
+
+  <Step title="Open model settings">
+    Select **Models** in the settings sidebar to open custom model management, then click **Add Model** in the upper-right corner.
+
+    <Frame caption="Open Models and click Add Model">
+      <img src="/images/workbuddy/02-model-settings.png" alt="Models settings page and Add Model button in WorkBuddy" />
+    </Frame>
+
+    <Info>
+      WorkBuddy stores custom model settings locally in `~/.workbuddy/models.json`. You normally do not need to edit this file directly.
+    </Info>
+  </Step>
+
+  <Step title="Enter the HiLinkup model settings">
+    Use the following values:
+
+    | Field | Value |
+    | --- | --- |
+    | Provider | `Custom` |
+    | Endpoint | `https://hilinkup.com/v1/chat/completions` |
+    | API Key | Your API key from the HiLinkup console |
+    | Model Name | An exact model ID returned by HiLinkup |
+
+    <Frame caption="Select Custom and enter the HiLinkup endpoint, API key, and model name">
+      <img src="/images/workbuddy/03-add-custom-model.png" alt="HiLinkup endpoint, API key, and model name in the WorkBuddy custom model editor" />
+    </Frame>
+
+    Tool calling, image input, reasoning, and the other advanced options depend on the selected model. Enable only capabilities that the model supports. Keep the defaults when you are unsure.
+
+    Click **Save**. Repeat this step for each additional model you want to use.
+  </Step>
+
+  <Step title="Use the model in WorkBuddy">
+    Return to the WorkBuddy home screen and open the model menu next to the prompt box. Select the saved model under **Custom Models**, then send a short test message.
+
+    <Frame caption="Select a HiLinkup model under Custom Models">
+      <img src="/images/workbuddy/04-use-custom-model.png" alt="qwen3.7-plus, glm-5.2, and mimo-v2.5-pro under Custom Models in WorkBuddy" />
+    </Frame>
+  </Step>
+</Steps>
+
+<Check>
+  The configuration is active when the model appears in the model menu and returns a response.
+</Check>
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="The saved model does not appear in the menu">
+    Confirm that you clicked **Save**. Close and reopen the model menu. If the model is still missing, fully quit and restart WorkBuddy.
+  </Accordion>
+
+  <Accordion title="The request returns 401 or 403">
+    Verify that the API key is complete and active and that the account can access the selected model. Do not add spaces or quotation marks around the key.
+  </Accordion>
+
+  <Accordion title="The request returns 404">
+    The Endpoint must be the full path `https://hilinkup.com/v1/chat/completions`, not only `https://hilinkup.com/v1`.
+  </Accordion>
+
+  <Accordion title="The model name is invalid or unavailable">
+    Use a `data[].id` value returned by `GET /v1/models` as the Model Name. The list can change, so rely on the live [HiLinkup model list](/en/api-reference/models).
+  </Accordion>
+
+  <Accordion title="Tools, images, or reasoning do not work">
+    These capabilities depend on the model and upstream channel. Disable the related advanced option and verify plain text first, then retest with a model that explicitly supports the capability.
+  </Accordion>
+</AccordionGroup>
