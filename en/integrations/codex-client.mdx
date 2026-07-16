@@ -1,0 +1,130 @@
+---
+title: "Codex desktop app"
+description: "Use CC Switch to connect the Codex desktop app to HiLinkup and select Chinese AI models."
+keywords: ["Codex desktop app", "ChatGPT", "CC Switch", "Responses API", "model configuration"]
+icon: "monitor"
+---
+
+This guide shows you how to add HiLinkup as a provider for the Codex desktop app through CC Switch. After setup, you can select Chinese AI models provided by HiLinkup directly from the Codex model menu.
+
+<Card title="Download CC Switch" icon="download" href="https://ccswitch.io/">
+  Download the version of CC Switch for your operating system.
+</Card>
+
+## Prerequisites
+
+You need:
+
+- CC Switch and the Codex desktop app installed.
+- A HiLinkup API key from the [HiLinkup console](https://hilinkup.com/console/token).
+- The HiLinkup API request URL: `https://hilinkup.com/v1`
+
+<Warning>
+  Paste your API key only into the secret field in CC Switch. Do not expose a real key in screenshots, chat messages, or project files.
+</Warning>
+
+## Configure the Codex desktop app with CC Switch
+
+<Steps>
+  <Step title="Switch to Codex / ChatGPT">
+    Open CC Switch and click the OpenAI icon in the application switcher to open the provider settings for Codex / ChatGPT.
+
+    <Frame caption="Select Codex / ChatGPT in the CC Switch application bar">
+      <img src="/images/codex-client-cc-switch/01-select-codex.png" alt="Codex and ChatGPT option in the CC Switch application switcher" />
+    </Frame>
+  </Step>
+
+  <Step title="Add a provider">
+    Click the orange `+` button in the upper-right corner to open the Add New Provider page.
+
+    <Frame caption="Click the add-provider button">
+      <img src="/images/codex-client-cc-switch/02-add-provider.png" alt="Add-provider button in the upper-right corner of the CC Switch Codex provider list" />
+    </Frame>
+  </Step>
+
+  <Step title="Enter the HiLinkup connection details">
+    Use the following values:
+
+    | Field | Value |
+    | --- | --- |
+    | Provider Name | `HiLinkup`, or another recognizable custom name |
+    | Website URL | `https://hilinkup.com`, optional |
+    | API Key | Your API key from the HiLinkup console |
+    | API Request URL | `https://hilinkup.com/v1` |
+    | Upstream Format | `Responses (native)` |
+
+    Keep the **Full URL** toggle off. HiLinkup supports the Responses API natively, so select `Responses (native)` as the upstream format.
+
+    <Frame caption="Enter the HiLinkup API key and request URL, then select Responses (native)">
+      <img src="/images/codex-client-cc-switch/03-provider-settings.png" alt="HiLinkup provider name, API key, request URL, and Responses native settings in CC Switch" />
+    </Frame>
+  </Step>
+
+  <Step title="Fetch available models">
+    Expand **Advanced Options**. In **Model Mapping**, click **Fetch Models**. CC Switch uses the current API key to retrieve the models available from HiLinkup.
+
+    <Frame caption="Fetch the HiLinkup model list">
+      <img src="/images/codex-client-cc-switch/04-fetch-models.png" alt="Fetch Models button in the CC Switch advanced options" />
+    </Frame>
+
+    <Info>
+      If the request fails, verify the API key and the `https://hilinkup.com/v1` request URL.
+    </Info>
+  </Step>
+
+  <Step title="Add model mappings">
+    Click **Add Model** to create a model mapping row.
+
+    <Frame caption="Add a model mapping">
+      <img src="/images/codex-client-cc-switch/05-add-model.png" alt="Add Model button in the CC Switch model mapping section" />
+    </Frame>
+
+    Open the menu next to **Actual Request Model** and select a HiLinkup model. **Menu Display Name** controls the name shown in the Codex app and can normally match the actual request model.
+
+    <Frame caption="Select a model returned by HiLinkup">
+      <img src="/images/codex-client-cc-switch/06-select-model.png" alt="CC Switch model menu containing Qwen, DeepSeek, and MiniMax models" />
+    </Frame>
+
+    Repeat **Add Model** to configure more models. The available list depends on the current API response and may include models such as `glm-5.2`, `deepseek-v4-pro`, and other Chinese models.
+  </Step>
+
+  <Step title="Save the configuration">
+    Confirm the display names and actual request models, then click **Save** in the lower-right corner.
+
+    <Frame caption="Save the HiLinkup provider and model mappings">
+      <img src="/images/codex-client-cc-switch/07-save-provider.png" alt="Save button in the lower-right corner of the CC Switch provider editor" />
+    </Frame>
+  </Step>
+
+  <Step title="Restart Codex and select a model">
+    Fully quit and reopen the Codex desktop app. Open the model menu next to the prompt box, select a configured HiLinkup model, and send a short test message.
+
+    <Frame caption="Select a HiLinkup model after restarting Codex">
+      <img src="/images/codex-client-cc-switch/08-select-model-in-codex.png" alt="Codex model menu showing glm-5.2 and deepseek-v4-pro" />
+    </Frame>
+  </Step>
+</Steps>
+
+<Check>
+  The setup is active when the models appear in the Codex menu and a selected model returns a response.
+</Check>
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="The new models do not appear in Codex">
+    Confirm that you clicked **Save** in CC Switch, then fully quit and restart the Codex desktop app. The model catalog does not automatically refresh after configuration changes.
+  </Accordion>
+
+  <Accordion title="Fetch Models fails">
+    Verify the API key, use `https://hilinkup.com/v1` as the request URL, and keep **Full URL** off. You can also validate the key with [List models](/en/api-reference/models).
+  </Accordion>
+
+  <Accordion title="The model appears, but requests fail">
+    Confirm that **Upstream Format** is set to `Responses (native)` and that the selected model supports the Responses API. Test the model first with the cURL example in the [Responses API guide](/en/api-reference/responses).
+  </Accordion>
+
+  <Accordion title="Which model name should I enter?">
+    Use an exact model ID returned by **Fetch Models**. You can customize **Menu Display Name**, but **Actual Request Model** must exactly match the model ID returned by HiLinkup.
+  </Accordion>
+</AccordionGroup>

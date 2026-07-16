@@ -128,6 +128,7 @@
                 "pages": [
                   "integrations/claude-code",
                   "integrations/codex-cli",
+                  "integrations/codex-client",
                   "integrations/cursor",
                   "integrations/cline",
                   "integrations/roo-code",
@@ -288,6 +289,7 @@
                 "pages": [
                   "en/integrations/claude-code",
                   "en/integrations/codex-cli",
+                  "en/integrations/codex-client",
                   "en/integrations/cursor",
                   "en/integrations/cline",
                   "en/integrations/roo-code",
