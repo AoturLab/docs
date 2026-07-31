@@ -1,21 +1,42 @@
 ---
 title: "Streaming responses"
-description: "Receive model output incrementally."
-keywords: ["streaming", "SSE", "Chat Completions"]
+description: "Handle Responses and Chat Completions server-sent events correctly."
+keywords: ["streaming", "SSE", "Responses", "Chat Completions"]
 icon: "waves"
 ---
 
-Set `stream: true` in a Chat Completions request. The response is delivered as Server-Sent Events.
+Set `stream: true` to receive Server-Sent Events. Responses emits typed events; Chat Completions emits chunks with `choices[].delta`. Their consumers are not interchangeable.
 
-```python
-stream = client.chat.completions.create(
-    model="qwen3.7-plus",
-    messages=[{"role": "user", "content": "Explain streaming."}],
-    stream=True,
-)
+<Tabs>
+  <Tab title="Responses (new code)">
+    ```python
+    stream = client.responses.create(
+        model="qwen3.7-plus",
+        input="Explain streaming.",
+        stream=True,
+    )
 
-for chunk in stream:
-    print(chunk.choices[0].delta.content or "", end="")
-```
+    for event in stream:
+        if event.type == "response.output_text.delta":
+            print(event.delta, end="")
+    ```
 
-Handle disconnects, timeouts, and a final empty delta in your client.
+    Common text events include `response.created`, `response.output_text.delta`, `response.completed`, and `error`.
+  </Tab>
+  <Tab title="Chat Completions (compatibility)">
+    ```python
+    stream = client.chat.completions.create(
+        model="qwen3.7-plus",
+        messages=[{"role": "user", "content": "Explain streaming."}],
+        stream=True,
+    )
+
+    for chunk in stream:
+        print(chunk.choices[0].delta.content or "", end="")
+    ```
+  </Tab>
+</Tabs>
+
+<Warning>A Chat Completions `choices[0].delta` parser will not parse Responses events, and a Responses event-type parser will not parse Chat Completions chunks.</Warning>
+
+Handle disconnects, timeouts, terminal events, and partial tool arguments without infinite retries.

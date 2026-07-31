@@ -5,7 +5,7 @@ keywords: ["HiLinkup", "大模型 API", "OpenAI 兼容", "LLM"]
 icon: "house"
 ---
 
-HiLinkup 提供统一的模型 API。对于支持 OpenAI 兼容接口的应用，你通常只需替换 API Key、Base URL 和模型 ID。
+HiLinkup 提供统一的模型 API，并兼容 OpenAI Responses、Chat Completions、Claude Messages 与 Gemini generateContent 等调用协议。新开发的 OpenAI 风格应用优先使用 Responses；第三方客户端应使用它实际支持的协议。
 
 <Info>
   API Base URL：`https://hilinkup.com/v1`
@@ -13,7 +13,7 @@ HiLinkup 提供统一的模型 API。对于支持 OpenAI 兼容接口的应用�
 
 <Columns cols={2}>
   <Card title="5 分钟完成调用" icon="rocket" href="/getting-started/quickstart">
-    创建 API Key，并发送第一条 Chat Completions 请求。
+    创建 API Key，并发送第一条 Responses 请求。
   </Card>
   <Card title="从 OpenAI 迁移" icon="refresh-cw" href="/getting-started/openai-compatible">
     修改现有 SDK 配置，无需重写业务逻辑。
@@ -37,14 +37,12 @@ client = OpenAI(
     base_url="https://hilinkup.com/v1",
 )
 
-response = client.chat.completions.create(
+response = client.responses.create(
     model="qwen3.7-plus",
-    messages=[
-        {"role": "user", "content": "用一句话介绍 HiLinkup"}
-    ],
+    input="用一句话介绍 HiLinkup",
 )
 
-print(response.choices[0].message.content)
+print(response.output_text)
 ```
 
 ```javascript Node.js
@@ -55,25 +53,21 @@ const client = new OpenAI({
   baseURL: "https://hilinkup.com/v1",
 });
 
-const response = await client.chat.completions.create({
+const response = await client.responses.create({
   model: "qwen3.7-plus",
-  messages: [
-    { role: "user", content: "用一句话介绍 HiLinkup" },
-  ],
+  input: "用一句话介绍 HiLinkup",
 });
 
-console.log(response.choices[0].message.content);
+console.log(response.output_text);
 ```
 
 ```bash cURL
-curl https://hilinkup.com/v1/chat/completions \
+curl https://hilinkup.com/v1/responses \
   -H "Authorization: Bearer $HILINKUP_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
     "model": "qwen3.7-plus",
-    "messages": [
-      {"role": "user", "content": "用一句话介绍 HiLinkup"}
-    ]
+    "input": "用一句话介绍 HiLinkup"
   }'
 ```
 </CodeGroup>
@@ -88,8 +82,11 @@ curl https://hilinkup.com/v1/chat/completions \
 ### 常用 API
 
 <Columns cols={2}>
+  <Card title="Responses" icon="sparkles" href="/api-reference/responses">
+    新项目默认使用的 OpenAI 风格响应接口。
+  </Card>
   <Card title="Chat Completions" icon="message-square" href="/api-reference/chat-completions">
-    创建文本对话、流式响应和工具调用。
+    兼容只支持传统聊天协议的客户端和现有项目。
   </Card>
   <Card title="模型列表" icon="list" href="/api-reference/models">
     获取当前 API Key 可访问的模型 ID。
@@ -125,8 +122,8 @@ curl https://hilinkup.com/v1/chat/completions \
   <Step title="获取模型">
     调用 `/v1/models`，不要长期硬编码未经验证的模型列表。
   </Step>
-  <Step title="完成基础调用">
-    先测试普通对话，再验证流式响应、工具调用和多模态输入。
+  <Step title="选择正确协议并完成基础调用">
+    新项目先测试 Responses；第三方客户端按其文档选择 Chat Completions、Claude Messages 或 Gemini generateContent，再验证高级能力。
   </Step>
   <Step title="接入生产环境">
     配置超时、有限重试、日志脱敏、额度和异常告警。

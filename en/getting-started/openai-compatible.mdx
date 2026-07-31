@@ -7,6 +7,17 @@ icon: "refresh-cw"
 
 HiLinkup supports the OpenAI SDK request format. Change the API key, base URL, and model ID.
 
+## Choose the wire protocol
+
+| Scenario | Protocol | Final endpoint |
+| --- | --- | --- |
+| New OpenAI SDK application | Responses | `POST /v1/responses` |
+| Existing code reads `choices[0].message.content` | Chat Completions | `POST /v1/chat/completions` |
+| Third-party OpenAI-compatible chat client | Usually Chat Completions | Inspect the client's final request |
+| Codex CLI or the Codex desktop app | Responses | `POST /v1/responses` |
+
+<Info>OpenAI recommends Responses for new projects while Chat Completions remains supported. Migration changes the request body, output shape, streaming events, and tool format—not only the URL.</Info>
+
 ```python
 from openai import OpenAI
 
@@ -17,5 +28,19 @@ client = OpenAI(
 ```
 
 Use [`GET /v1/models`](/en/api-reference/models) to select a model ID supported by your key.
+
+## Responses example
+
+```python
+response = client.responses.create(
+    model="qwen3.7-plus",
+    instructions="You are a concise technical assistant.",
+    input="Explain API routing.",
+)
+
+print(response.output_text)
+```
+
+If existing code uses `messages` and `choices[0].message.content`, keep using [Chat Completions](/en/api-reference/chat-completions). Do not send a Chat Completions body unchanged to `/v1/responses`.
 
 <Note>Provider-specific features may differ. Validate streaming, tool calls, and multimodal input before production rollout.</Note>

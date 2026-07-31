@@ -5,18 +5,18 @@ keywords: ["integrations", "OpenAI compatible", "clients", "frameworks"]
 icon: "blocks"
 ---
 
-Any application that supports a custom OpenAI or OpenAI-compatible provider can generally connect to HiLinkup.
+HiLinkup can connect to OpenAI-, Anthropic/Claude-, and Gemini-style clients. Confirm the wire protocol and whether the field expects a base URL or a full endpoint before entering an address.
 
 ## Connection values
 
 | Setting | Value |
 | --- | --- |
-| Provider type | OpenAI / OpenAI-compatible / Custom OpenAI |
+| Provider type | OpenAI, Anthropic/Claude, or Gemini as required by the application |
 | API key | A dedicated key from the HiLinkup console |
-| Base URL | `https://hilinkup.com/v1` |
+| Address | A base URL or full endpoint; these are not interchangeable |
 | Model | An exact ID returned by `GET /v1/models` |
 
-<Warning>Unless an application explicitly requests a full endpoint, do not append `/chat/completions` to the base URL.</Warning>
+<Warning>Inspect the field label. A base URL is normally extended by the client; an endpoint normally requires the full resource path. Check the final URL for a missing or duplicated `/v1`.</Warning>
 
 ## Choose the correct protocol
 
@@ -24,14 +24,27 @@ Not every “compatible” client uses the same protocol. Check whether the appl
 
 | Protocol | Use case | Base URL / endpoint | Auth | Reference |
 | --- | --- | --- | --- | --- |
-| OpenAI Chat Completions | Most chat clients, Dify, LangChain, older OpenAI SDK calls | `https://hilinkup.com/v1` | `Authorization: Bearer $HILINKUP_API_KEY` | [Chat Completions](/en/api-reference/chat-completions) |
-| OpenAI Responses | New apps, agents, unified input/output flows | `https://hilinkup.com/v1` | `Authorization: Bearer $HILINKUP_API_KEY` | [Responses](/en/api-reference/responses) |
-| Claude Messages | Anthropic SDKs and Claude-style clients | `https://hilinkup.com/v1/messages` | `x-api-key: $HILINKUP_API_KEY` | [Claude Messages](/en/api-reference/claude-messages) |
-| Gemini generateContent | Gemini SDKs and Google AI-style clients | `https://hilinkup.com/v1beta/models/{model}:generateContent` | `x-goog-api-key: $HILINKUP_API_KEY` | [Gemini generateContent](/en/api-reference/gemini-generate-content) |
+| OpenAI Responses | New code, Codex, WorkBuddy, Responses-capable agents | Base: `https://hilinkup.com/v1`; full: `.../v1/responses` | `Authorization: Bearer $HILINKUP_API_KEY` | [Responses](/en/api-reference/responses) |
+| OpenAI Chat Completions | Traditional chat clients, `ChatOpenAI`, chat-only plugins | Base: `https://hilinkup.com/v1`; full: `.../v1/chat/completions` | `Authorization: Bearer $HILINKUP_API_KEY` | [Chat Completions](/en/api-reference/chat-completions) |
+| Claude Messages | Claude Code, Anthropic SDKs, Claude-style clients | Base: `https://hilinkup.com`; full: `.../v1/messages` | `x-api-key` plus `anthropic-version: 2023-06-01` | [Claude Messages](/en/api-reference/claude-messages) |
+| Gemini generateContent | Gemini SDKs and Google AI-style clients | Base: `https://hilinkup.com`; full: `.../v1beta/models/{model}:generateContent` | `x-goog-api-key: $HILINKUP_API_KEY` | [Gemini generateContent](/en/api-reference/gemini-generate-content) |
 
 <Tip>
-  Protocol names do not define model origin. Examples use HiLinkup platform Chinese models such as `qwen3.7-plus` and `deepseek-v3`. If the app says OpenAI-compatible, use `https://hilinkup.com/v1`; if it says Anthropic, Claude, or Gemini, use the corresponding protocol page.
+  Protocol names do not define model origin. Each protocol can call Chinese models on HiLinkup when that model and channel support the protocol. A model appearing in `/v1/models` does not by itself prove support for every protocol.
 </Tip>
+
+## Common application mapping
+
+| Application or configuration | Protocol | Address |
+| --- | --- | --- |
+| Codex CLI and Codex desktop | OpenAI Responses | Base URL `https://hilinkup.com/v1` |
+| WorkBuddy custom Endpoint | OpenAI Responses | Full endpoint `https://hilinkup.com/v1/responses` |
+| Claude Code and CC Switch Claude mode | Claude Messages | Final request must be `https://hilinkup.com/v1/messages` |
+| Common chat clients and knowledge-base UIs | OpenAI Chat Completions | Usually base URL `https://hilinkup.com/v1` |
+| LangChain `ChatOpenAI`, LlamaIndex `OpenAILike`, current Dify OpenAI-compatible setup | OpenAI Chat Completions | Usually base URL `https://hilinkup.com/v1` |
+| Native Gemini clients | Gemini generateContent | Final request includes `/v1beta/models/{model}:generateContent` |
+
+<Note>Cursor, Cline, Roo Code, Continue, OpenCode, and OpenClaw change quickly. If the current version exposes separate Responses, Chat Completions, or Anthropic choices, follow that explicit protocol name instead of guessing from “OpenAI-compatible.”</Note>
 
 ## Integration workflow
 
@@ -45,8 +58,11 @@ Not every “compatible” client uses the same protocol. Check whether the appl
       -H "Authorization: Bearer $HILINKUP_API_KEY"
     ```
   </Step>
-  <Step title="Select an OpenAI-compatible provider">
-    Enter the key, base URL, and an exact model ID.
+  <Step title="Choose the protocol">
+    Prefer Responses for new code. Use Chat Completions for traditional chat clients, Claude Messages for Claude Code, and generateContent for native Gemini clients.
+  </Step>
+  <Step title="Enter the correct address and authentication">
+    Confirm whether the field expects a base URL or full endpoint, then verify the final path and headers.
   </Step>
   <Step title="Test plain chat">
     Send a short text message before enabling images, tools, knowledge bases, or long context.
@@ -77,6 +93,17 @@ Not every “compatible” client uses the same protocol. Check whether the appl
 ## cURL templates
 
 <Tabs>
+  <Tab title="Responses">
+    ```bash
+    curl https://hilinkup.com/v1/responses \
+      -H "Content-Type: application/json" \
+      -H "Authorization: Bearer $HILINKUP_API_KEY" \
+      -d '{
+        "model": "qwen3.7-plus",
+        "input": "Tell me a three sentence bedtime story about a unicorn."
+      }'
+    ```
+  </Tab>
   <Tab title="OpenAI Chat">
     ```bash
     curl https://hilinkup.com/v1/chat/completions \
@@ -94,17 +121,6 @@ Not every “compatible” client uses the same protocol. Check whether the appl
             "content": "Hello!"
           }
         ]
-      }'
-    ```
-  </Tab>
-  <Tab title="Responses">
-    ```bash
-    curl https://hilinkup.com/v1/responses \
-      -H "Content-Type: application/json" \
-      -H "Authorization: Bearer $HILINKUP_API_KEY" \
-      -d '{
-        "model": "qwen3.7-plus",
-        "input": "Tell me a three sentence bedtime story about a unicorn."
       }'
     ```
   </Tab>
@@ -151,7 +167,7 @@ Not every “compatible” client uses the same protocol. Check whether the appl
 
 <AccordionGroup>
   <Accordion title="cURL works but the application fails">
-    Inspect the final URL. The correct chat endpoint is `/v1/chat/completions`; avoid missing or duplicated `/v1`.
+    Inspect the final protocol, URL, and authentication header. Responses uses `/v1/responses`, Chat Completions uses `/v1/chat/completions`, Claude uses `/v1/messages`, and Gemini uses `/v1beta/models/{model}:generateContent`.
   </Accordion>
   <Accordion title="The model list is empty">
     Add an exact model ID manually. Some clients cannot discover models from custom providers.

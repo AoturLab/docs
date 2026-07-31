@@ -1,15 +1,21 @@
 ---
 title: "认证"
-description: "使用 Bearer Token 安全地认证 HiLinkup API 请求。"
-keywords: ["认证", "Bearer Token", "API Key", "安全"]
+description: "按 OpenAI、Claude 与 Gemini 兼容协议正确发送 HiLinkup API Key。"
+keywords: ["认证", "Bearer Token", "x-api-key", "x-goog-api-key", "API Key"]
 icon: "key-round"
 ---
 
-HiLinkup API 使用 Bearer Token。所有 `/v1` 请求都应在 `Authorization` 请求头中携带 API Key。
+HiLinkup 使用同一类账户 API Key，但请求头取决于你调用的协议。不能把所有 `/v1` 请求都当作 Bearer Token 接口。
 
-```http
-Authorization: Bearer YOUR_HILINKUP_API_KEY
-```
+| 协议 | 典型路径 | 必需鉴权头 |
+| --- | --- | --- |
+| OpenAI Responses、Chat Completions、Models、Embeddings、Images | `/v1/...` | `Authorization: Bearer YOUR_HILINKUP_API_KEY` |
+| Claude Messages | `/v1/messages` | `x-api-key: YOUR_HILINKUP_API_KEY` 与 `anthropic-version: 2023-06-01` |
+| Gemini generateContent | `/v1beta/models/{model}:generateContent` | `x-goog-api-key: YOUR_HILINKUP_API_KEY` |
+
+<Warning>
+  路径包含 `/v1` 不等于一定使用 Bearer Token。Claude Messages 同样位于 `/v1/messages`，但使用 `x-api-key` 和 `anthropic-version`。
+</Warning>
 
 ## 创建和使用密钥
 
@@ -20,10 +26,27 @@ Authorization: Bearer YOUR_HILINKUP_API_KEY
   <Step title="保存到服务端">
     将密钥保存到环境变量或密钥管理服务，不要发送到浏览器和移动端。
   </Step>
-  <Step title="添加请求头">
+  <Step title="按协议添加请求头">
+    OpenAI 兼容接口：
+
     ```bash
     curl https://hilinkup.com/v1/models \
       -H "Authorization: Bearer $HILINKUP_API_KEY"
+    ```
+
+    Claude Messages：
+
+    ```http
+    x-api-key: YOUR_HILINKUP_API_KEY
+    anthropic-version: 2023-06-01
+    Content-Type: application/json
+    ```
+
+    Gemini generateContent：
+
+    ```http
+    x-goog-api-key: YOUR_HILINKUP_API_KEY
+    Content-Type: application/json
     ```
   </Step>
 </Steps>
@@ -44,7 +67,11 @@ Authorization: Bearer YOUR_HILINKUP_API_KEY
 
 | 状态码 | 常见原因 | 处理方式 |
 | --- | --- | --- |
-| `401` | 缺少、无效或已撤销的密钥 | 检查 `Authorization` 格式并更换有效密钥 |
+| `401` | 缺少、无效或已撤销的密钥 | 先确认协议，再检查对应鉴权头 |
 | `403` | 请求被策略或上游服务拒绝 | 检查请求参数、模型权限和调用环境 |
+
+<Tip>
+  如果同一密钥调用 `/v1/models` 成功，但模型请求返回 `401`，优先检查是否把 Bearer、`x-api-key` 或 `x-goog-api-key` 用错，而不是重新创建密钥。
+</Tip>
 
 完整处理流程参见[错误排查](/troubleshooting/errors)。

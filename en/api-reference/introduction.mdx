@@ -7,19 +7,24 @@ icon: "braces"
 
 HiLinkup exposes OpenAI-compatible endpoints and selected provider-style compatible endpoints. Most OpenAI-compatible clients only need a new API key, base URL, and model ID. Claude-style and Gemini-style clients must use their own endpoint paths and auth headers.
 
-## Base URLs
+## Base URLs and full endpoints
 
-OpenAI-compatible endpoints:
+When an SDK asks for a **base URL**, use:
 
 ```text
 https://hilinkup.com/v1
 ```
 
-Gemini-compatible endpoints use the `v1beta` path:
+When a client asks for a **full endpoint**, use the protocol-specific path:
 
-```text
-https://hilinkup.com/v1beta/models/{model}:generateContent
-```
+| Protocol | Base URL | Full endpoint |
+| --- | --- | --- |
+| OpenAI Responses | `https://hilinkup.com/v1` | `https://hilinkup.com/v1/responses` |
+| OpenAI Chat Completions | `https://hilinkup.com/v1` | `https://hilinkup.com/v1/chat/completions` |
+| Claude Messages | `https://hilinkup.com` | `https://hilinkup.com/v1/messages` |
+| Gemini generateContent | `https://hilinkup.com` | `https://hilinkup.com/v1beta/models/{model}:generateContent` |
+
+<Warning>Do not interchange a base URL and a full endpoint. SDKs normally append the resource path, so using a full endpoint as a base URL can create duplicated paths.</Warning>
 
 ## Authentication
 
@@ -46,8 +51,8 @@ Content-Type: application/json
 ```
 
 <CardGroup cols={2}>
-  <Card title="Chat Completions" href="/en/api-reference/chat-completions" icon="message-square" />
   <Card title="Responses" href="/en/api-reference/responses" icon="sparkles" />
+  <Card title="Chat Completions" href="/en/api-reference/chat-completions" icon="message-square" />
   <Card title="Claude Messages" href="/en/api-reference/claude-messages" icon="message-circle" />
   <Card title="Gemini generateContent" href="/en/api-reference/gemini-generate-content" icon="gem" />
   <Card title="Models" href="/en/api-reference/models" icon="list" />

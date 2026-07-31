@@ -7,19 +7,26 @@ icon: "braces"
 
 HiLinkup API 使用 HTTPS 和 JSON，并提供多种常见模型协议的兼容端点。多数 OpenAI 兼容应用只需要替换 API Key、Base URL 和模型 ID；Claude 与 Gemini 风格应用需要使用各自协议的路径和鉴权头。
 
-## Base URL
+## Base URL 与完整 Endpoint
 
-OpenAI 兼容端点：
+SDK 或客户端要求 **Base URL** 时，OpenAI 兼容协议填写：
 
 ```text
 https://hilinkup.com/v1
 ```
 
-Gemini 兼容端点使用 `v1beta` 路径，例如：
+客户端要求 **完整 Endpoint** 时，按协议填写完整路径：
 
-```text
-https://hilinkup.com/v1beta/models/{model}:generateContent
-```
+| 协议 | Base URL | 完整 Endpoint |
+| --- | --- | --- |
+| OpenAI Responses | `https://hilinkup.com/v1` | `https://hilinkup.com/v1/responses` |
+| OpenAI Chat Completions | `https://hilinkup.com/v1` | `https://hilinkup.com/v1/chat/completions` |
+| Claude Messages | `https://hilinkup.com` | `https://hilinkup.com/v1/messages` |
+| Gemini generateContent | `https://hilinkup.com` | `https://hilinkup.com/v1beta/models/{model}:generateContent` |
+
+<Warning>
+  Base URL 与完整 Endpoint 不能互换。SDK 通常会自动追加路径；如果把完整 Endpoint 当作 Base URL，最终可能出现 `/responses/responses` 或 `/v1/v1/messages`。
+</Warning>
 
 ## 认证
 
@@ -50,7 +57,7 @@ Content-Type: application/json
 | 方法 | 路径 | 用途 |
 | --- | --- | --- |
 | `POST` | `/chat/completions` | 创建文本或多模态对话 |
-| `POST` | `/responses` | 使用 OpenAI Responses 兼容格式创建响应 |
+| `POST` | `/responses` | 新项目默认的 OpenAI Responses 兼容接口 |
 | `POST` | `/messages` | 使用 Claude Messages 兼容格式创建响应 |
 | `POST` | `/v1beta/models/{model}:generateContent` | 使用 Gemini 兼容格式生成内容 |
 | `GET` | `/models` | 获取当前密钥可用的模型 |
@@ -80,11 +87,11 @@ Content-Type: application/json
 ## 按协议选择文档
 
 <Columns cols={2}>
-  <Card title="Chat Completions" icon="message-square" href="/api-reference/chat-completions">
-    适合大多数 OpenAI 兼容聊天客户端和旧版 SDK。
-  </Card>
   <Card title="Responses" icon="sparkles" href="/api-reference/responses">
-    适合按 OpenAI Responses API 编写的新项目。
+    新项目优先使用的 OpenAI 风格统一接口。
+  </Card>
+  <Card title="Chat Completions" icon="message-square" href="/api-reference/chat-completions">
+    适合只支持传统聊天协议的客户端和现有项目。
   </Card>
   <Card title="Claude Messages" icon="message-circle" href="/api-reference/claude-messages">
     适合按 Anthropic Messages API 编写的客户端。
@@ -94,4 +101,4 @@ Content-Type: application/json
   </Card>
 </Columns>
 
-下一步查看 [Chat Completions](/api-reference/chat-completions)、[Responses](/api-reference/responses) 或[错误处理](/guides/error-handling)。
+下一步查看 [Responses](/api-reference/responses)、[Chat Completions](/api-reference/chat-completions) 或[错误处理](/guides/error-handling)。

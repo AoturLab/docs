@@ -5,20 +5,19 @@ keywords: ["第三方集成", "OpenAI 兼容", "客户端", "开发工具", "应
 icon: "blocks"
 ---
 
-HiLinkup 可以接入支持自定义 OpenAI API 或 OpenAI-compatible Provider 的应用。本页先说明通用配置，再按应用类型提供具体入口。
+HiLinkup 可以接入 OpenAI、Anthropic/Claude 与 Gemini 风格客户端。先确认应用的协议和字段类型，再填写地址；“兼容 OpenAI”并不代表所有客户端都会调用同一个端点。
 
 ## 通用连接参数
 
 | 配置项 | 应填写的值 | 常见字段名称 |
 | --- | --- | --- |
-| 服务类型 | OpenAI / OpenAI-compatible / Custom OpenAI | Provider、API 类型 |
+| 服务类型 | 按应用实际支持选择 OpenAI、Anthropic/Claude 或 Gemini | Provider、API 类型 |
 | API Key | 在 HiLinkup 控制台创建的密钥 | API Key、Token |
-| Base URL | `https://hilinkup.com/v1` | API Host、Endpoint、Base URL |
+| 地址 | Base URL 或完整 Endpoint，不能混用 | API Host、Endpoint、Base URL |
 | Model | `/v1/models` 返回的完整 ID | Model、Model ID、Deployment |
 
 <Warning>
-  不要把 Base URL 填成具体接口地址。除非应用明确要求完整路径，否则填写
-  `https://hilinkup.com/v1`，不要填写 `/chat/completions`。
+  先看字段名称。Base URL 通常由客户端继续拼接路径；Endpoint 通常要求完整地址。配置后应检查最终请求 URL，避免遗漏或重复 `/v1`。
 </Warning>
 
 ## 按协议填写配置
@@ -27,14 +26,29 @@ HiLinkup 可以接入支持自定义 OpenAI API 或 OpenAI-compatible Provider �
 
 | 协议 | 适用场景 | Base URL / Endpoint | 鉴权方式 | 示例文档 |
 | --- | --- | --- | --- | --- |
-| OpenAI Chat Completions | 大多数聊天客户端、Dify、LangChain、OpenAI SDK 旧版调用 | `https://hilinkup.com/v1` | `Authorization: Bearer $HILINKUP_API_KEY` | [Chat Completions](/api-reference/chat-completions) |
-| OpenAI Responses | 新项目、Agent、统一输入输出接口 | `https://hilinkup.com/v1` | `Authorization: Bearer $HILINKUP_API_KEY` | [Responses](/api-reference/responses) |
-| Claude Messages | Claude Code、Anthropic SDK、Claude 风格客户端 | `https://hilinkup.com/v1/messages` | `x-api-key: $HILINKUP_API_KEY` | [Claude Messages](/api-reference/claude-messages) |
-| Gemini generateContent | Gemini SDK、Google AI 风格客户端 | `https://hilinkup.com/v1beta/models/{model}:generateContent` | `x-goog-api-key: $HILINKUP_API_KEY` | [Gemini generateContent](/api-reference/gemini-generate-content) |
+| OpenAI Responses | 新项目、Codex、WorkBuddy、支持 Responses 的 Agent | Base：`https://hilinkup.com/v1`；完整：`.../v1/responses` | `Authorization: Bearer $HILINKUP_API_KEY` | [Responses](/api-reference/responses) |
+| OpenAI Chat Completions | 传统聊天客户端、`ChatOpenAI` 与只支持聊天协议的插件 | Base：`https://hilinkup.com/v1`；完整：`.../v1/chat/completions` | `Authorization: Bearer $HILINKUP_API_KEY` | [Chat Completions](/api-reference/chat-completions) |
+| Claude Messages | Claude Code、Anthropic SDK、Claude 风格客户端 | Base：`https://hilinkup.com`；完整：`.../v1/messages` | `x-api-key` + `anthropic-version: 2023-06-01` | [Claude Messages](/api-reference/claude-messages) |
+| Gemini generateContent | Gemini SDK、Google AI 风格客户端 | Base：`https://hilinkup.com`；完整：`.../v1beta/models/{model}:generateContent` | `x-goog-api-key: $HILINKUP_API_KEY` | [Gemini generateContent](/api-reference/gemini-generate-content) |
 
 <Tip>
-  协议名称不等于模型来源。文档示例统一使用 HiLinkup 平台上的中国模型，例如 `qwen3.7-plus`、`deepseek-v3`。如果一个应用明确写着 “OpenAI-compatible”，通常填 `https://hilinkup.com/v1`；如果它写着 “Anthropic / Claude API” 或 “Gemini API”，按对应协议页面填写。
+  协议名称不等于模型来源。Responses、Chat Completions、Claude Messages 与 Gemini generateContent 都可以调用 HiLinkup 平台中支持该协议的中国模型。模型是否出现在 `/v1/models` 中，也不自动证明它支持每一种协议。
 </Tip>
+
+## 常见应用的协议
+
+| 应用或配置方式 | 协议 | 地址填写方式 |
+| --- | --- | --- |
+| Codex CLI、Codex 客户端 | OpenAI Responses | Base URL `https://hilinkup.com/v1` |
+| WorkBuddy 自定义 Endpoint | OpenAI Responses | 完整 Endpoint `https://hilinkup.com/v1/responses` |
+| Claude Code、CC Switch 的 Claude Code 模式 | Claude Messages | 确保最终请求为 `https://hilinkup.com/v1/messages` |
+| Cherry Studio、Chatbox、LobeChat、Open WebUI、NextChat、LibreChat、AnythingLLM | OpenAI Chat Completions | 通常填写 Base URL `https://hilinkup.com/v1` |
+| LangChain `ChatOpenAI`、LlamaIndex `OpenAILike`、Dify 当前 OpenAI-compatible 配置 | OpenAI Chat Completions | 通常填写 Base URL `https://hilinkup.com/v1` |
+| 原生 Gemini 客户端 | Gemini generateContent | 确保最终请求包含 `/v1beta/models/{model}:generateContent` |
+
+<Note>
+  Cursor、Cline、Roo Code、Continue、OpenCode、OpenClaw 等工具更新较快。若界面提供单独的 Responses、Chat Completions 或 Anthropic 选项，以当前版本的协议名称为准；不要只根据“OpenAI-compatible”字样猜测。
+</Note>
 
 ## 接入前准备
 
@@ -141,11 +155,11 @@ HiLinkup 可以接入支持自定义 OpenAI API 或 OpenAI-compatible Provider �
 ## 通用配置流程
 
 <Steps>
-  <Step title="选择自定义 OpenAI 服务">
-    如果应用内没有 HiLinkup，选择 **OpenAI-compatible**、**Custom OpenAI** 或允许自定义 Base URL 的 OpenAI Provider。
+  <Step title="先选择协议">
+    新项目优先选择 **Responses**。传统聊天客户端选择 **OpenAI-compatible / Chat Completions**；Claude Code 选择 Anthropic/Claude；原生 Gemini 客户端选择 Gemini。
   </Step>
-  <Step title="填写 API Key 和 Base URL">
-    API Key 使用为该应用创建的独立密钥；Base URL 填写 `https://hilinkup.com/v1`。
+  <Step title="确认字段是 Base URL 还是 Endpoint">
+    按上方协议表填写地址，并使用为该应用创建的独立密钥。保存后检查最终请求路径和鉴权头。
   </Step>
   <Step title="添加模型">
     优先使用应用的“获取模型”或“同步模型”功能。无法同步时，手动添加 `/v1/models` 返回的完整模型 ID。
@@ -211,6 +225,17 @@ hilinkup = OpenAI(
 ### 常用协议 cURL 模板
 
 <Tabs>
+  <Tab title="OpenAI Responses">
+    ```bash
+    curl https://hilinkup.com/v1/responses \
+      -H "Content-Type: application/json" \
+      -H "Authorization: Bearer $HILINKUP_API_KEY" \
+      -d '{
+        "model": "qwen3.7-plus",
+        "input": "Tell me a three sentence bedtime story about a unicorn."
+      }'
+    ```
+  </Tab>
   <Tab title="OpenAI Chat">
     ```bash
     curl https://hilinkup.com/v1/chat/completions \
@@ -228,17 +253,6 @@ hilinkup = OpenAI(
             "content": "Hello!"
           }
         ]
-      }'
-    ```
-  </Tab>
-  <Tab title="OpenAI Responses">
-    ```bash
-    curl https://hilinkup.com/v1/responses \
-      -H "Content-Type: application/json" \
-      -H "Authorization: Bearer $HILINKUP_API_KEY" \
-      -d '{
-        "model": "qwen3.7-plus",
-        "input": "Tell me a three sentence bedtime story about a unicorn."
       }'
     ```
   </Tab>
@@ -321,7 +335,7 @@ export async function checkHilinkup() {
 
 <AccordionGroup>
   <Accordion title="连接测试失败，但 cURL 正常">
-    检查客户端是否自动拼接 `/v1`。如果它要求 API Host，可能需要填写 `https://hilinkup.com`；如果要求 Base URL，通常填写 `https://hilinkup.com/v1`。以客户端最终请求地址为准，正确的聊天接口应为 `/v1/chat/completions`。
+    检查客户端最终请求的协议、路径和鉴权头。Responses 应到 `/v1/responses`，Chat Completions 应到 `/v1/chat/completions`，Claude 应到 `/v1/messages`，Gemini 应到 `/v1beta/models/{model}:generateContent`。
   </Accordion>
   <Accordion title="客户端没有显示模型">
     手动添加 `/v1/models` 返回的完整模型 ID。确认没有多余空格、显示名称或供应商前缀。

@@ -15,18 +15,11 @@ Codex CLI can use custom model providers through the user-level `config.toml`. F
   Examples use the HiLinkup platform model `qwen3.7-plus`, a Chinese model example. Confirm available code models with `/v1/models` and the console.
 </Note>
 
-## Choose the Codex wire API
+## Codex uses Responses only
 
-In Codex CLI custom provider config, `wire_api` decides which endpoint Codex calls.
+For current Codex CLI custom providers, `responses` is the only supported `wire_api` value and is also the default when omitted.
 
-| Scenario | Recommended config | Endpoint |
-| --- | --- | --- |
-| Current Codex CLI | `wire_api = "responses"` | `POST /v1/responses` |
-| Older Codex CLI or models that only support Chat Completions | `wire_api = "chat"` | `POST /v1/chat/completions` |
-
-<Info>
-  If you are not sure which protocol your Codex version should use, start with `responses`. If the request fails, switch to `chat` and verify the Chat Completions cURL example first.
-</Info>
+<Warning>Do not configure `wire_api = "chat"`. It is not a supported current Codex protocol and does not make a Chat-Completions-only model usable in Codex. Verify that the selected model and HiLinkup channel support `POST /v1/responses`.</Warning>
 
 ## Verify the API first
 
@@ -288,7 +281,7 @@ codex exec --profile hilinkup "Only read the current directory and summarize the
     Confirm `env_key = "HILINKUP_API_KEY"` and verify that the same terminal can read it. Use `echo $HILINKUP_API_KEY` on macOS/Linux or `echo $env:HILINKUP_API_KEY` in PowerShell.
   </Accordion>
   <Accordion title="Responses does not work">
-    Prefer `wire_api = "responses"` for current Codex CLI. If the model or older Codex version only supports Chat Completions, change `wire_api` to `"chat"` and verify [Chat Completions](/en/api-reference/chat-completions) first.
+    Codex custom providers use Responses. Verify `https://hilinkup.com/v1/responses` with the [Responses example](/en/api-reference/responses). If a model only supports Chat Completions, select a model that supports Responses; do not set `wire_api` to `"chat"`.
   </Accordion>
   <Accordion title="Do not put provider settings in project .codex/config.toml">
     Codex project-level `.codex/config.toml` cannot override `model_provider`, `model_providers`, and provider authentication settings. Put them in user-level `~/.codex/config.toml` or `~/.codex/hilinkup.config.toml`.

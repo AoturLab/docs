@@ -13,6 +13,19 @@ icon: "refresh-cw"
 | Base URL | `https://hilinkup.com/v1` |
 | Model | `GET /v1/models` 返回的模型 ID |
 
+## 先选择调用协议
+
+| 场景 | 使用协议 | 最终端点 |
+| --- | --- | --- |
+| 新开发的 OpenAI SDK 应用 | Responses | `POST /v1/responses` |
+| 现有项目已经读取 `choices[0].message.content` | Chat Completions | `POST /v1/chat/completions` |
+| 第三方聊天客户端只提供 OpenAI-compatible 选项 | 通常为 Chat Completions | 以客户端实际请求为准 |
+| Codex CLI、Codex 客户端 | Responses | `POST /v1/responses` |
+
+<Info>
+  OpenAI 官方建议新项目使用 Responses，同时继续支持 Chat Completions。迁移不只是替换 URL：输入字段、输出结构、流式事件和工具调用格式也需要一起调整。
+</Info>
+
 <Tabs>
   <Tab title="Python">
     ```python
@@ -37,6 +50,35 @@ icon: "refresh-cw"
   </Tab>
 </Tabs>
 
+## 新项目：Responses
+
+<CodeGroup>
+```python Python
+response = client.responses.create(
+    model="qwen3.7-plus",
+    instructions="你是一个简洁的技术助手。",
+    input="解释什么是 API 路由。",
+)
+
+print(response.output_text)
+```
+
+```javascript Node.js
+const response = await client.responses.create({
+  model: "qwen3.7-plus",
+  instructions: "你是一个简洁的技术助手。",
+  input: "解释什么是 API 路由。",
+});
+
+console.log(response.output_text);
+```
+</CodeGroup>
+
+## 现有客户端：Chat Completions
+
+如果现有代码使用 `messages` 和 `choices[0].message.content`，可以继续调用
+[`POST /v1/chat/completions`](/api-reference/chat-completions)。不要把 Chat Completions 的请求体原样发送到 `/v1/responses`。
+
 ## 兼容性边界
 
 不同模型和上游服务支持的参数可能不同。以下能力应按具体模型验证：
@@ -59,3 +101,4 @@ icon: "refresh-cw"
 - 只对可重试错误执行有限次数重试。
 - 日志记录请求 ID，但不记录 API Key 和敏感提示词。
 - 对工具调用、结构化输出和长上下文分别做回归测试。
+- 如果迁移到 Responses，已将 `messages`、`choices`、流式 `delta` 和工具结构映射为 Responses 对应字段。

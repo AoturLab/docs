@@ -1,52 +1,63 @@
 ---
 title: "流式响应"
-description: "通过 Server-Sent Events 逐段接收模型输出。"
-keywords: ["stream", "SSE", "流式响应"]
+description: "正确处理 Responses 与 Chat Completions 的 Server-Sent Events。"
+keywords: ["stream", "SSE", "Responses", "Chat Completions", "流式响应"]
 icon: "waves"
 ---
 
-将 `stream` 设置为 `true` 后，服务会通过 Server-Sent Events 逐段返回内容。
+将 `stream` 设置为 `true` 后，服务会通过 Server-Sent Events 逐段返回内容。Responses 使用带 `type` 的事件；Chat Completions 使用 `choices[].delta` 数据块，两种消费者不能混用。
 
-<CodeGroup>
-```python Python
-from openai import OpenAI
+<Tabs>
+  <Tab title="Responses（新项目）">
+    ```python
+    from openai import OpenAI
 
-client = OpenAI(
-    api_key="YOUR_HILINKUP_API_KEY",
-    base_url="https://hilinkup.com/v1",
-)
+    client = OpenAI(
+        api_key="YOUR_HILINKUP_API_KEY",
+        base_url="https://hilinkup.com/v1",
+    )
 
-stream = client.chat.completions.create(
-    model="qwen3.7-plus",
-    messages=[{"role": "user", "content": "写一段 API 上线检查清单。"}],
-    stream=True,
-)
+    stream = client.responses.create(
+        model="qwen3.7-plus",
+        input="写一段 API 上线检查清单。",
+        stream=True,
+    )
 
-for chunk in stream:
-    delta = chunk.choices[0].delta.content
-    if delta:
-        print(delta, end="", flush=True)
-```
+    for event in stream:
+        if event.type == "response.output_text.delta":
+            print(event.delta, end="", flush=True)
+        elif event.type == "response.completed":
+            print()
+    ```
 
-```javascript Node.js
-import OpenAI from "openai";
+    Responses 文本流常见事件包括 `response.created`、`response.output_text.delta`、`response.completed` 和 `error`。
+  </Tab>
+  <Tab title="Chat Completions（兼容客户端）">
+    ```python
+    from openai import OpenAI
 
-const client = new OpenAI({
-  apiKey: process.env.HILINKUP_API_KEY,
-  baseURL: "https://hilinkup.com/v1",
-});
+    client = OpenAI(
+        api_key="YOUR_HILINKUP_API_KEY",
+        base_url="https://hilinkup.com/v1",
+    )
 
-const stream = await client.chat.completions.create({
-  model: "qwen3.7-plus",
-  messages: [{ role: "user", content: "写一段 API 上线检查清单。" }],
-  stream: true,
-});
+    stream = client.chat.completions.create(
+        model="qwen3.7-plus",
+        messages=[{"role": "user", "content": "写一段 API 上线检查清单。"}],
+        stream=True,
+    )
 
-for await (const chunk of stream) {
-  process.stdout.write(chunk.choices[0]?.delta?.content ?? "");
-}
-```
-</CodeGroup>
+    for chunk in stream:
+        delta = chunk.choices[0].delta.content
+        if delta:
+            print(delta, end="", flush=True)
+    ```
+  </Tab>
+</Tabs>
+
+<Warning>
+  把 Chat Completions 的 `choices[0].delta` 解析器用于 Responses 会丢失文本；把 Responses 的事件 `type` 解析器用于 Chat Completions 同样无效。
+</Warning>
 
 ## 客户端处理
 
@@ -54,4 +65,4 @@ for await (const chunk of stream) {
 - 正确处理结束标记和连接中断。
 - 不要对同一条流式请求自动无限重连，否则可能重复计费。
 - 前端断开时，服务端应中止上游请求。
-- 工具调用参数可能跨多个数据块返回，需要先拼接再解析。
+- 工具调用参数可能跨多个事件或数据块返回，需要按当前协议拼接并通过 `call_id` 或工具调用 ID 关联。

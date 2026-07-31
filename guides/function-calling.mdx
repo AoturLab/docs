@@ -1,11 +1,11 @@
 ---
 title: "工具调用"
-description: "让支持工具调用的模型请求你的应用执行函数。"
-keywords: ["function calling", "tools", "工具调用"]
+description: "按 Responses 或 Chat Completions 协议定义并处理函数工具。"
+keywords: ["function calling", "tools", "Responses", "Chat Completions", "工具调用"]
 icon: "wrench"
 ---
 
-工具调用允许模型生成结构化参数，由你的应用执行函数。模型不会替你执行真实操作。
+工具调用允许模型生成结构化参数，由你的应用执行函数。模型不会替你执行真实操作。Responses 与 Chat Completions 的工具定义和返回结构不同。
 
 ```python
 from openai import OpenAI
@@ -14,16 +14,17 @@ client = OpenAI(
     api_key="YOUR_HILINKUP_API_KEY",
     base_url="https://hilinkup.com/v1",
 )
+```
 
-response = client.chat.completions.create(
-    model="TOOL_CAPABLE_MODEL_ID",
-    messages=[
-        {"role": "user", "content": "查询上海明天的天气。"}
-    ],
-    tools=[
-        {
-            "type": "function",
-            "function": {
+<Tabs>
+  <Tab title="Responses（新项目）">
+    ```python
+    response = client.responses.create(
+        model="TOOL_CAPABLE_MODEL_ID",
+        input="查询上海明天的天气。",
+        tools=[
+            {
+                "type": "function",
                 "name": "get_weather",
                 "description": "查询指定城市和日期的天气",
                 "parameters": {
@@ -34,12 +35,48 @@ response = client.chat.completions.create(
                     },
                     "required": ["city", "date"],
                     "additionalProperties": False
+                },
+                "strict": True
+            }
+        ],
+    )
+    ```
+
+    在 `response.output` 中查找 `type == "function_call"` 的项。执行函数后，使用同一个 `call_id` 发送 `function_call_output`。
+  </Tab>
+  <Tab title="Chat Completions（兼容客户端）">
+    ```python
+    response = client.chat.completions.create(
+        model="TOOL_CAPABLE_MODEL_ID",
+        messages=[{"role": "user", "content": "查询上海明天的天气。"}],
+        tools=[
+            {
+                "type": "function",
+                "function": {
+                    "name": "get_weather",
+                    "description": "查询指定城市和日期的天气",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "city": {"type": "string"},
+                            "date": {"type": "string", "format": "date"}
+                        },
+                        "required": ["city", "date"],
+                        "additionalProperties": False
+                    }
                 }
             }
-        }
-    ],
-)
-```
+        ],
+    )
+    ```
+
+    在 `choices[0].message.tool_calls` 中读取调用，并将执行结果作为带 `tool_call_id` 的 `tool` 消息返回。
+  </Tab>
+</Tabs>
+
+<Warning>
+  Responses 的函数定义字段直接位于工具对象中；Chat Completions 把定义放在 `function` 对象内。不要只替换端点后继续沿用另一种结构。
+</Warning>
 
 ## 安全边界
 
@@ -50,5 +87,5 @@ response = client.chat.completions.create(
 - 使用 JSON Schema 限制字段类型和允许值。
 - 设置超时、并发和调用次数上限。
 - 不向模型暴露内部密钥。
-- 将工具执行结果作为 `tool` 消息返回后，再让模型生成最终答复。
+- 按协议返回工具结果：Responses 使用 `function_call_output` 和 `call_id`；Chat Completions 使用 `tool` 消息和 `tool_call_id`。
 - 对模型不支持的工具参数提供明确降级路径。
