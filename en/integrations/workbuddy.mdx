@@ -1,11 +1,11 @@
 ---
 title: "WorkBuddy"
-description: "Add HiLinkup custom models to WorkBuddy through its OpenAI-compatible model settings."
-keywords: ["WorkBuddy", "custom model", "OpenAI compatible", "Chat Completions", "HiLinkup"]
+description: "Add HiLinkup custom models to WorkBuddy through the Responses protocol."
+keywords: ["WorkBuddy", "custom model", "OpenAI compatible", "Responses API", "HiLinkup"]
 icon: "briefcase-business"
 ---
 
-WorkBuddy supports custom OpenAI-compatible models. Enter the full HiLinkup Chat Completions endpoint, an API key, and an exact model ID to make the model available in the WorkBuddy model menu.
+WorkBuddy supports custom OpenAI-compatible models. Enter the HiLinkup Responses endpoint, an API key, and an exact model ID to make the model available in the WorkBuddy model menu.
 
 <Card title="Download WorkBuddy" icon="download" href="https://www.codebuddy.cn/work/">
   Download and install the WorkBuddy desktop app.
@@ -17,7 +17,7 @@ You need:
 
 - WorkBuddy installed and signed in.
 - A HiLinkup API key from the [HiLinkup console](https://hilinkup.com/console/token).
-- The full endpoint: `https://hilinkup.com/v1/chat/completions`
+- The Responses endpoint: `https://hilinkup.com/v1/responses`
 - A currently available HiLinkup model ID.
 
 <Warning>
@@ -57,13 +57,17 @@ You need:
     | Field | Value |
     | --- | --- |
     | Provider | `Custom` |
-    | Endpoint | `https://hilinkup.com/v1/chat/completions` |
+    | Endpoint | `https://hilinkup.com/v1/responses` |
     | API Key | Your API key from the HiLinkup console |
     | Model Name | An exact model ID returned by HiLinkup |
 
-    <Frame caption="Select Custom and enter the HiLinkup endpoint, API key, and model name">
+    <Frame caption="Select Custom and enter the HiLinkup endpoint, API key, and model name; replace the legacy URL in the screenshot with `/v1/responses`">
       <img src="/images/workbuddy/03-add-custom-model.png" alt="HiLinkup endpoint, API key, and model name in the WorkBuddy custom model editor" />
     </Frame>
+
+    <Warning>
+      The screenshot was captured with the legacy `/v1/chat/completions` URL. For the current setup, enter `https://hilinkup.com/v1/responses`.
+    </Warning>
 
     Tool calling, image input, reasoning, and the other advanced options depend on the selected model. Enable only capabilities that the model supports. Keep the defaults when you are unsure.
 
@@ -95,7 +99,7 @@ You need:
   </Accordion>
 
   <Accordion title="The request returns 404">
-    The Endpoint must be the full path `https://hilinkup.com/v1/chat/completions`, not only `https://hilinkup.com/v1`.
+    The Endpoint must be the full path `https://hilinkup.com/v1/responses`, not only `https://hilinkup.com/v1`.
   </Accordion>
 
   <Accordion title="The model name is invalid or unavailable">
