@@ -12,7 +12,7 @@ icon: "square-terminal"
 ```bash
 export HILINKUP_API_KEY="YOUR_HILINKUP_API_KEY"
 
-curl https://hilinkup.com/v1/models \
+curl https://api.hilinkup.com/v1/models \
   -H "Authorization: Bearer $HILINKUP_API_KEY"
 ```
 
@@ -20,8 +20,8 @@ curl https://hilinkup.com/v1/models \
 
 ```bash
 export HILINKUP_API_KEY="YOUR_HILINKUP_API_KEY"
-export HILINKUP_BASE_URL="https://hilinkup.com/v1"
-export HILINKUP_MODEL="qwen3.7-plus"
+export HILINKUP_BASE_URL="https://api.hilinkup.com/v1"
+export HILINKUP_MODEL="aliyun/kimi-k3"
 ```
 
 ## Provider mapping
@@ -30,7 +30,7 @@ export HILINKUP_MODEL="qwen3.7-plus"
 | --- | --- |
 | Provider | OpenAI-compatible / Custom OpenAI |
 | API key | `$HILINKUP_API_KEY` |
-| Base URL | `https://hilinkup.com/v1` |
+| Base URL | `https://api.hilinkup.com/v1` |
 | Model | A model ID returned by `/v1/models` |
 
 ## Configuration file template
@@ -44,16 +44,16 @@ If your OpenCode version supports provider config files, keep the key in the env
       "type": "openai-compatible",
       "name": "HiLinkup",
       "apiKey": "${HILINKUP_API_KEY}",
-      "baseURL": "https://hilinkup.com/v1",
+      "baseURL": "https://api.hilinkup.com/v1",
       "models": {
-        "qwen3.7-plus": {
-          "name": "qwen3.7-plus"
+        "aliyun/kimi-k3": {
+          "name": "aliyun/kimi-k3"
         }
       }
     }
   },
   "defaultProvider": "hilinkup",
-  "defaultModel": "qwen3.7-plus"
+  "defaultModel": "aliyun/kimi-k3"
 }
 ```
 

@@ -19,7 +19,7 @@ Official references:
 </Warning>
 
 <Note>
-  Examples use Chinese models such as `deepseek-v4-pro`, `deepseek-v4-flash`, and `MiniMax-M2.1`. The actual model list depends on the HiLinkup console and the model list returned inside CC Switch.
+  This guide uses complete `provider/model` IDs returned by `/v1/models`, such as `aliyun/kimi-k3`. The actual list depends on the HiLinkup console and the response fetched by CC Switch.
 </Note>
 
 ## Before you start
@@ -28,7 +28,7 @@ Prepare:
 
 - CC Switch installed and open.
 - A HiLinkup API key.
-- HiLinkup request URL: `https://hilinkup.com/v1`
+- HiLinkup request URL: `https://api.hilinkup.com/v1`
 - At least one model that supports Claude Messages-compatible calls.
 
 Verify the key and model list first:
@@ -38,7 +38,7 @@ Verify the key and model list first:
     ```bash
     export HILINKUP_API_KEY="YOUR_HILINKUP_API_KEY"
 
-    curl https://hilinkup.com/v1/models \
+    curl https://api.hilinkup.com/v1/models \
       -H "Authorization: Bearer $HILINKUP_API_KEY"
     ```
   </Tab>
@@ -46,7 +46,7 @@ Verify the key and model list first:
     ```powershell
     $env:HILINKUP_API_KEY = "YOUR_HILINKUP_API_KEY"
 
-    curl.exe https://hilinkup.com/v1/models `
+    curl.exe https://api.hilinkup.com/v1/models `
       -H "Authorization: Bearer $env:HILINKUP_API_KEY"
     ```
   </Tab>
@@ -74,7 +74,7 @@ Verify the key and model list first:
     | Provider name | `HiLinkup` |
     | Website | `https://hilinkup.com` |
     | API Key | Your HiLinkup API key |
-    | Request URL | `https://hilinkup.com/v1` |
+    | Request URL | `https://api.hilinkup.com/v1` |
   </Step>
   <Step title="Confirm the auth field">
     Keep the default auth environment variable as `ANTHROPIC_AUTH_TOKEN`. CC Switch writes the key into the corresponding provider config.
@@ -87,7 +87,7 @@ Verify the key and model list first:
 ![Adding HiLinkup as a provider in CC Switch](/images/cc-switch/add-provider.png)
 
 <Info>
-  Use the Claude-compatible server URL and avoid a trailing slash. The recommended request URL is `https://hilinkup.com/v1`.
+  Use the Claude-compatible server URL and avoid a trailing slash. The recommended request URL is `https://api.hilinkup.com/v1`.
 </Info>
 
 ## Fetch models and map roles
@@ -101,13 +101,13 @@ After adding the provider, open the HiLinkup edit page in CC Switch.
     Click "Get model list". The official docs state that CC Switch uses the configured API key to call the OpenAI-compatible `/v1/models` endpoint and then shows models in a grouped dropdown.
   </Step>
   <Step title="Map Sonnet">
-    For `Sonnet`, choose a model suitable for daily coding and agent work, such as `deepseek-v4-pro`.
+    For `Sonnet`, choose a complete ID returned by `/v1/models`, such as `aliyun/kimi-k3`.
   </Step>
   <Step title="Map Opus">
-    For `Opus`, choose a stronger model for complex refactors, architecture analysis, or long-context work, such as `MiniMax-M2.1`.
+    For `Opus`, choose a complete model ID that you have verified for Claude Messages and the capabilities you need. You can use `aliyun/kimi-k3` for the initial setup.
   </Step>
   <Step title="Map Fable and Haiku">
-    For `Fable` and `Haiku`, choose a faster or lower-cost model, such as `deepseek-v4-flash`.
+    For `Fable` and `Haiku`, select complete IDs that are present in the fetched list and verified for this protocol. For the first connection test, you can map all roles to `aliyun/kimi-k3`.
   </Step>
   <Step title="Set a fallback model">
     Choose a stable default fallback model. Requests that do not clearly map to Sonnet, Opus, Fable, or Haiku will use this model.
@@ -121,14 +121,14 @@ After adding the provider, open the HiLinkup edit page in CC Switch.
 
 | Claude Code role | Best for | HiLinkup model example |
 | --- | --- | --- |
-| Sonnet | Daily coding, file edits, regular agent tasks | `deepseek-v4-pro` |
-| Opus | Complex refactors, long-context reasoning, architecture analysis | `MiniMax-M2.1` |
-| Fable | Fast Q&A, lightweight edits, lower-cost tasks | `deepseek-v4-flash` |
-| Haiku | Classification, summaries, small tasks | `deepseek-v4-flash` |
-| Default fallback | Requests that do not match a role | `deepseek-v4-pro` |
+| Sonnet | Daily coding, file edits, regular agent tasks | `aliyun/kimi-k3` |
+| Opus | Complex tasks; adjust after capability verification | `aliyun/kimi-k3` |
+| Fable | Initial connection verification | `aliyun/kimi-k3` |
+| Haiku | Initial connection verification | `aliyun/kimi-k3` |
+| Default fallback | Requests that do not match a role | `aliyun/kimi-k3` |
 
 <Tip>
-  If you are not sure which models to choose, map both Sonnet and the fallback model to one stable model first. After Claude Code works, tune Opus, Fable, and Haiku separately.
+  `owned_by` identifies the provider, and a complete model ID looks like `aliyun/kimi-k3`. If you omit the provider and enter only `kimi-k3`, the platform uses its current default provider setting. Use the complete ID for predictable routing.
 </Tip>
 
 ## Switch to HiLinkup
@@ -138,7 +138,7 @@ After adding the provider, open the HiLinkup edit page in CC Switch.
     Find the `HiLinkup` provider on the CC Switch home screen.
   </Step>
   <Step title="Set it as the active provider">
-    Select HiLinkup. Confirm that the active provider is `HiLinkup` and the request URL shows `https://hilinkup.com` or `https://hilinkup.com/v1`.
+    Select HiLinkup. Confirm that the active provider is `HiLinkup` and the request URL shows `https://api.hilinkup.com/v1`.
   </Step>
   <Step title="Confirm it takes effect">
     The official docs state that Claude Code supports hot reload, so switching providers usually takes effect immediately. If requests still use the old provider, close and reopen Claude Code.
@@ -166,7 +166,7 @@ Test in this order instead of starting with a complex agent task:
 
 <AccordionGroup>
   <Accordion title="Get model list fails">
-    Check that the API key is a HiLinkup key and that the request URL is `https://hilinkup.com/v1`. Browser or system proxy settings can also cause an empty model list.
+    Check that the API key is a HiLinkup key and that the request URL is `https://api.hilinkup.com/v1`. Browser or system proxy settings can also cause an empty model list.
   </Accordion>
   <Accordion title="Models appear, but Claude Code requests fail">
     A model returned by `/v1/models` is not guaranteed to support Claude Messages-compatible calls. Switch to a model that explicitly supports Claude Code or Claude Messages, or verify with the [Claude Messages](/en/api-reference/claude-messages) cURL example first.
@@ -174,8 +174,8 @@ Test in this order instead of starting with a complex agent task:
   <Accordion title="Claude Code still uses the old provider">
     Claude Code usually hot-reloads config. If it still uses the old provider, first confirm that HiLinkup is the active provider; if it still does not apply, close and reopen Claude Code.
   </Accordion>
-  <Accordion title="Should the URL be https://hilinkup.com or https://hilinkup.com/v1?">
-    In the CC Switch provider request URL, use `https://hilinkup.com/v1`. If your CC Switch version explicitly says not to include `/v1`, follow the app prompt and use `https://hilinkup.com`.
+  <Accordion title="Should the request URL include /v1?">
+    Use `https://api.hilinkup.com/v1` in the CC Switch provider request URL. If your CC Switch version explicitly says not to include `/v1`, use `https://api.hilinkup.com`. Do not use the website domain for API requests.
   </Accordion>
   <Accordion title="How should I choose model mappings?">
     Start stable: use the same reliable model for Sonnet and the fallback model; use a stronger model for Opus; use faster or lower-cost models for Fable and Haiku. Tune later based on latency, cost, and success rate.

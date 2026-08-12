@@ -12,7 +12,7 @@ Claude Code sends Anthropic-style requests. Use this guide only when your HiLink
 </Warning>
 
 <Note>
-  Examples use the HiLinkup platform model `deepseek-v3`. This is a Chinese model example, not a requirement to use an overseas Claude model. Confirm available models with `/v1/models` and the console.
+  Examples use the HiLinkup platform model `aliyun/kimi-k3`. This is a Chinese model example, not a requirement to use an overseas Claude model. Confirm available models with `/v1/models` and the console.
 </Note>
 
 ## Choose a configuration method
@@ -44,8 +44,8 @@ Claude Code official settings use `~/.claude/settings.json` for user-level setti
       "$schema": "https://json.schemastore.org/claude-code-settings.json",
       "env": {
         "ANTHROPIC_AUTH_TOKEN": "YOUR_HILINKUP_API_KEY",
-        "ANTHROPIC_BASE_URL": "https://hilinkup.com",
-        "ANTHROPIC_MODEL": "deepseek-v3"
+        "ANTHROPIC_BASE_URL": "https://api.hilinkup.com",
+        "ANTHROPIC_MODEL": "aliyun/kimi-k3"
       }
     }
     ```
@@ -73,8 +73,8 @@ Claude Code official settings use `~/.claude/settings.json` for user-level setti
       "$schema": "https://json.schemastore.org/claude-code-settings.json",
       "env": {
         "ANTHROPIC_AUTH_TOKEN": "YOUR_HILINKUP_API_KEY",
-        "ANTHROPIC_BASE_URL": "https://hilinkup.com",
-        "ANTHROPIC_MODEL": "deepseek-v3"
+        "ANTHROPIC_BASE_URL": "https://api.hilinkup.com",
+        "ANTHROPIC_MODEL": "aliyun/kimi-k3"
       }
     }
     ```
@@ -107,8 +107,8 @@ Claude Code official settings use `~/.claude/settings.json` for user-level setti
       "$schema": "https://json.schemastore.org/claude-code-settings.json",
       "env": {
         "ANTHROPIC_AUTH_TOKEN": "YOUR_HILINKUP_API_KEY",
-        "ANTHROPIC_BASE_URL": "https://hilinkup.com",
-        "ANTHROPIC_MODEL": "deepseek-v3"
+        "ANTHROPIC_BASE_URL": "https://api.hilinkup.com",
+        "ANTHROPIC_MODEL": "aliyun/kimi-k3"
       }
     }
     ```
@@ -142,8 +142,8 @@ Use `.claude/settings.local.json` when only the current project should use HiLin
     {
       "env": {
         "ANTHROPIC_AUTH_TOKEN": "YOUR_HILINKUP_API_KEY",
-        "ANTHROPIC_BASE_URL": "https://hilinkup.com",
-        "ANTHROPIC_MODEL": "deepseek-v3"
+        "ANTHROPIC_BASE_URL": "https://api.hilinkup.com",
+        "ANTHROPIC_MODEL": "aliyun/kimi-k3"
       },
       "permissions": {
         "deny": [
@@ -173,8 +173,8 @@ Use `.claude/settings.local.json` when only the current project should use HiLin
     {
       "env": {
         "ANTHROPIC_AUTH_TOKEN": "YOUR_HILINKUP_API_KEY",
-        "ANTHROPIC_BASE_URL": "https://hilinkup.com",
-        "ANTHROPIC_MODEL": "deepseek-v3"
+        "ANTHROPIC_BASE_URL": "https://api.hilinkup.com",
+        "ANTHROPIC_MODEL": "aliyun/kimi-k3"
       },
       "permissions": {
         "deny": [
@@ -202,16 +202,16 @@ Use this for first-time verification when you do not want to modify config files
   <Tab title="macOS / Linux">
     ```bash
     export ANTHROPIC_AUTH_TOKEN="YOUR_HILINKUP_API_KEY"
-    export ANTHROPIC_BASE_URL="https://hilinkup.com"
-    export ANTHROPIC_MODEL="deepseek-v3"
+    export ANTHROPIC_BASE_URL="https://api.hilinkup.com"
+    export ANTHROPIC_MODEL="aliyun/kimi-k3"
     claude
     ```
   </Tab>
   <Tab title="Windows PowerShell">
     ```powershell
     $env:ANTHROPIC_AUTH_TOKEN = "YOUR_HILINKUP_API_KEY"
-    $env:ANTHROPIC_BASE_URL = "https://hilinkup.com"
-    $env:ANTHROPIC_MODEL = "deepseek-v3"
+    $env:ANTHROPIC_BASE_URL = "https://api.hilinkup.com"
+    $env:ANTHROPIC_MODEL = "aliyun/kimi-k3"
     claude
     ```
   </Tab>
@@ -256,8 +256,8 @@ If your team uses 1Password, Vault, pass, Keychain, or an internal secret servic
       "$schema": "https://json.schemastore.org/claude-code-settings.json",
       "apiKeyHelper": "~/.claude/bin/hilinkup-key",
       "env": {
-        "ANTHROPIC_BASE_URL": "https://hilinkup.com",
-        "ANTHROPIC_MODEL": "deepseek-v3"
+        "ANTHROPIC_BASE_URL": "https://api.hilinkup.com",
+        "ANTHROPIC_MODEL": "aliyun/kimi-k3"
       }
     }
     ```
@@ -297,8 +297,8 @@ If your team uses 1Password, Vault, pass, Keychain, or an internal secret servic
       "$schema": "https://json.schemastore.org/claude-code-settings.json",
       "apiKeyHelper": "%USERPROFILE%\\.claude\\bin\\hilinkup-key.cmd",
       "env": {
-        "ANTHROPIC_BASE_URL": "https://hilinkup.com",
-        "ANTHROPIC_MODEL": "deepseek-v3"
+        "ANTHROPIC_BASE_URL": "https://api.hilinkup.com",
+        "ANTHROPIC_MODEL": "aliyun/kimi-k3"
       }
     }
     ```
@@ -319,12 +319,12 @@ If your team uses 1Password, Vault, pass, Keychain, or an internal secret servic
 <Tabs>
   <Tab title="macOS / Linux">
     ```bash
-    curl https://hilinkup.com/v1/messages \
+    curl https://api.hilinkup.com/v1/messages \
       -H "content-type: application/json" \
       -H "x-api-key: $HILINKUP_API_KEY" \
       -H "anthropic-version: 2023-06-01" \
       -d '{
-        "model": "deepseek-v3",
+        "model": "aliyun/kimi-k3",
         "max_tokens": 256,
         "messages": [
           {
@@ -337,12 +337,12 @@ If your team uses 1Password, Vault, pass, Keychain, or an internal secret servic
   </Tab>
   <Tab title="Windows PowerShell">
     ```powershell
-    curl.exe https://hilinkup.com/v1/messages `
+    curl.exe https://api.hilinkup.com/v1/messages `
       -H "content-type: application/json" `
       -H "x-api-key: $env:HILINKUP_API_KEY" `
       -H "anthropic-version: 2023-06-01" `
       -d '{
-        "model": "deepseek-v3",
+        "model": "aliyun/kimi-k3",
         "max_tokens": 256,
         "messages": [
           {

@@ -22,9 +22,9 @@ import os
 from llama_index.llms.openai_like import OpenAILike
 
 llm = OpenAILike(
-    model="qwen3.7-plus",
+    model="aliyun/kimi-k3",
     api_key=os.environ["HILINKUP_API_KEY"],
-    api_base="https://hilinkup.com/v1",
+    api_base="https://api.hilinkup.com/v1",
     is_chat_model=True,
     timeout=60.0,
 )

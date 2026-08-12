@@ -11,7 +11,7 @@ Set `stream: true` to receive Server-Sent Events. Responses emits typed events; 
   <Tab title="Responses (new code)">
     ```python
     stream = client.responses.create(
-        model="qwen3.7-plus",
+        model="aliyun/kimi-k3",
         input="Explain streaming.",
         stream=True,
     )
@@ -26,7 +26,7 @@ Set `stream: true` to receive Server-Sent Events. Responses emits typed events; 
   <Tab title="Chat Completions (compatibility)">
     ```python
     stream = client.chat.completions.create(
-        model="qwen3.7-plus",
+        model="aliyun/kimi-k3",
         messages=[{"role": "user", "content": "Explain streaming."}],
         stream=True,
     )

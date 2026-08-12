@@ -7,7 +7,7 @@ icon: "messages-square"
 
 LobeChat 可以通过 OpenAI Provider 的自定义代理地址接入 HiLinkup。
 
-<Info>本页 OpenAI Provider 使用 Chat Completions。代理 Base URL 为 `https://hilinkup.com/v1`，最终请求应为 `POST /v1/chat/completions`。</Info>
+<Info>本页 OpenAI Provider 使用 Chat Completions。代理 Base URL 为 `https://api.hilinkup.com/v1`，最终请求应为 `POST /v1/chat/completions`。</Info>
 
 ## 用户界面配置
 
@@ -16,7 +16,7 @@ LobeChat 可以通过 OpenAI Provider 的自定义代理地址接入 HiLinkup。
 | 字段 | 值 |
 | --- | --- |
 | API Key | HiLinkup API Key |
-| OpenAI Proxy URL | `https://hilinkup.com/v1` |
+| OpenAI Proxy URL | `https://api.hilinkup.com/v1` |
 | Model | 从 `/v1/models` 获取 |
 
 ## 自部署环境变量
@@ -25,7 +25,7 @@ LobeChat 可以通过 OpenAI Provider 的自定义代理地址接入 HiLinkup。
 
 ```bash
 OPENAI_API_KEY=YOUR_HILINKUP_API_KEY
-OPENAI_PROXY_URL=https://hilinkup.com/v1
+OPENAI_PROXY_URL=https://api.hilinkup.com/v1
 ```
 
 <Note>

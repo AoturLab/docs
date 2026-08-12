@@ -10,7 +10,7 @@ icon: "refresh-cw"
 | 配置 | HiLinkup 值 |
 | --- | --- |
 | API Key | HiLinkup 控制台创建的密钥 |
-| Base URL | `https://hilinkup.com/v1` |
+| Base URL | `https://api.hilinkup.com/v1` |
 | Model | `GET /v1/models` 返回的模型 ID |
 
 ## 先选择调用协议
@@ -34,7 +34,7 @@ icon: "refresh-cw"
 
     client = OpenAI(
         api_key=os.environ["HILINKUP_API_KEY"],
-        base_url="https://hilinkup.com/v1",
+        base_url="https://api.hilinkup.com/v1",
     )
     ```
   </Tab>
@@ -44,7 +44,7 @@ icon: "refresh-cw"
 
     const client = new OpenAI({
       apiKey: process.env.HILINKUP_API_KEY,
-      baseURL: "https://hilinkup.com/v1",
+      baseURL: "https://api.hilinkup.com/v1",
     });
     ```
   </Tab>
@@ -55,7 +55,7 @@ icon: "refresh-cw"
 <CodeGroup>
 ```python Python
 response = client.responses.create(
-    model="qwen3.7-plus",
+    model="aliyun/kimi-k3",
     instructions="你是一个简洁的技术助手。",
     input="解释什么是 API 路由。",
 )
@@ -65,7 +65,7 @@ print(response.output_text)
 
 ```javascript Node.js
 const response = await client.responses.create({
-  model: "qwen3.7-plus",
+  model: "aliyun/kimi-k3",
   instructions: "你是一个简洁的技术助手。",
   input: "解释什么是 API 路由。",
 });

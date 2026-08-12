@@ -5,15 +5,15 @@ keywords: ["LangChain", "Python", "OpenAI"]
 icon: "workflow"
 ---
 
-<Info>`ChatOpenAI` uses Chat Completions. Enter base URL `https://hilinkup.com/v1`; it is not a Responses client.</Info>
+<Info>`ChatOpenAI` uses Chat Completions. Enter base URL `https://api.hilinkup.com/v1`; it is not a Responses client.</Info>
 
 ```python
 from langchain_openai import ChatOpenAI
 
 model = ChatOpenAI(
     api_key="YOUR_HILINKUP_API_KEY",
-    base_url="https://hilinkup.com/v1",
-    model="qwen3.7-plus",
+    base_url="https://api.hilinkup.com/v1",
+    model="aliyun/kimi-k3",
 )
 
 print(model.invoke("Hello").content)

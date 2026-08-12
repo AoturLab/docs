@@ -13,13 +13,13 @@ Use Claude Messages when your application already follows Anthropic's Messages A
 </Info>
 
 <Note>
-  “Claude Messages” is the protocol shape, not a requirement to use an overseas Claude model. Examples use the HiLinkup platform model `deepseek-v3`; confirm available IDs with `/v1/models`.
+  “Claude Messages” is the protocol shape, not a requirement to use an overseas Claude model. Examples use the HiLinkup platform model `aliyun/kimi-k3`; confirm available IDs with `/v1/models`.
 </Note>
 
 ## Endpoint
 
 ```text
-POST https://hilinkup.com/v1/messages
+POST https://api.hilinkup.com/v1/messages
 ```
 
 ## Headers
@@ -33,12 +33,12 @@ anthropic-version: 2023-06-01
 ## Minimal request
 
 ```bash
-curl https://hilinkup.com/v1/messages \
+curl https://api.hilinkup.com/v1/messages \
   -H "content-type: application/json" \
   -H "x-api-key: $HILINKUP_API_KEY" \
   -H "anthropic-version: 2023-06-01" \
   -d '{
-    "model": "deepseek-v3",
+    "model": "aliyun/kimi-k3",
     "max_tokens": 1024,
     "messages": [
       {
@@ -54,12 +54,12 @@ curl https://hilinkup.com/v1/messages \
 Claude-style requests use a top-level `system` field instead of an OpenAI-style system message.
 
 ```bash
-curl https://hilinkup.com/v1/messages \
+curl https://api.hilinkup.com/v1/messages \
   -H "content-type: application/json" \
   -H "x-api-key: $HILINKUP_API_KEY" \
   -H "anthropic-version: 2023-06-01" \
   -d '{
-    "model": "deepseek-v3",
+    "model": "aliyun/kimi-k3",
     "max_tokens": 1024,
     "system": "You are a concise integration assistant.",
     "messages": [
@@ -76,9 +76,9 @@ curl https://hilinkup.com/v1/messages \
 | Anthropic setting | HiLinkup setting |
 | --- | --- |
 | API key | HiLinkup API key |
-| Base URL | `https://hilinkup.com`, or `https://hilinkup.com/v1` if required by the client |
-| Messages endpoint | `https://hilinkup.com/v1/messages` |
-| Model | A HiLinkup model ID that supports the Claude Messages protocol, such as `deepseek-v3` |
+| Base URL | `https://api.hilinkup.com`, or `https://api.hilinkup.com/v1` if the client requires the version path |
+| Messages endpoint | `https://api.hilinkup.com/v1/messages` |
+| Model | A HiLinkup model ID that supports the Claude Messages protocol, such as `aliyun/kimi-k3` |
 
 <Warning>
   Claude Messages, OpenAI Chat Completions, and Gemini generateContent are different protocols. Do not send a Claude request body to `/v1/chat/completions`.

@@ -7,7 +7,7 @@ icon: "house"
 
 HiLinkup provides a unified model API with OpenAI Responses, Chat Completions, Claude Messages, and Gemini generateContent compatible protocols. Use Responses for new OpenAI-style code; use the protocol that each third-party client actually supports.
 
-<Info>API base URL: `https://hilinkup.com/v1`</Info>
+<Info>API base URL: `https://api.hilinkup.com/v1`</Info>
 
 <Columns cols={2}>
   <Card title="Make your first request" icon="rocket" href="/en/getting-started/quickstart">Create an API key and send a Responses request.</Card>
@@ -23,11 +23,11 @@ from openai import OpenAI
 
 client = OpenAI(
     api_key="YOUR_HILINKUP_API_KEY",
-    base_url="https://hilinkup.com/v1",
+    base_url="https://api.hilinkup.com/v1",
 )
 
 response = client.responses.create(
-    model="qwen3.7-plus",
+    model="aliyun/kimi-k3",
     input="Hello",
 )
 print(response.output_text)

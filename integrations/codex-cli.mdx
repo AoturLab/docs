@@ -5,14 +5,14 @@ keywords: ["Codex CLI", "config.toml", "model_providers", "OpenAI compatible", "
 icon: "code"
 ---
 
-Codex CLI 支持通过用户级 `config.toml` 配置自定义模型供应商。HiLinkup 作为 OpenAI 兼容服务时，使用 `https://hilinkup.com/v1` 和 Responses 协议。
+Codex CLI 支持通过用户级 `config.toml` 配置自定义模型供应商。HiLinkup 作为 OpenAI 兼容服务时，使用 `https://api.hilinkup.com/v1` 和 Responses 协议。
 
 <Info>
   Codex 官方配置说明：`~/.codex/config.toml` 是用户级配置；`--profile hilinkup` 会加载 `~/.codex/config.toml`，再叠加 `~/.codex/hilinkup.config.toml`；Provider 相关配置应放在用户级配置或 profile 中，不应放在项目级 `.codex/config.toml`。
 </Info>
 
 <Note>
-  本页示例模型使用 HiLinkup 平台上的中国模型 `qwen3.7-plus`。实际代码模型请以 `/v1/models` 和控制台展示为准。
+  本页示例模型使用 HiLinkup 平台上的中国模型 `aliyun/kimi-k3`。实际代码模型请以 `/v1/models` 和控制台展示为准。
 </Note>
 
 ## Codex 只使用 Responses
@@ -32,7 +32,7 @@ Codex CLI 支持通过用户级 `config.toml` 配置自定义模型供应商。H
     ```bash
     export HILINKUP_API_KEY="YOUR_HILINKUP_API_KEY"
 
-    curl https://hilinkup.com/v1/models \
+    curl https://api.hilinkup.com/v1/models \
       -H "Authorization: Bearer $HILINKUP_API_KEY"
     ```
   </Tab>
@@ -40,13 +40,13 @@ Codex CLI 支持通过用户级 `config.toml` 配置自定义模型供应商。H
     ```powershell
     $env:HILINKUP_API_KEY = "YOUR_HILINKUP_API_KEY"
 
-    curl.exe https://hilinkup.com/v1/models `
+    curl.exe https://api.hilinkup.com/v1/models `
       -H "Authorization: Bearer $env:HILINKUP_API_KEY"
     ```
   </Tab>
 </Tabs>
 
-从返回的 `data[].id` 中选择模型。下面示例使用 `qwen3.7-plus`。
+从返回的 `data[].id` 中选择模型。下面示例使用 `aliyun/kimi-k3`。
 
 ## 方法一：编辑用户级配置文件
 
@@ -64,12 +64,12 @@ Codex CLI 支持通过用户级 `config.toml` 配置自定义模型供应商。H
     2. 粘贴以下内容：
 
     ```toml
-    model = "qwen3.7-plus"
+    model = "aliyun/kimi-k3"
     model_provider = "hilinkup"
 
     [model_providers.hilinkup]
     name = "HiLinkup"
-    base_url = "https://hilinkup.com/v1"
+    base_url = "https://api.hilinkup.com/v1"
     env_key = "HILINKUP_API_KEY"
     wire_api = "responses"
     request_max_retries = 2
@@ -108,12 +108,12 @@ Codex CLI 支持通过用户级 `config.toml` 配置自定义模型供应商。H
     2. 粘贴以下内容：
 
     ```toml
-    model = "qwen3.7-plus"
+    model = "aliyun/kimi-k3"
     model_provider = "hilinkup"
 
     [model_providers.hilinkup]
     name = "HiLinkup"
-    base_url = "https://hilinkup.com/v1"
+    base_url = "https://api.hilinkup.com/v1"
     env_key = "HILINKUP_API_KEY"
     wire_api = "responses"
     request_max_retries = 2
@@ -169,12 +169,12 @@ Codex CLI 支持通过用户级 `config.toml` 配置自定义模型供应商。H
     3. 粘贴以下内容并保存：
 
     ```toml
-    model = "qwen3.7-plus"
+    model = "aliyun/kimi-k3"
     model_provider = "hilinkup"
 
     [model_providers.hilinkup]
     name = "HiLinkup"
-    base_url = "https://hilinkup.com/v1"
+    base_url = "https://api.hilinkup.com/v1"
     env_key = "HILINKUP_API_KEY"
     wire_api = "responses"
     request_max_retries = 2
@@ -214,12 +214,12 @@ Codex CLI 支持通过用户级 `config.toml` 配置自定义模型供应商。H
     粘贴：
 
     ```toml
-    model = "qwen3.7-plus"
+    model = "aliyun/kimi-k3"
     model_provider = "hilinkup"
 
     [model_providers.hilinkup]
     name = "HiLinkup"
-    base_url = "https://hilinkup.com/v1"
+    base_url = "https://api.hilinkup.com/v1"
     env_key = "HILINKUP_API_KEY"
     wire_api = "responses"
     ```
@@ -240,12 +240,12 @@ Codex CLI 支持通过用户级 `config.toml` 配置自定义模型供应商。H
     粘贴：
 
     ```toml
-    model = "qwen3.7-plus"
+    model = "aliyun/kimi-k3"
     model_provider = "hilinkup"
 
     [model_providers.hilinkup]
     name = "HiLinkup"
-    base_url = "https://hilinkup.com/v1"
+    base_url = "https://api.hilinkup.com/v1"
     env_key = "HILINKUP_API_KEY"
     wire_api = "responses"
     ```
@@ -268,10 +268,10 @@ Codex CLI 支持通过用户级 `config.toml` 配置自定义模型供应商。H
     ```bash
     HILINKUP_API_KEY="YOUR_HILINKUP_API_KEY" \
     codex \
-      -c model='"qwen3.7-plus"' \
+      -c model='"aliyun/kimi-k3"' \
       -c model_provider='"hilinkup"' \
       -c model_providers.hilinkup.name='"HiLinkup"' \
-      -c model_providers.hilinkup.base_url='"https://hilinkup.com/v1"' \
+      -c model_providers.hilinkup.base_url='"https://api.hilinkup.com/v1"' \
       -c model_providers.hilinkup.env_key='"HILINKUP_API_KEY"' \
       -c model_providers.hilinkup.wire_api='"responses"'
     ```
@@ -281,10 +281,10 @@ Codex CLI 支持通过用户级 `config.toml` 配置自定义模型供应商。H
     $env:HILINKUP_API_KEY = "YOUR_HILINKUP_API_KEY"
 
     codex `
-      -c model='"qwen3.7-plus"' `
+      -c model='"aliyun/kimi-k3"' `
       -c model_provider='"hilinkup"' `
       -c model_providers.hilinkup.name='"HiLinkup"' `
-      -c model_providers.hilinkup.base_url='"https://hilinkup.com/v1"' `
+      -c model_providers.hilinkup.base_url='"https://api.hilinkup.com/v1"' `
       -c model_providers.hilinkup.env_key='"HILINKUP_API_KEY"' `
       -c model_providers.hilinkup.wire_api='"responses"'
     ```
@@ -323,7 +323,7 @@ Codex CLI 支持通过用户级 `config.toml` 配置自定义模型供应商。H
     确认 `env_key = "HILINKUP_API_KEY"`，并且启动 Codex 的同一个 shell 中能读取该变量。macOS/Linux 执行 `echo $HILINKUP_API_KEY`；Windows PowerShell 执行 `echo $env:HILINKUP_API_KEY`。
   </Accordion>
   <Accordion title="Responses 路径不通">
-    Codex 的自定义 provider 只使用 Responses。先用 [Responses](/api-reference/responses) 页面里的 cURL 验证 `https://hilinkup.com/v1/responses`。如果模型只支持 Chat Completions，请更换为支持 Responses 的模型；不要把 `wire_api` 改成 `"chat"`。
+    Codex 的自定义 provider 只使用 Responses。先用 [Responses](/api-reference/responses) 页面里的 cURL 验证 `https://api.hilinkup.com/v1/responses`。如果模型只支持 Chat Completions，请更换为支持 Responses 的模型；不要把 `wire_api` 改成 `"chat"`。
   </Accordion>
   <Accordion title="不要把 provider 写到项目级 .codex/config.toml">
     Codex 官方文档说明项目级 `.codex/config.toml` 不能覆盖 `model_provider` 和 `model_providers` 等 Provider 鉴权相关配置。请把这些配置写到用户级 `~/.codex/config.toml` 或 `~/.codex/hilinkup.config.toml`。

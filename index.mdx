@@ -8,7 +8,7 @@ icon: "house"
 HiLinkup 提供统一的模型 API，并兼容 OpenAI Responses、Chat Completions、Claude Messages 与 Gemini generateContent 等调用协议。新开发的 OpenAI 风格应用优先使用 Responses；第三方客户端应使用它实际支持的协议。
 
 <Info>
-  API Base URL：`https://hilinkup.com/v1`
+  API Base URL：`https://api.hilinkup.com/v1`
 </Info>
 
 <Columns cols={2}>
@@ -34,11 +34,11 @@ from openai import OpenAI
 
 client = OpenAI(
     api_key="YOUR_HILINKUP_API_KEY",
-    base_url="https://hilinkup.com/v1",
+    base_url="https://api.hilinkup.com/v1",
 )
 
 response = client.responses.create(
-    model="qwen3.7-plus",
+    model="aliyun/kimi-k3",
     input="用一句话介绍 HiLinkup",
 )
 
@@ -50,11 +50,11 @@ import OpenAI from "openai";
 
 const client = new OpenAI({
   apiKey: process.env.HILINKUP_API_KEY,
-  baseURL: "https://hilinkup.com/v1",
+  baseURL: "https://api.hilinkup.com/v1",
 });
 
 const response = await client.responses.create({
-  model: "qwen3.7-plus",
+  model: "aliyun/kimi-k3",
   input: "用一句话介绍 HiLinkup",
 });
 
@@ -62,11 +62,11 @@ console.log(response.output_text);
 ```
 
 ```bash cURL
-curl https://hilinkup.com/v1/responses \
+curl https://api.hilinkup.com/v1/responses \
   -H "Authorization: Bearer $HILINKUP_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "qwen3.7-plus",
+    "model": "aliyun/kimi-k3",
     "input": "用一句话介绍 HiLinkup"
   }'
 ```

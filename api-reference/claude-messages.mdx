@@ -13,13 +13,13 @@ Claude Messages 适合已经按 Anthropic 官方接口开发的应用。接入�
 </Info>
 
 <Note>
-  “Claude Messages” 指接口协议，不代表必须选择海外 Claude 模型。示例使用 HiLinkup 平台上的中国模型 `deepseek-v3`；实际模型 ID 以 `/v1/models` 返回为准。
+  “Claude Messages” 指接口协议，不代表必须选择海外 Claude 模型。示例使用 HiLinkup 平台上的中国模型 `aliyun/kimi-k3`；实际模型 ID 以 `/v1/models` 返回为准。
 </Note>
 
 ## Endpoint
 
 ```text
-POST https://hilinkup.com/v1/messages
+POST https://api.hilinkup.com/v1/messages
 ```
 
 ## Headers
@@ -31,18 +31,18 @@ anthropic-version: 2023-06-01
 ```
 
 <Note>
-  如果某个第三方客户端只提供 API Key 和 Base URL 字段，Base URL 填 `https://hilinkup.com` 或客户端要求的 Anthropic Base URL；最终请求路径应是 `/v1/messages`。
+  如果某个第三方客户端只提供 API Key 和 Base URL 字段，Base URL 填 `https://api.hilinkup.com`；最终请求路径应是 `/v1/messages`。
 </Note>
 
 ## 最小请求
 
 ```bash
-curl https://hilinkup.com/v1/messages \
+curl https://api.hilinkup.com/v1/messages \
   -H "content-type: application/json" \
   -H "x-api-key: $HILINKUP_API_KEY" \
   -H "anthropic-version: 2023-06-01" \
   -d '{
-    "model": "deepseek-v3",
+    "model": "aliyun/kimi-k3",
     "max_tokens": 1024,
     "messages": [
       {
@@ -58,12 +58,12 @@ curl https://hilinkup.com/v1/messages \
 Claude 风格接口使用顶层 `system` 字段，而不是 OpenAI Chat Completions 中的 `system` 消息。
 
 ```bash
-curl https://hilinkup.com/v1/messages \
+curl https://api.hilinkup.com/v1/messages \
   -H "content-type: application/json" \
   -H "x-api-key: $HILINKUP_API_KEY" \
   -H "anthropic-version: 2023-06-01" \
   -d '{
-    "model": "deepseek-v3",
+    "model": "aliyun/kimi-k3",
     "max_tokens": 1024,
     "system": "You are a concise integration assistant.",
     "messages": [
@@ -78,12 +78,12 @@ curl https://hilinkup.com/v1/messages \
 ## 流式输出
 
 ```bash
-curl https://hilinkup.com/v1/messages \
+curl https://api.hilinkup.com/v1/messages \
   -H "content-type: application/json" \
   -H "x-api-key: $HILINKUP_API_KEY" \
   -H "anthropic-version: 2023-06-01" \
   -d '{
-    "model": "deepseek-v3",
+    "model": "aliyun/kimi-k3",
     "max_tokens": 1024,
     "stream": true,
     "messages": [
@@ -100,9 +100,9 @@ curl https://hilinkup.com/v1/messages \
 | Anthropic 官方配置 | HiLinkup 配置 |
 | --- | --- |
 | API Key | HiLinkup API Key |
-| Base URL | `https://hilinkup.com`，或客户端要求时填写 `https://hilinkup.com/v1` |
-| Messages endpoint | `https://hilinkup.com/v1/messages` |
-| Model | 使用 HiLinkup 控制台或模型列表中支持 Claude Messages 协议的模型 ID，例如 `deepseek-v3` |
+| Base URL | `https://api.hilinkup.com`，或客户端要求包含版本路径时填写 `https://api.hilinkup.com/v1` |
+| Messages endpoint | `https://api.hilinkup.com/v1/messages` |
+| Model | 使用 HiLinkup 控制台或模型列表中支持 Claude Messages 协议的模型 ID，例如 `aliyun/kimi-k3` |
 
 <Warning>
   Claude Messages、OpenAI Chat Completions 和 Gemini generateContent 是不同协议。不要把 Claude 请求体发送到 `/v1/chat/completions`。
@@ -118,6 +118,6 @@ curl https://hilinkup.com/v1/messages \
     Claude Messages 的 `messages` 只包含 `user` 和 `assistant` 对话轮次；系统提示应放在顶层 `system` 字段。
   </Accordion>
   <Accordion title="客户端要求填写 Anthropic Base URL">
-    优先填写 `https://hilinkup.com`，并确认最终请求地址是 `https://hilinkup.com/v1/messages`。如果客户端不会自动拼 `/v1/messages`，则按客户端说明填写完整 Endpoint。
+    优先填写 `https://api.hilinkup.com`，并确认最终请求地址是 `https://api.hilinkup.com/v1/messages`。如果客户端不会自动拼 `/v1/messages`，则按客户端说明填写完整 Endpoint。
   </Accordion>
 </AccordionGroup>

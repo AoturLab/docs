@@ -4,7 +4,7 @@
 
 - This is the Chinese developer documentation for HiLinkup.
 - The production origin is `https://hilinkup.com`.
-- The OpenAI-compatible API base URL is `https://hilinkup.com/v1`.
+- The API origin is `https://api.hilinkup.com`; OpenAI-compatible SDKs normally use `https://api.hilinkup.com/v1` as the base URL.
 - Navigation and site settings are defined in `docs.json`.
 - Documentation pages use MDX with YAML frontmatter.
 
@@ -20,7 +20,8 @@
 
 ## API examples
 
-- Use `https://hilinkup.com/v1` as the base URL.
+- Use the `https://api.hilinkup.com` API origin. OpenAI-compatible SDK examples normally use `https://api.hilinkup.com/v1` as the base URL.
+- Prefer provider-qualified model IDs returned by `GET /v1/models`, such as `aliyun/kimi-k3`. An unqualified model ID uses the platform's current default provider setting.
 - Use `HILINKUP_API_KEY` for environment variable examples.
 - Never include a real API Key.
 - Include language tags on every code block.

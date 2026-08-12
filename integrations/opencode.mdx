@@ -16,11 +16,11 @@ OpenCode 版本更新较快。只要当前版本支持自定义 OpenAI-compatibl
     ```bash
     export HILINKUP_API_KEY="YOUR_HILINKUP_API_KEY"
 
-    curl https://hilinkup.com/v1/chat/completions \
+    curl https://api.hilinkup.com/v1/chat/completions \
       -H "Content-Type: application/json" \
       -H "Authorization: Bearer $HILINKUP_API_KEY" \
       -d '{
-        "model": "qwen3.7-plus",
+        "model": "aliyun/kimi-k3",
         "messages": [
           {
             "role": "user",
@@ -33,7 +33,7 @@ OpenCode 版本更新较快。只要当前版本支持自定义 OpenAI-compatibl
   </Step>
   <Step title="复制模型 ID">
     ```bash
-    curl https://hilinkup.com/v1/models \
+    curl https://api.hilinkup.com/v1/models \
       -H "Authorization: Bearer $HILINKUP_API_KEY"
     ```
   </Step>
@@ -43,8 +43,8 @@ OpenCode 版本更新较快。只要当前版本支持自定义 OpenAI-compatibl
 
 ```bash
 export HILINKUP_API_KEY="YOUR_HILINKUP_API_KEY"
-export HILINKUP_BASE_URL="https://hilinkup.com/v1"
-export HILINKUP_MODEL="qwen3.7-plus"
+export HILINKUP_BASE_URL="https://api.hilinkup.com/v1"
+export HILINKUP_MODEL="aliyun/kimi-k3"
 ```
 
 然后在 OpenCode 中选择 OpenAI-compatible / Custom OpenAI Provider，并映射：
@@ -53,8 +53,8 @@ export HILINKUP_MODEL="qwen3.7-plus"
 | --- | --- |
 | Provider | OpenAI-compatible / Custom OpenAI |
 | API Key | `$HILINKUP_API_KEY` |
-| Base URL | `https://hilinkup.com/v1` |
-| Model | `qwen3.7-plus` 或 `/v1/models` 返回的模型 ID |
+| Base URL | `https://api.hilinkup.com/v1` |
+| Model | `aliyun/kimi-k3` 或 `/v1/models` 返回的模型 ID |
 
 ## 方法二：用户级配置文件
 
@@ -67,21 +67,21 @@ export HILINKUP_MODEL="qwen3.7-plus"
       "type": "openai-compatible",
       "name": "HiLinkup",
       "apiKey": "${HILINKUP_API_KEY}",
-      "baseURL": "https://hilinkup.com/v1",
+      "baseURL": "https://api.hilinkup.com/v1",
       "models": {
-        "qwen3.7-plus": {
-          "name": "qwen3.7-plus"
+        "aliyun/kimi-k3": {
+          "name": "aliyun/kimi-k3"
         }
       }
     }
   },
   "defaultProvider": "hilinkup",
-  "defaultModel": "qwen3.7-plus"
+  "defaultModel": "aliyun/kimi-k3"
 }
 ```
 
 <Note>
-  OpenCode 不同版本的配置文件名和字段可能不同。如果你的版本使用 `baseUrl`、`base_url` 或 `api_key`，按当前版本 schema 调整字段，但值保持一致：Base URL 是 `https://hilinkup.com/v1`，Key 来自 `HILINKUP_API_KEY`。
+  OpenCode 不同版本的配置文件名和字段可能不同。如果你的版本使用 `baseUrl`、`base_url` 或 `api_key`，按当前版本 schema 调整字段，但值保持一致：Base URL 是 `https://api.hilinkup.com/v1`，Key 来自 `HILINKUP_API_KEY`。
 </Note>
 
 ## 方法三：项目级配置模板
@@ -92,8 +92,8 @@ export HILINKUP_MODEL="qwen3.7-plus"
 {
   "provider": "openai-compatible",
   "apiKeyEnv": "HILINKUP_API_KEY",
-  "baseURL": "https://hilinkup.com/v1",
-  "model": "qwen3.7-plus",
+  "baseURL": "https://api.hilinkup.com/v1",
+  "model": "aliyun/kimi-k3",
   "temperature": 0.2,
   "maxTokens": 4096
 }
@@ -131,7 +131,7 @@ printf '%s\n' '.opencode.local.json' >> .gitignore
 
 <AccordionGroup>
   <Accordion title="连接测试失败">
-    检查最终请求地址是否为 `https://hilinkup.com/v1/chat/completions`。如果出现 `/v1/v1/chat/completions`，说明客户端自动追加了 `/v1`，Base URL 应改成 `https://hilinkup.com`。
+    检查最终请求地址是否为 `https://api.hilinkup.com/v1/chat/completions`。如果出现 `/v1/v1/chat/completions`，说明客户端自动追加了 `/v1`，Base URL 应改成 `https://api.hilinkup.com`。
   </Accordion>
   <Accordion title="普通 cURL 成功，但 Agent 失败">
     Agent 请求通常会带工具定义和更长上下文。先关闭工具或使用只读任务；如果只读成功，再逐步启用编辑、命令执行和长上下文。

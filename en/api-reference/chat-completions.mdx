@@ -8,10 +8,10 @@ icon: "message-square"
 ## `POST /v1/chat/completions`
 
 ```bash
-curl https://hilinkup.com/v1/chat/completions \
+curl https://api.hilinkup.com/v1/chat/completions \
   -H "Authorization: Bearer $HILINKUP_API_KEY" \
   -H "Content-Type: application/json" \
-  -d '{"model":"qwen3.7-plus","messages":[{"role":"user","content":"Hello"}]}'
+  -d '{"model":"aliyun/kimi-k3","messages":[{"role":"user","content":"Hello"}]}'
 ```
 
 Required fields are `model` and `messages`. Optional features include streaming and tool calls when supported by the model.
@@ -23,11 +23,11 @@ Set `HILINKUP_API_KEY` first, then replace `model` with an ID returned by `/v1/m
 <Tabs>
   <Tab title="Non-streaming">
     ```bash
-    curl https://hilinkup.com/v1/chat/completions \
+    curl https://api.hilinkup.com/v1/chat/completions \
       -H "Content-Type: application/json" \
       -H "Authorization: Bearer $HILINKUP_API_KEY" \
       -d '{
-        "model": "qwen3.7-plus",
+        "model": "aliyun/kimi-k3",
         "messages": [
           {
             "role": "system",
@@ -47,11 +47,11 @@ Set `HILINKUP_API_KEY` first, then replace `model` with an ID returned by `/v1/m
   </Tab>
   <Tab title="Streaming">
     ```bash
-    curl https://hilinkup.com/v1/chat/completions \
+    curl https://api.hilinkup.com/v1/chat/completions \
       -H "Content-Type: application/json" \
       -H "Authorization: Bearer $HILINKUP_API_KEY" \
       -d '{
-        "model": "qwen3.7-plus",
+        "model": "aliyun/kimi-k3",
         "messages": [
           {
             "role": "user",
@@ -66,11 +66,11 @@ Set `HILINKUP_API_KEY` first, then replace `model` with an ID returned by `/v1/m
   </Tab>
   <Tab title="Tool call">
     ```bash
-    curl https://hilinkup.com/v1/chat/completions \
+    curl https://api.hilinkup.com/v1/chat/completions \
       -H "Content-Type: application/json" \
       -H "Authorization: Bearer $HILINKUP_API_KEY" \
       -d '{
-        "model": "qwen3.7-plus",
+        "model": "aliyun/kimi-k3",
         "messages": [
           {
             "role": "user",

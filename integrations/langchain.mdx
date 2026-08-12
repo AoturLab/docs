@@ -5,7 +5,7 @@ keywords: ["LangChain", "ChatOpenAI", "Python", "JavaScript"]
 icon: "link"
 ---
 
-<Info>`ChatOpenAI` 使用 Chat Completions。Base URL 填 `https://hilinkup.com/v1`，最终请求为 `POST /v1/chat/completions`；它不是 Responses 客户端。</Info>
+<Info>`ChatOpenAI` 使用 Chat Completions。Base URL 填 `https://api.hilinkup.com/v1`，最终请求为 `POST /v1/chat/completions`；它不是 Responses 客户端。</Info>
 
 <CodeGroup>
 ```python Python
@@ -13,9 +13,9 @@ import os
 from langchain_openai import ChatOpenAI
 
 model = ChatOpenAI(
-    model="qwen3.7-plus",
+    model="aliyun/kimi-k3",
     api_key=os.environ["HILINKUP_API_KEY"],
-    base_url="https://hilinkup.com/v1",
+    base_url="https://api.hilinkup.com/v1",
     timeout=60,
     max_retries=2,
 )
@@ -28,10 +28,10 @@ print(response.content)
 import { ChatOpenAI } from "@langchain/openai";
 
 const model = new ChatOpenAI({
-  model: "qwen3.7-plus",
+  model: "aliyun/kimi-k3",
   apiKey: process.env.HILINKUP_API_KEY,
   configuration: {
-    baseURL: "https://hilinkup.com/v1",
+    baseURL: "https://api.hilinkup.com/v1",
   },
   maxRetries: 2,
 });

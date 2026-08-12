@@ -8,7 +8,7 @@ icon: "rocket"
 按照本页操作，你将完成一个真实可用的 HiLinkup 接入：创建密钥、确认模型、发送请求并验证返回结果。
 
 <Info>
-  API Base URL：`https://hilinkup.com/v1`
+  API Base URL：`https://api.hilinkup.com/v1`
 </Info>
 
 ## 完成后你会得到什么
@@ -82,7 +82,7 @@ icon: "rocket"
   <Tab title=".env 文件">
     ```dotenv
     HILINKUP_API_KEY=你的 API Key
-    HILINKUP_BASE_URL=https://hilinkup.com/v1
+    HILINKUP_BASE_URL=https://api.hilinkup.com/v1
     ```
 
     将 `.env` 加入 `.gitignore`：
@@ -99,7 +99,7 @@ icon: "rocket"
 不要从博客、截图或其他账户复制模型名称。`GET /v1/models` 返回当前 API Key 此刻可以使用的模型。
 
 ```bash
-curl https://hilinkup.com/v1/models \
+curl https://api.hilinkup.com/v1/models \
   -H "Authorization: Bearer $HILINKUP_API_KEY"
 ```
 
@@ -110,14 +110,22 @@ curl https://hilinkup.com/v1/models \
   "object": "list",
   "data": [
     {
-      "id": "qwen3.7-plus",
+      "created": 1785943362,
+      "owned_by": "z-ai",
+      "id": "z-ai/glm-5.2",
+      "object": "model"
+    },
+    {
+      "created": 1786358014,
+      "owned_by": "aliyun",
+      "id": "aliyun/kimi-k3",
       "object": "model"
     }
   ]
 }
 ```
 
-复制 `data[].id` 的完整值。后续示例使用 `qwen3.7-plus`，如果你的返回结果中没有这个 ID，请替换成实际可用模型。
+`owned_by` 是供应商，`id` 的完整格式是 `供应商/模型`。复制 `data[].id` 的完整值可显式指定供应商，例如 `aliyun/kimi-k3`；只传 `kimi-k3` 时不指定供应商，由平台当前的默认供应商设置处理。后续示例使用 `aliyun/kimi-k3`，如果你的返回结果中没有这个 ID，请替换成实际可用模型。
 
 <Check>
   收到 HTTP `200`，并且 `data` 数组至少包含一个模型，表示鉴权和模型访问正常。
@@ -129,11 +137,11 @@ curl https://hilinkup.com/v1/models \
 
 <CodeGroup>
 ```bash cURL
-curl https://hilinkup.com/v1/responses \
+curl https://api.hilinkup.com/v1/responses \
   -H "Authorization: Bearer $HILINKUP_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "qwen3.7-plus",
+    "model": "aliyun/kimi-k3",
     "instructions": "你是一个回答简洁的技术助手。",
     "input": "用三点说明 API 健康检查应该包含什么。"
   }'
@@ -146,12 +154,12 @@ from openai import OpenAI
 
 client = OpenAI(
     api_key=os.environ["HILINKUP_API_KEY"],
-    base_url="https://hilinkup.com/v1",
+    base_url="https://api.hilinkup.com/v1",
     timeout=60.0,
 )
 
 response = client.responses.create(
-    model="qwen3.7-plus",
+    model="aliyun/kimi-k3",
     instructions="你是一个回答简洁的技术助手。",
     input="用三点说明 API 健康检查应该包含什么。",
 )
@@ -166,12 +174,12 @@ import OpenAI from "openai";
 
 const client = new OpenAI({
   apiKey: process.env.HILINKUP_API_KEY,
-  baseURL: "https://hilinkup.com/v1",
+  baseURL: "https://api.hilinkup.com/v1",
   timeout: 60_000,
 });
 
 const response = await client.responses.create({
-  model: "qwen3.7-plus",
+  model: "aliyun/kimi-k3",
   instructions: "你是一个回答简洁的技术助手。",
   input: "用三点说明 API 健康检查应该包含什么。",
 });
@@ -200,7 +208,7 @@ console.log("usage:", response.usage);
   "id": "resp_example",
   "object": "response",
   "status": "completed",
-  "model": "qwen3.7-plus",
+  "model": "aliyun/kimi-k3",
   "output": [
     {
       "type": "message",
@@ -232,7 +240,7 @@ console.log("usage:", response.usage);
 
 ```python
 stream = client.responses.create(
-    model="qwen3.7-plus",
+    model="aliyun/kimi-k3",
     input="逐步解释什么是流式响应。",
     stream=True,
 )
@@ -254,7 +262,7 @@ for event in stream:
     检查账户状态、密钥权限和所选模型是否对当前账户开放。重新调用 `/v1/models`，不要继续使用未返回的模型 ID。
   </Accordion>
   <Accordion title="404：请求地址错误">
-    Responses 的完整地址是 `https://hilinkup.com/v1/responses`。使用 SDK 时，Base URL 应为 `https://hilinkup.com/v1`。
+    Responses 的完整地址是 `https://api.hilinkup.com/v1/responses`。使用 SDK 时，Base URL 应为 `https://api.hilinkup.com/v1`。
   </Accordion>
   <Accordion title="429：请求过多或额度受限">
     降低并发，等待后使用指数退避重试。检查控制台中的余额、额度和使用情况。

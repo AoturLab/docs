@@ -13,19 +13,19 @@ Gemini 风格接口适合已经按 Google Gemini API 开发的应用。接入时
 </Info>
 
 <Note>
-  “Gemini generateContent” 指接口协议，不代表必须选择海外 Gemini 模型。示例使用 HiLinkup 平台上的中国模型 `qwen3.7-plus`；实际模型 ID 以 `/v1/models` 返回为准。
+  “Gemini generateContent” 指接口协议，不代表必须选择海外 Gemini 模型。示例使用 HiLinkup 平台上的中国模型 `aliyun/kimi-k3`；实际模型 ID 以 `/v1/models` 返回为准。
 </Note>
 
 ## Endpoint
 
 ```text
-POST https://hilinkup.com/v1beta/models/{model}:generateContent
+POST https://api.hilinkup.com/v1beta/models/{model}:generateContent
 ```
 
 其中 `{model}` 替换为 HiLinkup 可用且支持 generateContent 协议的模型 ID，例如：
 
 ```text
-qwen3.7-plus
+aliyun/kimi-k3
 ```
 
 ## Headers
@@ -38,7 +38,7 @@ x-goog-api-key: $HILINKUP_API_KEY
 ## 最小请求
 
 ```bash
-curl "https://hilinkup.com/v1beta/models/qwen3.7-plus:generateContent" \
+curl "https://api.hilinkup.com/v1beta/models/aliyun/kimi-k3:generateContent" \
   -H "x-goog-api-key: $HILINKUP_API_KEY" \
   -H "Content-Type: application/json" \
   -X POST \
@@ -58,7 +58,7 @@ curl "https://hilinkup.com/v1beta/models/qwen3.7-plus:generateContent" \
 ## 带生成参数
 
 ```bash
-curl "https://hilinkup.com/v1beta/models/qwen3.7-plus:generateContent" \
+curl "https://api.hilinkup.com/v1beta/models/aliyun/kimi-k3:generateContent" \
   -H "x-goog-api-key: $HILINKUP_API_KEY" \
   -H "Content-Type: application/json" \
   -X POST \
@@ -85,12 +85,12 @@ curl "https://hilinkup.com/v1beta/models/qwen3.7-plus:generateContent" \
 | Google Gemini 官方配置 | HiLinkup 配置 |
 | --- | --- |
 | API Key | HiLinkup API Key |
-| Base URL / Endpoint | `https://hilinkup.com`，最终路径为 `/v1beta/models/{model}:generateContent` |
-| Model | HiLinkup 可用且支持 generateContent 协议的模型 ID，例如 `qwen3.7-plus` |
+| Base URL / Endpoint | `https://api.hilinkup.com`，最终路径为 `/v1beta/models/{model}:generateContent` |
+| Model | HiLinkup 可用且支持 generateContent 协议的模型 ID，例如 `aliyun/kimi-k3` |
 | Auth header | `x-goog-api-key: $HILINKUP_API_KEY` |
 
 <Warning>
-  Gemini 接口路径不是 `/v1/chat/completions`。如果客户端要求填写完整接口地址，应填写 `https://hilinkup.com/v1beta/models/{model}:generateContent`。
+  Gemini 接口路径不是 `/v1/chat/completions`。如果客户端要求填写完整接口地址，应填写 `https://api.hilinkup.com/v1beta/models/{model}:generateContent`。
 </Warning>
 
 ## 常见问题

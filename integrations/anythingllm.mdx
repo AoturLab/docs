@@ -7,14 +7,14 @@ icon: "database"
 
 AnythingLLM 可以使用 OpenAI-compatible 聊天模型。知识库功能还需要单独配置嵌入模型，聊天模型可用不代表嵌入模型也已配置。
 
-<Info>本页的聊天模型配置使用 OpenAI Chat Completions：Base URL 为 `https://hilinkup.com/v1`，最终请求为 `POST /v1/chat/completions`。嵌入模型另行调用 `/v1/embeddings`。</Info>
+<Info>本页的聊天模型配置使用 OpenAI Chat Completions：Base URL 为 `https://api.hilinkup.com/v1`，最终请求为 `POST /v1/chat/completions`。嵌入模型另行调用 `/v1/embeddings`。</Info>
 
 ## 聊天模型配置
 
 | 字段 | 值 |
 | --- | --- |
 | LLM Provider | Generic OpenAI / OpenAI-compatible |
-| API Base URL | `https://hilinkup.com/v1` |
+| API Base URL | `https://api.hilinkup.com/v1` |
 | API Key | HiLinkup API Key |
 | Chat Model | `/v1/models` 中的聊天模型 ID |
 

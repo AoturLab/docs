@@ -8,10 +8,41 @@ icon: "list"
 ## `GET /v1/models`
 
 ```bash
-curl https://hilinkup.com/v1/models \
+curl https://api.hilinkup.com/v1/models \
   -H "Authorization: Bearer $HILINKUP_API_KEY"
 ```
 
 Use the returned `data[].id` value as the `model` field in subsequent requests.
 
-<Note>The response is the source of truth for the current API key. Availability can change over time.</Note>
+```json
+{
+  "object": "list",
+  "data": [
+    {
+      "created": 1785943362,
+      "owned_by": "z-ai",
+      "id": "z-ai/glm-5.2",
+      "object": "model"
+    },
+    {
+      "created": 1786358014,
+      "owned_by": "aliyun",
+      "id": "aliyun/kimi-k3",
+      "object": "model"
+    }
+  ]
+}
+```
+
+## Select a provider
+
+The full model ID uses the `provider/model` format. The provider prefix is part of the `model` value, not a separate request parameter.
+
+| `model` value | Routing behavior |
+| --- | --- |
+| `aliyun/kimi-k3` | Explicitly routes `kimi-k3` through the `aliyun` provider |
+| `kimi-k3` | Omits the provider and uses the platform's current default provider setting |
+
+`data[].owned_by` identifies the provider associated with the listed route. For predictable routing, copy the full `data[].id` value, such as `aliyun/kimi-k3`.
+
+<Note>The response is the source of truth for the current API key. Model availability, providers, and default-provider routing can change over time.</Note>

@@ -13,19 +13,19 @@ Use the Gemini-style endpoint when your application already follows Google's Gem
 </Info>
 
 <Note>
-  “Gemini generateContent” is the protocol shape, not a requirement to use an overseas Gemini model. Examples use the HiLinkup platform model `qwen3.7-plus`; confirm available IDs with `/v1/models`.
+  “Gemini generateContent” is the protocol shape, not a requirement to use an overseas Gemini model. Examples use the HiLinkup platform model `aliyun/kimi-k3`; confirm available IDs with `/v1/models`.
 </Note>
 
 ## Endpoint
 
 ```text
-POST https://hilinkup.com/v1beta/models/{model}:generateContent
+POST https://api.hilinkup.com/v1beta/models/{model}:generateContent
 ```
 
 Replace `{model}` with an available Gemini-compatible model ID, for example:
 
 ```text
-qwen3.7-plus
+aliyun/kimi-k3
 ```
 
 ## Headers
@@ -38,7 +38,7 @@ x-goog-api-key: $HILINKUP_API_KEY
 ## Minimal request
 
 ```bash
-curl "https://hilinkup.com/v1beta/models/qwen3.7-plus:generateContent" \
+curl "https://api.hilinkup.com/v1beta/models/aliyun/kimi-k3:generateContent" \
   -H "x-goog-api-key: $HILINKUP_API_KEY" \
   -H "Content-Type: application/json" \
   -X POST \
@@ -60,10 +60,10 @@ curl "https://hilinkup.com/v1beta/models/qwen3.7-plus:generateContent" \
 | Google Gemini setting | HiLinkup setting |
 | --- | --- |
 | API key | HiLinkup API key |
-| Base URL / endpoint | `https://hilinkup.com`, final path `/v1beta/models/{model}:generateContent` |
-| Model | A HiLinkup model ID that supports generateContent, such as `qwen3.7-plus` |
+| Base URL / endpoint | `https://api.hilinkup.com`, final path `/v1beta/models/{model}:generateContent` |
+| Model | A HiLinkup model ID that supports generateContent, such as `aliyun/kimi-k3` |
 | Auth header | `x-goog-api-key: $HILINKUP_API_KEY` |
 
 <Warning>
-  Gemini does not use `/v1/chat/completions`. If a client asks for a full endpoint, use `https://hilinkup.com/v1beta/models/{model}:generateContent`.
+  Gemini does not use `/v1/chat/completions`. If a client asks for a full endpoint, use `https://api.hilinkup.com/v1beta/models/{model}:generateContent`.
 </Warning>

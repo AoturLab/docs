@@ -12,19 +12,25 @@ HiLinkup exposes OpenAI-compatible endpoints and selected provider-style compati
 When an SDK asks for a **base URL**, use:
 
 ```text
-https://hilinkup.com/v1
+https://api.hilinkup.com/v1
 ```
 
 When a client asks for a **full endpoint**, use the protocol-specific path:
 
 | Protocol | Base URL | Full endpoint |
 | --- | --- | --- |
-| OpenAI Responses | `https://hilinkup.com/v1` | `https://hilinkup.com/v1/responses` |
-| OpenAI Chat Completions | `https://hilinkup.com/v1` | `https://hilinkup.com/v1/chat/completions` |
-| Claude Messages | `https://hilinkup.com` | `https://hilinkup.com/v1/messages` |
-| Gemini generateContent | `https://hilinkup.com` | `https://hilinkup.com/v1beta/models/{model}:generateContent` |
+| OpenAI Responses | `https://api.hilinkup.com/v1` | `https://api.hilinkup.com/v1/responses` |
+| OpenAI Chat Completions | `https://api.hilinkup.com/v1` | `https://api.hilinkup.com/v1/chat/completions` |
+| Claude Messages | `https://api.hilinkup.com` | `https://api.hilinkup.com/v1/messages` |
+| Gemini generateContent | `https://api.hilinkup.com` | `https://api.hilinkup.com/v1beta/models/{model}:generateContent` |
 
 <Warning>Do not interchange a base URL and a full endpoint. SDKs normally append the resource path, so using a full endpoint as a base URL can create duplicated paths.</Warning>
+
+## Model IDs and providers
+
+`GET https://api.hilinkup.com/v1/models` identifies the provider in `owned_by` and returns `id` values in `provider/model` format. Sending `aliyun/kimi-k3` explicitly uses the `aliyun` provider. Sending only `kimi-k3` uses the platform's current default provider setting.
+
+<Tip>For predictable provider routing, copy the complete `data[].id` returned by the model list. Available providers and the platform default can change.</Tip>
 
 ## Authentication
 

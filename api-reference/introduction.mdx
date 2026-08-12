@@ -12,21 +12,29 @@ HiLinkup API 使用 HTTPS 和 JSON，并提供多种常见模型协议的兼容�
 SDK 或客户端要求 **Base URL** 时，OpenAI 兼容协议填写：
 
 ```text
-https://hilinkup.com/v1
+https://api.hilinkup.com/v1
 ```
 
 客户端要求 **完整 Endpoint** 时，按协议填写完整路径：
 
 | 协议 | Base URL | 完整 Endpoint |
 | --- | --- | --- |
-| OpenAI Responses | `https://hilinkup.com/v1` | `https://hilinkup.com/v1/responses` |
-| OpenAI Chat Completions | `https://hilinkup.com/v1` | `https://hilinkup.com/v1/chat/completions` |
-| Claude Messages | `https://hilinkup.com` | `https://hilinkup.com/v1/messages` |
-| Gemini generateContent | `https://hilinkup.com` | `https://hilinkup.com/v1beta/models/{model}:generateContent` |
+| OpenAI Responses | `https://api.hilinkup.com/v1` | `https://api.hilinkup.com/v1/responses` |
+| OpenAI Chat Completions | `https://api.hilinkup.com/v1` | `https://api.hilinkup.com/v1/chat/completions` |
+| Claude Messages | `https://api.hilinkup.com` | `https://api.hilinkup.com/v1/messages` |
+| Gemini generateContent | `https://api.hilinkup.com` | `https://api.hilinkup.com/v1beta/models/{model}:generateContent` |
 
 <Warning>
   Base URL 与完整 Endpoint 不能互换。SDK 通常会自动追加路径；如果把完整 Endpoint 当作 Base URL，最终可能出现 `/responses/responses` 或 `/v1/v1/messages`。
 </Warning>
+
+## 模型 ID 与供应商
+
+`GET https://api.hilinkup.com/v1/models` 返回的 `owned_by` 表示供应商，`id` 使用 `供应商/模型` 格式。请求中填写 `aliyun/kimi-k3` 会显式使用 `aliyun`；只填写 `kimi-k3` 时，平台会使用当前默认供应商设置。
+
+<Tip>
+  需要固定供应商时，始终复制模型列表返回的完整 `data[].id`。供应商列表和平台默认供应商都可能变化。
+</Tip>
 
 ## 认证
 

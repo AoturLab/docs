@@ -12,7 +12,7 @@ CC Switch 可以集中管理 Claude Code 的供应商配置。把 HiLinkup 添�
 </Warning>
 
 <Note>
-  本页示例使用 `deepseek-v4-pro`、`deepseek-v4-flash`、`MiniMax-M2.1` 等中国模型作为映射示例。实际可选模型以 CC Switch 的“获取模型列表”和 HiLinkup 控制台为准。
+  本页使用 `/v1/models` 返回的完整 `供应商/模型` ID，例如 `aliyun/kimi-k3`。实际可选模型以 CC Switch 的“获取模型列表”和 HiLinkup 控制台为准。
 </Note>
 
 ## 配置前准备
@@ -21,7 +21,7 @@ CC Switch 可以集中管理 Claude Code 的供应商配置。把 HiLinkup 添�
 
 - 已安装并能打开 CC Switch
 - HiLinkup API Key。
-- HiLinkup 请求地址：`https://hilinkup.com/v1`
+- HiLinkup 请求地址：`https://api.hilinkup.com/v1`
 - 至少一个支持 Claude Messages 兼容调用的模型。
 
 先用 cURL 验证密钥和模型列表：
@@ -31,7 +31,7 @@ CC Switch 可以集中管理 Claude Code 的供应商配置。把 HiLinkup 添�
     ```bash
     export HILINKUP_API_KEY="YOUR_HILINKUP_API_KEY"
     
-    curl https://hilinkup.com/v1/models \
+    curl https://api.hilinkup.com/v1/models \
       -H "Authorization: Bearer $HILINKUP_API_KEY"
     ```
   </Tab>
@@ -39,7 +39,7 @@ CC Switch 可以集中管理 Claude Code 的供应商配置。把 HiLinkup 添�
     ```powershell
     $env:HILINKUP_API_KEY = "YOUR_HILINKUP_API_KEY"
     
-    curl.exe https://hilinkup.com/v1/models `
+    curl.exe https://api.hilinkup.com/v1/models `
       -H "Authorization: Bearer $env:HILINKUP_API_KEY"
     ```
   </Tab>
@@ -67,7 +67,7 @@ CC Switch 可以集中管理 Claude Code 的供应商配置。把 HiLinkup 添�
     | 供应商名称 | `HiLinkup` |
     | 官网链接 | `https://hilinkup.com` |
     | API Key | 你的 HiLinkup API Key |
-    | 请求地址 | `https://hilinkup.com/v1` |
+    | 请求地址 | `https://api.hilinkup.com/v1` |
   </Step>
   <Step title="确认认证字段">
     认证环境变量保持默认 `ANTHROPIC_AUTH_TOKEN`。CC Switch 会把你填写的 API Key 写入对应配置。
@@ -80,7 +80,7 @@ CC Switch 可以集中管理 Claude Code 的供应商配置。把 HiLinkup 添�
 ![在 CC Switch 中添加 HiLinkup 供应商](/images/cc-switch/add-provider.png)
 
 <Info>
-  请求地址填写兼容 Claude API 的服务端地址，不要以斜杠结尾。推荐使用 `https://hilinkup.com/v1`。
+  请求地址填写兼容 Claude API 的服务端地址，不要以斜杠结尾。推荐使用 `https://api.hilinkup.com/v1`。
 </Info>
 
 ## 获取模型列表并映射角色
@@ -94,13 +94,13 @@ CC Switch 可以集中管理 Claude Code 的供应商配置。把 HiLinkup 添�
     点击“获取模型列表”。CC Switch 官方文档说明，该功能会使用配置的 API Key 调用 OpenAI 兼容的 `/v1/models` 端点，并按类别显示模型下拉菜单。
   </Step>
   <Step title="映射 Sonnet">
-    在 `Sonnet` 行选择一个适合日常编码和 Agent 任务的模型，例如 `deepseek-v4-pro`。
+    在 `Sonnet` 行选择 `/v1/models` 返回的完整 ID，例如 `aliyun/kimi-k3`。
   </Step>
   <Step title="映射 Opus">
-    在 `Opus` 行选择一个更强的推理或复杂任务模型，例如 `MiniMax-M2.1` 或控制台推荐的高能力模型。
+    在 `Opus` 行选择你已验证支持 Claude Messages 和目标能力的完整模型 ID。首次配置也可以先使用 `aliyun/kimi-k3`。
   </Step>
   <Step title="映射 Fable 和 Haiku">
-    给 `Fable`、`Haiku` 选择响应更快或成本更低的模型，例如 `deepseek-v4-flash`。
+    给 `Fable`、`Haiku` 选择接口实际返回且已验证可用的完整模型 ID。首次配置可先统一使用 `aliyun/kimi-k3`，连接成功后再分别调整。
   </Step>
   <Step title="设置默认兜底模型">
     在“默认兜底模型”中选择一个稳定模型。未明确落到 Sonnet、Opus、Fable、Haiku 的请求会使用该模型。
@@ -114,14 +114,14 @@ CC Switch 可以集中管理 Claude Code 的供应商配置。把 HiLinkup 添�
 
 | Claude Code 角色 | 推荐用途 | HiLinkup 模型示例 |
 | --- | --- | --- |
-| Sonnet | 日常编码、文件编辑、常规 Agent 任务 | `deepseek-v4-pro` |
-| Opus | 复杂重构、长上下文推理、架构分析 | `MiniMax-M2.1` |
-| Fable | 快速问答、轻量编辑、低成本任务 | `deepseek-v4-flash` |
-| Haiku | 快速分类、摘要、小任务 | `deepseek-v4-flash` |
-| 默认兜底模型 | 未命中角色映射时使用 | `deepseek-v4-pro` |
+| Sonnet | 日常编码、文件编辑、常规 Agent 任务 | `aliyun/kimi-k3` |
+| Opus | 复杂任务；确认模型能力后再单独调整 | `aliyun/kimi-k3` |
+| Fable | 首次连通性验证 | `aliyun/kimi-k3` |
+| Haiku | 首次连通性验证 | `aliyun/kimi-k3` |
+| 默认兜底模型 | 未命中角色映射时使用 | `aliyun/kimi-k3` |
 
 <Tip>
-  如果你不确定怎么选，先把 Sonnet 和默认兜底模型都映射到同一个稳定模型。确认 Claude Code 正常工作后，再分别优化 Opus、Fable 和 Haiku。
+  `owned_by` 表示供应商，完整模型 ID 形如 `aliyun/kimi-k3`。省略供应商、只填写 `kimi-k3` 时会使用平台当前的默认供应商设置；需要固定路由时请使用完整 ID。
 </Tip>
 
 ## 切换到 HiLinkup
@@ -131,7 +131,7 @@ CC Switch 可以集中管理 Claude Code 的供应商配置。把 HiLinkup 添�
     在 CC Switch 首页找到 `HiLinkup` 供应商。
   </Step>
   <Step title="切换默认供应商">
-    选中 HiLinkup。确认列表中的当前供应商显示为 `HiLinkup`，请求地址显示为 `https://hilinkup.com` 或 `https://hilinkup.com/v1`。
+    选中 HiLinkup。确认列表中的当前供应商显示为 `HiLinkup`，请求地址显示为 `https://api.hilinkup.com/v1`。
   </Step>
   <Step title="确认生效">
     CC Switch 官方文档说明，Claude Code 支持热重载，切换供应商后通常即时生效。如果你发现请求仍走旧供应商，再关闭并重新打开 Claude Code。
@@ -159,7 +159,7 @@ CC Switch 可以集中管理 Claude Code 的供应商配置。把 HiLinkup 添�
 
 <AccordionGroup>
   <Accordion title="获取模型列表失败">
-    检查 API Key 是否来自 HiLinkup，`请求地址` 是否为 `https://hilinkup.com/v1`。如果浏览器或系统代理拦截请求，也可能导致列表为空。
+    检查 API Key 是否来自 HiLinkup，`请求地址` 是否为 `https://api.hilinkup.com/v1`。如果浏览器或系统代理拦截请求，也可能导致列表为空。
   </Accordion>
 
   <Accordion title="模型列表有模型，但 Claude Code 请求失败">
@@ -170,8 +170,8 @@ CC Switch 可以集中管理 Claude Code 的供应商配置。把 HiLinkup 添�
     Claude Code 通常会热重载配置。若切换后仍然走旧供应商，先确认 HiLinkup 已被设为当前供应商；仍不生效时，再关闭并重新打开 Claude Code。
   </Accordion>
 
-  <Accordion title="应该填 https://hilinkup.com 还是 https://hilinkup.com/v1">
-    在 CC Switch 的供应商请求地址中推荐填写 `https://hilinkup.com/v1`。如果当前 CC Switch 版本明确提示“不要带 /v1”，再按应用提示填写 `https://hilinkup.com`。
+  <Accordion title="请求地址是否需要包含 /v1">
+    在 CC Switch 的供应商请求地址中推荐填写 `https://api.hilinkup.com/v1`。如果当前 CC Switch 版本明确提示“不要带 /v1”，填写 `https://api.hilinkup.com`；API 请求不要使用官网域名。
   </Accordion>
 
   <Accordion title="模型映射怎么选">

@@ -24,24 +24,28 @@ Not every “compatible” client uses the same protocol. Check whether the appl
 
 | Protocol | Use case | Base URL / endpoint | Auth | Reference |
 | --- | --- | --- | --- | --- |
-| OpenAI Responses | New code, Codex, WorkBuddy, Responses-capable agents | Base: `https://hilinkup.com/v1`; full: `.../v1/responses` | `Authorization: Bearer $HILINKUP_API_KEY` | [Responses](/en/api-reference/responses) |
-| OpenAI Chat Completions | Traditional chat clients, `ChatOpenAI`, chat-only plugins | Base: `https://hilinkup.com/v1`; full: `.../v1/chat/completions` | `Authorization: Bearer $HILINKUP_API_KEY` | [Chat Completions](/en/api-reference/chat-completions) |
-| Claude Messages | Claude Code, Anthropic SDKs, Claude-style clients | Base: `https://hilinkup.com`; full: `.../v1/messages` | `x-api-key` plus `anthropic-version: 2023-06-01` | [Claude Messages](/en/api-reference/claude-messages) |
-| Gemini generateContent | Gemini SDKs and Google AI-style clients | Base: `https://hilinkup.com`; full: `.../v1beta/models/{model}:generateContent` | `x-goog-api-key: $HILINKUP_API_KEY` | [Gemini generateContent](/en/api-reference/gemini-generate-content) |
+| OpenAI Responses | New code, Codex, WorkBuddy, Responses-capable agents | Base: `https://api.hilinkup.com/v1`; full: `.../v1/responses` | `Authorization: Bearer $HILINKUP_API_KEY` | [Responses](/en/api-reference/responses) |
+| OpenAI Chat Completions | Traditional chat clients, `ChatOpenAI`, chat-only plugins | Base: `https://api.hilinkup.com/v1`; full: `.../v1/chat/completions` | `Authorization: Bearer $HILINKUP_API_KEY` | [Chat Completions](/en/api-reference/chat-completions) |
+| Claude Messages | Claude Code, Anthropic SDKs, Claude-style clients | Base: `https://api.hilinkup.com`; full: `.../v1/messages` | `x-api-key` plus `anthropic-version: 2023-06-01` | [Claude Messages](/en/api-reference/claude-messages) |
+| Gemini generateContent | Gemini SDKs and Google AI-style clients | Base: `https://api.hilinkup.com`; full: `.../v1beta/models/{model}:generateContent` | `x-goog-api-key: $HILINKUP_API_KEY` | [Gemini generateContent](/en/api-reference/gemini-generate-content) |
 
 <Tip>
   Protocol names do not define model origin. Each protocol can call Chinese models on HiLinkup when that model and channel support the protocol. A model appearing in `/v1/models` does not by itself prove support for every protocol.
 </Tip>
 
+<Info>
+  In `/v1/models`, `owned_by` identifies the provider and `id` uses `provider/model` format. Use the complete ID, such as `aliyun/kimi-k3`, to choose a provider explicitly. Sending only `kimi-k3` uses the platform's current default provider setting.
+</Info>
+
 ## Common application mapping
 
 | Application or configuration | Protocol | Address |
 | --- | --- | --- |
-| Codex CLI and Codex desktop | OpenAI Responses | Base URL `https://hilinkup.com/v1` |
-| WorkBuddy custom Endpoint | OpenAI Responses | Full endpoint `https://hilinkup.com/v1/responses` |
-| Claude Code and CC Switch Claude mode | Claude Messages | Final request must be `https://hilinkup.com/v1/messages` |
-| Common chat clients and knowledge-base UIs | OpenAI Chat Completions | Usually base URL `https://hilinkup.com/v1` |
-| LangChain `ChatOpenAI`, LlamaIndex `OpenAILike`, current Dify OpenAI-compatible setup | OpenAI Chat Completions | Usually base URL `https://hilinkup.com/v1` |
+| Codex CLI and Codex desktop | OpenAI Responses | Base URL `https://api.hilinkup.com/v1` |
+| WorkBuddy custom Endpoint | OpenAI Responses | Full endpoint `https://api.hilinkup.com/v1/responses` |
+| Claude Code and CC Switch Claude mode | Claude Messages | Final request must be `https://api.hilinkup.com/v1/messages` |
+| Common chat clients and knowledge-base UIs | OpenAI Chat Completions | Usually base URL `https://api.hilinkup.com/v1` |
+| LangChain `ChatOpenAI`, LlamaIndex `OpenAILike`, current Dify OpenAI-compatible setup | OpenAI Chat Completions | Usually base URL `https://api.hilinkup.com/v1` |
 | Native Gemini clients | Gemini generateContent | Final request includes `/v1beta/models/{model}:generateContent` |
 
 <Note>Cursor, Cline, Roo Code, Continue, OpenCode, and OpenClaw change quickly. If the current version exposes separate Responses, Chat Completions, or Anthropic choices, follow that explicit protocol name instead of guessing from “OpenAI-compatible.”</Note>
@@ -54,9 +58,11 @@ Not every “compatible” client uses the same protocol. Check whether the appl
   </Step>
   <Step title="List models">
     ```bash
-    curl https://hilinkup.com/v1/models \
+    curl https://api.hilinkup.com/v1/models \
       -H "Authorization: Bearer $HILINKUP_API_KEY"
     ```
+
+    Copy the complete `provider/model` value from `data[].id`, such as `aliyun/kimi-k3`.
   </Step>
   <Step title="Choose the protocol">
     Prefer Responses for new code. Use Chat Completions for traditional chat clients, Claude Messages for Claude Code, and generateContent for native Gemini clients.
@@ -95,22 +101,22 @@ Not every “compatible” client uses the same protocol. Check whether the appl
 <Tabs>
   <Tab title="Responses">
     ```bash
-    curl https://hilinkup.com/v1/responses \
+    curl https://api.hilinkup.com/v1/responses \
       -H "Content-Type: application/json" \
       -H "Authorization: Bearer $HILINKUP_API_KEY" \
       -d '{
-        "model": "qwen3.7-plus",
+        "model": "aliyun/kimi-k3",
         "input": "Tell me a three sentence bedtime story about a unicorn."
       }'
     ```
   </Tab>
   <Tab title="OpenAI Chat">
     ```bash
-    curl https://hilinkup.com/v1/chat/completions \
+    curl https://api.hilinkup.com/v1/chat/completions \
       -H "Content-Type: application/json" \
       -H "Authorization: Bearer $HILINKUP_API_KEY" \
       -d '{
-        "model": "qwen3.7-plus",
+        "model": "aliyun/kimi-k3",
         "messages": [
           {
             "role": "developer",
@@ -126,12 +132,12 @@ Not every “compatible” client uses the same protocol. Check whether the appl
   </Tab>
   <Tab title="Claude">
     ```bash
-    curl https://hilinkup.com/v1/messages \
+    curl https://api.hilinkup.com/v1/messages \
       -H "content-type: application/json" \
       -H "x-api-key: $HILINKUP_API_KEY" \
       -H "anthropic-version: 2023-06-01" \
       -d '{
-        "model": "deepseek-v3",
+        "model": "aliyun/kimi-k3",
         "max_tokens": 1024,
         "messages": [
           {
@@ -144,7 +150,7 @@ Not every “compatible” client uses the same protocol. Check whether the appl
   </Tab>
   <Tab title="Gemini">
     ```bash
-    curl "https://hilinkup.com/v1beta/models/qwen3.7-plus:generateContent" \
+    curl "https://api.hilinkup.com/v1beta/models/aliyun/kimi-k3:generateContent" \
       -H "x-goog-api-key: $HILINKUP_API_KEY" \
       -H "Content-Type: application/json" \
       -X POST \

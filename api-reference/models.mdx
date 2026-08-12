@@ -5,11 +5,11 @@ keywords: ["模型列表", "model ID", "GET models"]
 api: "GET /v1/models"
 ---
 
-返回当前 API Key 可访问的模型。请将返回的 `data[].id` 原样用于其他 API 请求。
+返回当前 API Key 可访问的模型和供应商。请将返回的 `data[].id` 原样用于其他 API 请求。
 
 <RequestExample>
 ```bash
-curl https://hilinkup.com/v1/models \
+curl https://api.hilinkup.com/v1/models \
   -H "Authorization: Bearer $HILINKUP_API_KEY"
 ```
 </RequestExample>
@@ -20,10 +20,16 @@ curl https://hilinkup.com/v1/models \
   "object": "list",
   "data": [
     {
-      "id": "qwen3.7-plus",
-      "object": "model",
-      "created": 0,
-      "owned_by": "provider"
+      "created": 1785943362,
+      "owned_by": "z-ai",
+      "id": "z-ai/glm-5.2",
+      "object": "model"
+    },
+    {
+      "created": 1786358014,
+      "owned_by": "aliyun",
+      "id": "aliyun/kimi-k3",
+      "object": "model"
     }
   ]
 }
@@ -39,9 +45,30 @@ curl https://hilinkup.com/v1/models \
 </ResponseField>
 
 <ResponseField name="data[].id" type="string">
-  请求其他端点时使用的模型 ID。
+  请求其他端点时使用的模型 ID。完整格式为 `供应商/模型`，例如 `aliyun/kimi-k3`。
 </ResponseField>
 
+<ResponseField name="data[].owned_by" type="string">
+  提供该模型路由的供应商，例如 `aliyun` 或 `z-ai`。
+</ResponseField>
+
+<ResponseField name="data[].created" type="integer">
+  模型记录的创建时间戳。
+</ResponseField>
+
+## 选择供应商
+
+`model` 字段可以包含供应商前缀。这不是单独的请求参数，而是模型 ID 的一部分。
+
+| `model` 写法 | 路由行为 |
+| --- | --- |
+| `aliyun/kimi-k3` | 显式使用 `aliyun` 供应商的 `kimi-k3` |
+| `kimi-k3` | 未指定供应商，由平台当前的默认供应商设置处理 |
+
+<Tip>
+  需要稳定、可预期的供应商路由时，优先使用 `/v1/models` 返回的完整 `data[].id`，例如 `aliyun/kimi-k3`。只使用 `kimi-k3` 时，后续请求可能随平台默认供应商设置变化。
+</Tip>
+
 <Note>
-  模型列表会随账户权限和渠道状态变化。不要把抓取结果长期硬编码到客户端；定期刷新并为下线模型准备回退策略。
+  模型列表、供应商和账户权限可能变化。不要把抓取结果长期硬编码到客户端；定期刷新并为下线模型准备回退策略。
 </Note>

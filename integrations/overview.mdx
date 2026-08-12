@@ -26,24 +26,28 @@ HiLinkup 可以接入 OpenAI、Anthropic/Claude 与 Gemini 风格客户端。先
 
 | 协议 | 适用场景 | Base URL / Endpoint | 鉴权方式 | 示例文档 |
 | --- | --- | --- | --- | --- |
-| OpenAI Responses | 新项目、Codex、WorkBuddy、支持 Responses 的 Agent | Base：`https://hilinkup.com/v1`；完整：`.../v1/responses` | `Authorization: Bearer $HILINKUP_API_KEY` | [Responses](/api-reference/responses) |
-| OpenAI Chat Completions | 传统聊天客户端、`ChatOpenAI` 与只支持聊天协议的插件 | Base：`https://hilinkup.com/v1`；完整：`.../v1/chat/completions` | `Authorization: Bearer $HILINKUP_API_KEY` | [Chat Completions](/api-reference/chat-completions) |
-| Claude Messages | Claude Code、Anthropic SDK、Claude 风格客户端 | Base：`https://hilinkup.com`；完整：`.../v1/messages` | `x-api-key` + `anthropic-version: 2023-06-01` | [Claude Messages](/api-reference/claude-messages) |
-| Gemini generateContent | Gemini SDK、Google AI 风格客户端 | Base：`https://hilinkup.com`；完整：`.../v1beta/models/{model}:generateContent` | `x-goog-api-key: $HILINKUP_API_KEY` | [Gemini generateContent](/api-reference/gemini-generate-content) |
+| OpenAI Responses | 新项目、Codex、WorkBuddy、支持 Responses 的 Agent | Base：`https://api.hilinkup.com/v1`；完整：`.../v1/responses` | `Authorization: Bearer $HILINKUP_API_KEY` | [Responses](/api-reference/responses) |
+| OpenAI Chat Completions | 传统聊天客户端、`ChatOpenAI` 与只支持聊天协议的插件 | Base：`https://api.hilinkup.com/v1`；完整：`.../v1/chat/completions` | `Authorization: Bearer $HILINKUP_API_KEY` | [Chat Completions](/api-reference/chat-completions) |
+| Claude Messages | Claude Code、Anthropic SDK、Claude 风格客户端 | Base：`https://api.hilinkup.com`；完整：`.../v1/messages` | `x-api-key` + `anthropic-version: 2023-06-01` | [Claude Messages](/api-reference/claude-messages) |
+| Gemini generateContent | Gemini SDK、Google AI 风格客户端 | Base：`https://api.hilinkup.com`；完整：`.../v1beta/models/{model}:generateContent` | `x-goog-api-key: $HILINKUP_API_KEY` | [Gemini generateContent](/api-reference/gemini-generate-content) |
 
 <Tip>
   协议名称不等于模型来源。Responses、Chat Completions、Claude Messages 与 Gemini generateContent 都可以调用 HiLinkup 平台中支持该协议的中国模型。模型是否出现在 `/v1/models` 中，也不自动证明它支持每一种协议。
 </Tip>
 
+<Info>
+  `/v1/models` 的 `owned_by` 表示供应商，`id` 使用 `供应商/模型` 格式。实际调用建议填写完整 ID，例如 `aliyun/kimi-k3`；只填写 `kimi-k3` 时由平台当前的默认供应商设置选择路由。
+</Info>
+
 ## 常见应用的协议
 
 | 应用或配置方式 | 协议 | 地址填写方式 |
 | --- | --- | --- |
-| Codex CLI、Codex 客户端 | OpenAI Responses | Base URL `https://hilinkup.com/v1` |
-| WorkBuddy 自定义 Endpoint | OpenAI Responses | 完整 Endpoint `https://hilinkup.com/v1/responses` |
-| Claude Code、CC Switch 的 Claude Code 模式 | Claude Messages | 确保最终请求为 `https://hilinkup.com/v1/messages` |
-| Cherry Studio、Chatbox、LobeChat、Open WebUI、NextChat、LibreChat、AnythingLLM | OpenAI Chat Completions | 通常填写 Base URL `https://hilinkup.com/v1` |
-| LangChain `ChatOpenAI`、LlamaIndex `OpenAILike`、Dify 当前 OpenAI-compatible 配置 | OpenAI Chat Completions | 通常填写 Base URL `https://hilinkup.com/v1` |
+| Codex CLI、Codex 客户端 | OpenAI Responses | Base URL `https://api.hilinkup.com/v1` |
+| WorkBuddy 自定义 Endpoint | OpenAI Responses | 完整 Endpoint `https://api.hilinkup.com/v1/responses` |
+| Claude Code、CC Switch 的 Claude Code 模式 | Claude Messages | 确保最终请求为 `https://api.hilinkup.com/v1/messages` |
+| Cherry Studio、Chatbox、LobeChat、Open WebUI、NextChat、LibreChat、AnythingLLM | OpenAI Chat Completions | 通常填写 Base URL `https://api.hilinkup.com/v1` |
+| LangChain `ChatOpenAI`、LlamaIndex `OpenAILike`、Dify 当前 OpenAI-compatible 配置 | OpenAI Chat Completions | 通常填写 Base URL `https://api.hilinkup.com/v1` |
 | 原生 Gemini 客户端 | Gemini generateContent | 确保最终请求包含 `/v1beta/models/{model}:generateContent` |
 
 <Note>
@@ -58,11 +62,11 @@ HiLinkup 可以接入 OpenAI、Anthropic/Claude 与 Gemini 风格客户端。先
   </Step>
   <Step title="确认模型 ID">
     ```bash
-    curl https://hilinkup.com/v1/models \
+    curl https://api.hilinkup.com/v1/models \
       -H "Authorization: Bearer $HILINKUP_API_KEY"
     ```
 
-    从 `data[].id` 复制完整 ID。
+    从 `data[].id` 复制完整的 `供应商/模型` ID，例如 `aliyun/kimi-k3`。
   </Step>
   <Step title="先验证基础 API">
     在配置第三方应用前，先完成[快速开始](/getting-started/quickstart)。这样可以区分“账户/API 问题”和“客户端配置问题”。
@@ -200,7 +204,7 @@ import OpenAI from "openai";
 
 export const hilinkup = new OpenAI({
   apiKey: process.env.HILINKUP_API_KEY,
-  baseURL: process.env.HILINKUP_BASE_URL ?? "https://hilinkup.com/v1",
+  baseURL: process.env.HILINKUP_BASE_URL ?? "https://api.hilinkup.com/v1",
   timeout: 60_000,
   maxRetries: 2,
 });
@@ -214,7 +218,7 @@ hilinkup = OpenAI(
     api_key=os.environ["HILINKUP_API_KEY"],
     base_url=os.getenv(
         "HILINKUP_BASE_URL",
-        "https://hilinkup.com/v1",
+        "https://api.hilinkup.com/v1",
     ),
     timeout=60.0,
     max_retries=2,
@@ -227,22 +231,22 @@ hilinkup = OpenAI(
 <Tabs>
   <Tab title="OpenAI Responses">
     ```bash
-    curl https://hilinkup.com/v1/responses \
+    curl https://api.hilinkup.com/v1/responses \
       -H "Content-Type: application/json" \
       -H "Authorization: Bearer $HILINKUP_API_KEY" \
       -d '{
-        "model": "qwen3.7-plus",
+        "model": "aliyun/kimi-k3",
         "input": "Tell me a three sentence bedtime story about a unicorn."
       }'
     ```
   </Tab>
   <Tab title="OpenAI Chat">
     ```bash
-    curl https://hilinkup.com/v1/chat/completions \
+    curl https://api.hilinkup.com/v1/chat/completions \
       -H "Content-Type: application/json" \
       -H "Authorization: Bearer $HILINKUP_API_KEY" \
       -d '{
-        "model": "qwen3.7-plus",
+        "model": "aliyun/kimi-k3",
         "messages": [
           {
             "role": "developer",
@@ -258,12 +262,12 @@ hilinkup = OpenAI(
   </Tab>
   <Tab title="Claude">
     ```bash
-    curl https://hilinkup.com/v1/messages \
+    curl https://api.hilinkup.com/v1/messages \
       -H "content-type: application/json" \
       -H "x-api-key: $HILINKUP_API_KEY" \
       -H "anthropic-version: 2023-06-01" \
       -d '{
-        "model": "deepseek-v3",
+        "model": "aliyun/kimi-k3",
         "max_tokens": 1024,
         "messages": [
           {
@@ -276,7 +280,7 @@ hilinkup = OpenAI(
   </Tab>
   <Tab title="Gemini">
     ```bash
-    curl "https://hilinkup.com/v1beta/models/qwen3.7-plus:generateContent" \
+    curl "https://api.hilinkup.com/v1beta/models/aliyun/kimi-k3:generateContent" \
       -H "x-goog-api-key: $HILINKUP_API_KEY" \
       -H "Content-Type: application/json" \
       -X POST \
@@ -310,8 +314,8 @@ hilinkup = OpenAI(
 
 ```dotenv
 HILINKUP_API_KEY=your-api-key
-HILINKUP_BASE_URL=https://hilinkup.com/v1
-HILINKUP_MODEL=qwen3.7-plus
+HILINKUP_BASE_URL=https://api.hilinkup.com/v1
+HILINKUP_MODEL=aliyun/kimi-k3
 ```
 
 ### 健康检查

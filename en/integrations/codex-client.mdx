@@ -17,7 +17,7 @@ You need:
 
 - CC Switch and the Codex desktop app installed.
 - A HiLinkup API key from the [HiLinkup console](https://hilinkup.com/console/token).
-- The HiLinkup API request URL: `https://hilinkup.com/v1`
+- The HiLinkup API request URL: `https://api.hilinkup.com/v1`
 
 <Warning>
   Paste your API key only into the secret field in CC Switch. Do not expose a real key in screenshots, chat messages, or project files.
@@ -50,7 +50,7 @@ You need:
     | Provider Name | `HiLinkup`, or another recognizable custom name |
     | Website URL | `https://hilinkup.com`, optional |
     | API Key | Your API key from the HiLinkup console |
-    | API Request URL | `https://hilinkup.com/v1` |
+    | API Request URL | `https://api.hilinkup.com/v1` |
     | Upstream Format | `Responses (native)` |
 
     Keep the **Full URL** toggle off. HiLinkup supports the Responses API natively, so select `Responses (native)` as the upstream format.
@@ -68,7 +68,7 @@ You need:
     </Frame>
 
     <Info>
-      If the request fails, verify the API key and the `https://hilinkup.com/v1` request URL.
+      If the request fails, verify the API key and the `https://api.hilinkup.com/v1` request URL.
     </Info>
   </Step>
 
@@ -85,7 +85,7 @@ You need:
       <img src="/images/codex-client-cc-switch/06-select-model.png" alt="CC Switch model menu containing Qwen, DeepSeek, and MiniMax models" />
     </Frame>
 
-    Repeat **Add Model** to configure more models. The available list depends on the current API response and may include models such as `glm-5.2`, `deepseek-v4-pro`, and other Chinese models.
+    Repeat **Add Model** to configure more models. Use the complete `provider/model` ID returned by the API, such as `aliyun/kimi-k3` or `z-ai/glm-5.2`. Omitting the provider and entering only `kimi-k3` uses the platform's current default provider setting.
   </Step>
 
   <Step title="Save the configuration">
@@ -117,7 +117,7 @@ You need:
   </Accordion>
 
   <Accordion title="Fetch Models fails">
-    Verify the API key, use `https://hilinkup.com/v1` as the request URL, and keep **Full URL** off. You can also validate the key with [List models](/en/api-reference/models).
+    Verify the API key, use `https://api.hilinkup.com/v1` as the request URL, and keep **Full URL** off. You can also validate the key with [List models](/en/api-reference/models).
   </Accordion>
 
   <Accordion title="The model appears, but requests fail">

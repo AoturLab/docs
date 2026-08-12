@@ -7,7 +7,7 @@ icon: "messages-square"
 
 NextChat 支持通过部署环境变量或客户端设置连接 OpenAI-compatible API。
 
-<Info>本页配置使用 Chat Completions。根据 NextChat 版本填写 Host 或 Base URL，但最终请求必须是 `https://hilinkup.com/v1/chat/completions`。</Info>
+<Info>本页配置使用 Chat Completions。根据 NextChat 版本填写 Host 或 Base URL，但最终请求必须是 `https://api.hilinkup.com/v1/chat/completions`。</Info>
 
 ## 本地客户端配置
 
@@ -16,7 +16,7 @@ NextChat 支持通过部署环境变量或客户端设置连接 OpenAI-compatibl
 | 字段 | 值 |
 | --- | --- |
 | API Key | HiLinkup API Key |
-| 接口地址 / Endpoint | `https://hilinkup.com/v1` |
+| 接口地址 / Endpoint | `https://api.hilinkup.com/v1` |
 | 模型 | `/v1/models` 返回的模型 ID |
 
 ## 自托管部署
@@ -25,13 +25,13 @@ NextChat 支持通过部署环境变量或客户端设置连接 OpenAI-compatibl
 
 ```dotenv
 OPENAI_API_KEY=your-hilinkup-api-key
-BASE_URL=https://hilinkup.com
-CUSTOM_MODELS=qwen3.7-plus
+BASE_URL=https://api.hilinkup.com
+CUSTOM_MODELS=aliyun/kimi-k3
 ```
 
 <Warning>
   部分版本会自动在 `BASE_URL` 后拼接 `/v1`。部署前检查最终请求是否为
-  `https://hilinkup.com/v1/chat/completions`，避免重复出现 `/v1/v1`。
+  `https://api.hilinkup.com/v1/chat/completions`，避免重复出现 `/v1/v1`。
 </Warning>
 
 <Steps>

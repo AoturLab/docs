@@ -17,7 +17,7 @@ You need:
 
 - WorkBuddy installed and signed in.
 - A HiLinkup API key from the [HiLinkup console](https://hilinkup.com/console/token).
-- The Responses endpoint: `https://hilinkup.com/v1/responses`
+- The Responses endpoint: `https://api.hilinkup.com/v1/responses`
 - A currently available HiLinkup model ID.
 
 <Warning>
@@ -25,7 +25,7 @@ You need:
 </Warning>
 
 <Note>
-  The model name must exactly match a model ID returned by HiLinkup. Check [List models](/en/api-reference/models) instead of guessing from the examples.
+  Prefer the complete `provider/model` ID returned by HiLinkup, such as `aliyun/kimi-k3`. Sending only `kimi-k3` uses the platform's current default provider setting. Check [List models](/en/api-reference/models) instead of copying legacy model names from the screenshots.
 </Note>
 
 ## Add a HiLinkup custom model
@@ -57,16 +57,16 @@ You need:
     | Field | Value |
     | --- | --- |
     | Provider | `Custom` |
-    | Endpoint | `https://hilinkup.com/v1/responses` |
+    | Endpoint | `https://api.hilinkup.com/v1/responses` |
     | API Key | Your API key from the HiLinkup console |
-    | Model Name | An exact model ID returned by HiLinkup |
+    | Model Name | An exact model ID returned by HiLinkup, such as `aliyun/kimi-k3` |
 
     <Frame caption="Select Custom and enter the HiLinkup endpoint, API key, and model name; replace the legacy URL in the screenshot with `/v1/responses`">
       <img src="/images/workbuddy/03-add-custom-model.png" alt="HiLinkup endpoint, API key, and model name in the WorkBuddy custom model editor" />
     </Frame>
 
     <Warning>
-      The screenshot was captured with the legacy `/v1/chat/completions` URL. For the current setup, enter `https://hilinkup.com/v1/responses`.
+      The screenshot was captured with the legacy `/v1/chat/completions` URL. For the current setup, enter `https://api.hilinkup.com/v1/responses`.
     </Warning>
 
     Tool calling, image input, reasoning, and the other advanced options depend on the selected model. Enable only capabilities that the model supports. Keep the defaults when you are unsure.
@@ -99,7 +99,7 @@ You need:
   </Accordion>
 
   <Accordion title="The request returns 404">
-    The Endpoint must be the full path `https://hilinkup.com/v1/responses`, not only `https://hilinkup.com/v1`.
+    The Endpoint must be the full path `https://api.hilinkup.com/v1/responses`, not only `https://api.hilinkup.com/v1`.
   </Accordion>
 
   <Accordion title="The model name is invalid or unavailable">

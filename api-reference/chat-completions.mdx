@@ -40,11 +40,11 @@ api: "POST /v1/chat/completions"
 <Tabs>
   <Tab title="非流式">
     ```bash
-    curl https://hilinkup.com/v1/chat/completions \
+    curl https://api.hilinkup.com/v1/chat/completions \
       -H "Content-Type: application/json" \
       -H "Authorization: Bearer $HILINKUP_API_KEY" \
       -d '{
-        "model": "qwen3.7-plus",
+        "model": "aliyun/kimi-k3",
         "messages": [
           {
             "role": "system",
@@ -64,11 +64,11 @@ api: "POST /v1/chat/completions"
   </Tab>
   <Tab title="流式">
     ```bash
-    curl https://hilinkup.com/v1/chat/completions \
+    curl https://api.hilinkup.com/v1/chat/completions \
       -H "Content-Type: application/json" \
       -H "Authorization: Bearer $HILINKUP_API_KEY" \
       -d '{
-        "model": "qwen3.7-plus",
+        "model": "aliyun/kimi-k3",
         "messages": [
           {
             "role": "user",
@@ -83,11 +83,11 @@ api: "POST /v1/chat/completions"
   </Tab>
   <Tab title="工具调用">
     ```bash
-    curl https://hilinkup.com/v1/chat/completions \
+    curl https://api.hilinkup.com/v1/chat/completions \
       -H "Content-Type: application/json" \
       -H "Authorization: Bearer $HILINKUP_API_KEY" \
       -d '{
-        "model": "qwen3.7-plus",
+        "model": "aliyun/kimi-k3",
         "messages": [
           {
             "role": "user",
@@ -131,7 +131,7 @@ api: "POST /v1/chat/completions"
   "id": "chatcmpl_example",
   "object": "chat.completion",
   "created": 1782972000,
-  "model": "qwen3.7-plus",
+  "model": "aliyun/kimi-k3",
   "choices": [
     {
       "index": 0,

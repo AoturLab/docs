@@ -23,7 +23,7 @@ import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
 export const hilinkup = createOpenAICompatible({
   name: "hilinkup",
   apiKey: process.env.HILINKUP_API_KEY,
-  baseURL: "https://hilinkup.com/v1",
+  baseURL: "https://api.hilinkup.com/v1",
 });
 ```
 
@@ -34,7 +34,7 @@ import { generateText } from "ai";
 import { hilinkup } from "./hilinkup";
 
 const { text, usage } = await generateText({
-  model: hilinkup("qwen3.7-plus"),
+  model: hilinkup("aliyun/kimi-k3"),
   prompt: "用三点解释流式响应。",
 });
 
@@ -49,7 +49,7 @@ import { streamText } from "ai";
 import { hilinkup } from "./hilinkup";
 
 const result = streamText({
-  model: hilinkup("qwen3.7-plus"),
+  model: hilinkup("aliyun/kimi-k3"),
   prompt: "写一份 API 上线检查表。",
 });
 

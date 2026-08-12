@@ -7,7 +7,7 @@ icon: "message-square"
 
 Cherry Studio 是多模型桌面客户端。你可以把 HiLinkup 添加为 OpenAI-compatible Provider，在同一客户端中使用账户可访问的模型。
 
-<Info>本页的 OpenAI-compatible Provider 使用 Chat Completions：Base URL 为 `https://hilinkup.com/v1`，最终请求为 `POST /v1/chat/completions`。</Info>
+<Info>本页的 OpenAI-compatible Provider 使用 Chat Completions：Base URL 为 `https://api.hilinkup.com/v1`，最终请求为 `POST /v1/chat/completions`。</Info>
 
 ## 配置前准备
 
@@ -22,7 +22,7 @@ Cherry Studio 是多模型桌面客户端。你可以把 HiLinkup 添加为 Open
 | 提供商名称 | `HiLinkup` |
 | 提供商类型 | OpenAI / OpenAI-compatible |
 | API Key | 你的 HiLinkup API Key |
-| API 地址 | `https://hilinkup.com/v1` |
+| API 地址 | `https://api.hilinkup.com/v1` |
 | 模型 ID | `/v1/models` 返回的完整 ID |
 
 ## 第一步：打开模型服务设置
@@ -52,7 +52,7 @@ Cherry Studio 是多模型桌面客户端。你可以把 HiLinkup 添加为 Open
     填写：
 
     ```text
-    https://hilinkup.com/v1
+    https://api.hilinkup.com/v1
     ```
 
     不要在末尾添加 `/chat/completions`。
@@ -83,7 +83,7 @@ Cherry Studio 是多模型桌面客户端。你可以把 HiLinkup 添加为 Open
 5. 保存模型。
 
 ```bash
-curl https://hilinkup.com/v1/models \
+curl https://api.hilinkup.com/v1/models \
   -H "Authorization: Bearer $HILINKUP_API_KEY"
 ```
 

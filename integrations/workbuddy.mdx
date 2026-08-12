@@ -17,7 +17,7 @@ WorkBuddy 支持添加 OpenAI 兼容的自定义模型。将 HiLinkup 的 Respon
 
 - 已安装并登录 WorkBuddy。
 - 从 [HiLinkup 控制台](https://hilinkup.com/console/token) 获取的 API Key。
-- Responses 接口地址：`https://hilinkup.com/v1/responses`
+- Responses 接口地址：`https://api.hilinkup.com/v1/responses`
 - 一个当前可用的 HiLinkup 模型 ID。
 
 <Warning>
@@ -25,7 +25,7 @@ WorkBuddy 支持添加 OpenAI 兼容的自定义模型。将 HiLinkup 的 Respon
 </Warning>
 
 <Note>
-  模型名称必须使用 HiLinkup 返回的完整模型 ID。请先查看[获取模型列表](/api-reference/models)，不要根据示例名称猜测。
+  模型名称建议使用 HiLinkup 返回的完整 `供应商/模型` ID，例如 `aliyun/kimi-k3`。只填写 `kimi-k3` 会使用平台当前的默认供应商设置。请先查看[获取模型列表](/api-reference/models)，不要根据截图中的旧模型名称猜测。
 </Note>
 
 ## 添加 HiLinkup 自定义模型
@@ -57,16 +57,16 @@ WorkBuddy 支持添加 OpenAI 兼容的自定义模型。将 HiLinkup 的 Respon
     | 字段 | 填写内容 |
     | --- | --- |
     | Provider | `Custom` |
-    | Endpoint | `https://hilinkup.com/v1/responses` |
+    | Endpoint | `https://api.hilinkup.com/v1/responses` |
     | API Key | 从 HiLinkup 控制台获取的 API Key |
-    | Model Name | HiLinkup 返回的完整模型 ID |
+    | Model Name | HiLinkup 返回的完整模型 ID，例如 `aliyun/kimi-k3` |
 
     <Frame caption="选择 Custom 并填写 HiLinkup Endpoint、API Key 和模型名称；截图中的旧地址请替换为本文给出的 `/v1/responses`">
       <img src="/images/workbuddy/03-add-custom-model.png" alt="WorkBuddy 自定义模型窗口中的 HiLinkup Endpoint、API Key 和模型名称" />
     </Frame>
 
     <Warning>
-      截图拍摄时使用的是旧的 `/v1/chat/completions` 地址。当前配置请填写 `https://hilinkup.com/v1/responses`。
+      截图拍摄时使用的是旧的 `/v1/chat/completions` 地址。当前配置请填写 `https://api.hilinkup.com/v1/responses`。
     </Warning>
 
     “Advanced Settings”中的工具调用、图片输入和推理选项取决于所选模型能力。只启用模型明确支持的功能；不确定时先保持默认值。
@@ -99,7 +99,7 @@ WorkBuddy 支持添加 OpenAI 兼容的自定义模型。将 HiLinkup 的 Respon
   </Accordion>
 
   <Accordion title="请求返回 404">
-    WorkBuddy 的 Endpoint 需要填写完整接口路径：`https://hilinkup.com/v1/responses`，不能只填写 `https://hilinkup.com/v1`。
+    WorkBuddy 的 Endpoint 需要填写完整接口路径：`https://api.hilinkup.com/v1/responses`，不能只填写 `https://api.hilinkup.com/v1`。
   </Accordion>
 
   <Accordion title="模型名称错误或模型不可用">

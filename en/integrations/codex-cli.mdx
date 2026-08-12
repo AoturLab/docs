@@ -12,7 +12,7 @@ Codex CLI can use custom model providers through the user-level `config.toml`. F
 </Info>
 
 <Note>
-  Examples use the HiLinkup platform model `qwen3.7-plus`, a Chinese model example. Confirm available code models with `/v1/models` and the console.
+  Examples use the HiLinkup platform model `aliyun/kimi-k3`, a Chinese model example. Confirm available code models with `/v1/models` and the console.
 </Note>
 
 ## Codex uses Responses only
@@ -28,7 +28,7 @@ For current Codex CLI custom providers, `responses` is the only supported `wire_
     ```bash
     export HILINKUP_API_KEY="YOUR_HILINKUP_API_KEY"
 
-    curl https://hilinkup.com/v1/models \
+    curl https://api.hilinkup.com/v1/models \
       -H "Authorization: Bearer $HILINKUP_API_KEY"
     ```
   </Tab>
@@ -36,7 +36,7 @@ For current Codex CLI custom providers, `responses` is the only supported `wire_
     ```powershell
     $env:HILINKUP_API_KEY = "YOUR_HILINKUP_API_KEY"
 
-    curl.exe https://hilinkup.com/v1/models `
+    curl.exe https://api.hilinkup.com/v1/models `
       -H "Authorization: Bearer $env:HILINKUP_API_KEY"
     ```
   </Tab>
@@ -56,12 +56,12 @@ Recommended for long-term use.
     Paste:
 
     ```toml
-    model = "qwen3.7-plus"
+    model = "aliyun/kimi-k3"
     model_provider = "hilinkup"
 
     [model_providers.hilinkup]
     name = "HiLinkup"
-    base_url = "https://hilinkup.com/v1"
+    base_url = "https://api.hilinkup.com/v1"
     env_key = "HILINKUP_API_KEY"
     wire_api = "responses"
     request_max_retries = 2
@@ -98,12 +98,12 @@ Recommended for long-term use.
     Paste:
 
     ```toml
-    model = "qwen3.7-plus"
+    model = "aliyun/kimi-k3"
     model_provider = "hilinkup"
 
     [model_providers.hilinkup]
     name = "HiLinkup"
-    base_url = "https://hilinkup.com/v1"
+    base_url = "https://api.hilinkup.com/v1"
     env_key = "HILINKUP_API_KEY"
     wire_api = "responses"
     request_max_retries = 2
@@ -140,12 +140,12 @@ Recommended for long-term use.
     Paste and save:
 
     ```toml
-    model = "qwen3.7-plus"
+    model = "aliyun/kimi-k3"
     model_provider = "hilinkup"
 
     [model_providers.hilinkup]
     name = "HiLinkup"
-    base_url = "https://hilinkup.com/v1"
+    base_url = "https://api.hilinkup.com/v1"
     env_key = "HILINKUP_API_KEY"
     wire_api = "responses"
     request_max_retries = 2
@@ -189,12 +189,12 @@ codex
     Paste:
 
     ```toml
-    model = "qwen3.7-plus"
+    model = "aliyun/kimi-k3"
     model_provider = "hilinkup"
 
     [model_providers.hilinkup]
     name = "HiLinkup"
-    base_url = "https://hilinkup.com/v1"
+    base_url = "https://api.hilinkup.com/v1"
     env_key = "HILINKUP_API_KEY"
     wire_api = "responses"
     ```
@@ -215,12 +215,12 @@ codex
     Paste:
 
     ```toml
-    model = "qwen3.7-plus"
+    model = "aliyun/kimi-k3"
     model_provider = "hilinkup"
 
     [model_providers.hilinkup]
     name = "HiLinkup"
-    base_url = "https://hilinkup.com/v1"
+    base_url = "https://api.hilinkup.com/v1"
     env_key = "HILINKUP_API_KEY"
     wire_api = "responses"
     ```
@@ -241,10 +241,10 @@ codex
     ```bash
     HILINKUP_API_KEY="YOUR_HILINKUP_API_KEY" \
     codex \
-      -c model='"qwen3.7-plus"' \
+      -c model='"aliyun/kimi-k3"' \
       -c model_provider='"hilinkup"' \
       -c model_providers.hilinkup.name='"HiLinkup"' \
-      -c model_providers.hilinkup.base_url='"https://hilinkup.com/v1"' \
+      -c model_providers.hilinkup.base_url='"https://api.hilinkup.com/v1"' \
       -c model_providers.hilinkup.env_key='"HILINKUP_API_KEY"' \
       -c model_providers.hilinkup.wire_api='"responses"'
     ```
@@ -254,10 +254,10 @@ codex
     $env:HILINKUP_API_KEY = "YOUR_HILINKUP_API_KEY"
 
     codex `
-      -c model='"qwen3.7-plus"' `
+      -c model='"aliyun/kimi-k3"' `
       -c model_provider='"hilinkup"' `
       -c model_providers.hilinkup.name='"HiLinkup"' `
-      -c model_providers.hilinkup.base_url='"https://hilinkup.com/v1"' `
+      -c model_providers.hilinkup.base_url='"https://api.hilinkup.com/v1"' `
       -c model_providers.hilinkup.env_key='"HILINKUP_API_KEY"' `
       -c model_providers.hilinkup.wire_api='"responses"'
     ```
@@ -281,7 +281,7 @@ codex exec --profile hilinkup "Only read the current directory and summarize the
     Confirm `env_key = "HILINKUP_API_KEY"` and verify that the same terminal can read it. Use `echo $HILINKUP_API_KEY` on macOS/Linux or `echo $env:HILINKUP_API_KEY` in PowerShell.
   </Accordion>
   <Accordion title="Responses does not work">
-    Codex custom providers use Responses. Verify `https://hilinkup.com/v1/responses` with the [Responses example](/en/api-reference/responses). If a model only supports Chat Completions, select a model that supports Responses; do not set `wire_api` to `"chat"`.
+    Codex custom providers use Responses. Verify `https://api.hilinkup.com/v1/responses` with the [Responses example](/en/api-reference/responses). If a model only supports Chat Completions, select a model that supports Responses; do not set `wire_api` to `"chat"`.
   </Accordion>
   <Accordion title="Do not put provider settings in project .codex/config.toml">
     Codex project-level `.codex/config.toml` cannot override `model_provider`, `model_providers`, and provider authentication settings. Put them in user-level `~/.codex/config.toml` or `~/.codex/hilinkup.config.toml`.

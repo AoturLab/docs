@@ -13,13 +13,13 @@ Use Responses for new applications that already follow the OpenAI Responses API 
 </Info>
 
 <Note>
-  Examples use the HiLinkup platform model `qwen3.7-plus`. Use `GET /v1/models` and the console as the source of truth for available model IDs.
+  Examples use the HiLinkup platform model `aliyun/kimi-k3`. Use `GET /v1/models` and the console as the source of truth for available model IDs.
 </Note>
 
 ## Endpoint
 
 ```text
-POST https://hilinkup.com/v1/responses
+POST https://api.hilinkup.com/v1/responses
 ```
 
 ## Headers
@@ -32,11 +32,11 @@ Authorization: Bearer $HILINKUP_API_KEY
 ## Minimal request
 
 ```bash
-curl https://hilinkup.com/v1/responses \
+curl https://api.hilinkup.com/v1/responses \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $HILINKUP_API_KEY" \
   -d '{
-    "model": "qwen3.7-plus",
+    "model": "aliyun/kimi-k3",
     "input": "Tell me a three sentence bedtime story about a unicorn."
   }'
 ```
@@ -49,11 +49,11 @@ from openai import OpenAI
 
 client = OpenAI(
     api_key="YOUR_HILINKUP_API_KEY",
-    base_url="https://hilinkup.com/v1",
+    base_url="https://api.hilinkup.com/v1",
 )
 
 response = client.responses.create(
-    model="qwen3.7-plus",
+    model="aliyun/kimi-k3",
     input="Write a one paragraph release note for an API gateway.",
 )
 
@@ -65,11 +65,11 @@ import OpenAI from "openai";
 
 const client = new OpenAI({
   apiKey: process.env.HILINKUP_API_KEY,
-  baseURL: "https://hilinkup.com/v1",
+  baseURL: "https://api.hilinkup.com/v1",
 });
 
 const response = await client.responses.create({
-  model: "qwen3.7-plus",
+  model: "aliyun/kimi-k3",
   input: "Write a one paragraph release note for an API gateway.",
 });
 
@@ -81,10 +81,10 @@ console.log(response.output_text);
 
 | OpenAI setting | HiLinkup setting |
 | --- | --- |
-| `https://api.openai.com/v1` | `https://hilinkup.com/v1` |
+| `https://api.openai.com/v1` | `https://api.hilinkup.com/v1` |
 | OpenAI API key | HiLinkup API key |
 | OpenAI model ID | Available model ID from `/v1/models` |
 
 <Warning>
-  Do not set the SDK base URL to `https://hilinkup.com/v1/responses`. SDK base URLs stop at `/v1`; the SDK appends the endpoint path.
+  Do not set the SDK base URL to `https://api.hilinkup.com/v1/responses`. SDK base URLs stop at `/v1`; the SDK appends the endpoint path.
 </Warning>

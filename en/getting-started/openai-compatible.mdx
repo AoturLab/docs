@@ -23,7 +23,7 @@ from openai import OpenAI
 
 client = OpenAI(
     api_key="YOUR_HILINKUP_API_KEY",
-    base_url="https://hilinkup.com/v1",
+    base_url="https://api.hilinkup.com/v1",
 )
 ```
 
@@ -33,7 +33,7 @@ Use [`GET /v1/models`](/en/api-reference/models) to select a model ID supported 
 
 ```python
 response = client.responses.create(
-    model="qwen3.7-plus",
+    model="aliyun/kimi-k3",
     instructions="You are a concise technical assistant.",
     input="Explain API routing.",
 )

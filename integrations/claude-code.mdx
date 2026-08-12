@@ -12,7 +12,7 @@ Claude Code 使用 Anthropic 风格的接口。只有当你的 HiLinkup 账户�
 </Warning>
 
 <Note>
-  本页示例模型使用 `deepseek-v3`。这是 HiLinkup 平台模型示例，不是要求使用海外 Claude 模型。实际可用模型以 `/v1/models` 和控制台为准。
+  本页示例模型使用 `aliyun/kimi-k3`。这是 HiLinkup 平台模型示例，不是要求使用海外 Claude 模型。实际可用模型以 `/v1/models` 和控制台为准。
 </Note>
 
 ## 配置方式选择
@@ -44,8 +44,8 @@ Claude Code 使用 Anthropic 风格的接口。只有当你的 HiLinkup 账户�
       "$schema": "https://json.schemastore.org/claude-code-settings.json",
       "env": {
         "ANTHROPIC_AUTH_TOKEN": "YOUR_HILINKUP_API_KEY",
-        "ANTHROPIC_BASE_URL": "https://hilinkup.com",
-        "ANTHROPIC_MODEL": "deepseek-v3"
+        "ANTHROPIC_BASE_URL": "https://api.hilinkup.com",
+        "ANTHROPIC_MODEL": "aliyun/kimi-k3"
       }
     }
     ```
@@ -73,8 +73,8 @@ Claude Code 使用 Anthropic 风格的接口。只有当你的 HiLinkup 账户�
       "$schema": "https://json.schemastore.org/claude-code-settings.json",
       "env": {
         "ANTHROPIC_AUTH_TOKEN": "YOUR_HILINKUP_API_KEY",
-        "ANTHROPIC_BASE_URL": "https://hilinkup.com",
-        "ANTHROPIC_MODEL": "deepseek-v3"
+        "ANTHROPIC_BASE_URL": "https://api.hilinkup.com",
+        "ANTHROPIC_MODEL": "aliyun/kimi-k3"
       }
     }
     ```
@@ -107,8 +107,8 @@ Claude Code 使用 Anthropic 风格的接口。只有当你的 HiLinkup 账户�
       "$schema": "https://json.schemastore.org/claude-code-settings.json",
       "env": {
         "ANTHROPIC_AUTH_TOKEN": "YOUR_HILINKUP_API_KEY",
-        "ANTHROPIC_BASE_URL": "https://hilinkup.com",
-        "ANTHROPIC_MODEL": "deepseek-v3"
+        "ANTHROPIC_BASE_URL": "https://api.hilinkup.com",
+        "ANTHROPIC_MODEL": "aliyun/kimi-k3"
       }
     }
     ```
@@ -142,8 +142,8 @@ Claude Code 使用 Anthropic 风格的接口。只有当你的 HiLinkup 账户�
     {
       "env": {
         "ANTHROPIC_AUTH_TOKEN": "YOUR_HILINKUP_API_KEY",
-        "ANTHROPIC_BASE_URL": "https://hilinkup.com",
-        "ANTHROPIC_MODEL": "deepseek-v3"
+        "ANTHROPIC_BASE_URL": "https://api.hilinkup.com",
+        "ANTHROPIC_MODEL": "aliyun/kimi-k3"
       },
       "permissions": {
         "deny": [
@@ -173,8 +173,8 @@ Claude Code 使用 Anthropic 风格的接口。只有当你的 HiLinkup 账户�
     {
       "env": {
         "ANTHROPIC_AUTH_TOKEN": "YOUR_HILINKUP_API_KEY",
-        "ANTHROPIC_BASE_URL": "https://hilinkup.com",
-        "ANTHROPIC_MODEL": "deepseek-v3"
+        "ANTHROPIC_BASE_URL": "https://api.hilinkup.com",
+        "ANTHROPIC_MODEL": "aliyun/kimi-k3"
       },
       "permissions": {
         "deny": [
@@ -202,16 +202,16 @@ Claude Code 使用 Anthropic 风格的接口。只有当你的 HiLinkup 账户�
   <Tab title="macOS / Linux">
     ```bash
     export ANTHROPIC_AUTH_TOKEN="YOUR_HILINKUP_API_KEY"
-    export ANTHROPIC_BASE_URL="https://hilinkup.com"
-    export ANTHROPIC_MODEL="deepseek-v3"
+    export ANTHROPIC_BASE_URL="https://api.hilinkup.com"
+    export ANTHROPIC_MODEL="aliyun/kimi-k3"
     claude
     ```
   </Tab>
   <Tab title="Windows PowerShell">
     ```powershell
     $env:ANTHROPIC_AUTH_TOKEN = "YOUR_HILINKUP_API_KEY"
-    $env:ANTHROPIC_BASE_URL = "https://hilinkup.com"
-    $env:ANTHROPIC_MODEL = "deepseek-v3"
+    $env:ANTHROPIC_BASE_URL = "https://api.hilinkup.com"
+    $env:ANTHROPIC_MODEL = "aliyun/kimi-k3"
     claude
     ```
   </Tab>
@@ -256,8 +256,8 @@ Claude Code 使用 Anthropic 风格的接口。只有当你的 HiLinkup 账户�
       "$schema": "https://json.schemastore.org/claude-code-settings.json",
       "apiKeyHelper": "~/.claude/bin/hilinkup-key",
       "env": {
-        "ANTHROPIC_BASE_URL": "https://hilinkup.com",
-        "ANTHROPIC_MODEL": "deepseek-v3"
+        "ANTHROPIC_BASE_URL": "https://api.hilinkup.com",
+        "ANTHROPIC_MODEL": "aliyun/kimi-k3"
       }
     }
     ```
@@ -297,8 +297,8 @@ Claude Code 使用 Anthropic 风格的接口。只有当你的 HiLinkup 账户�
       "$schema": "https://json.schemastore.org/claude-code-settings.json",
       "apiKeyHelper": "%USERPROFILE%\\.claude\\bin\\hilinkup-key.cmd",
       "env": {
-        "ANTHROPIC_BASE_URL": "https://hilinkup.com",
-        "ANTHROPIC_MODEL": "deepseek-v3"
+        "ANTHROPIC_BASE_URL": "https://api.hilinkup.com",
+        "ANTHROPIC_MODEL": "aliyun/kimi-k3"
       }
     }
     ```
@@ -319,12 +319,12 @@ Claude Code 使用 Anthropic 风格的接口。只有当你的 HiLinkup 账户�
 <Tabs>
   <Tab title="macOS / Linux">
     ```bash
-    curl https://hilinkup.com/v1/messages \
+    curl https://api.hilinkup.com/v1/messages \
       -H "content-type: application/json" \
       -H "x-api-key: $HILINKUP_API_KEY" \
       -H "anthropic-version: 2023-06-01" \
       -d '{
-        "model": "deepseek-v3",
+        "model": "aliyun/kimi-k3",
         "max_tokens": 256,
         "messages": [
           {
@@ -337,12 +337,12 @@ Claude Code 使用 Anthropic 风格的接口。只有当你的 HiLinkup 账户�
   </Tab>
   <Tab title="Windows PowerShell">
     ```powershell
-    curl.exe https://hilinkup.com/v1/messages `
+    curl.exe https://api.hilinkup.com/v1/messages `
       -H "content-type: application/json" `
       -H "x-api-key: $env:HILINKUP_API_KEY" `
       -H "anthropic-version: 2023-06-01" `
       -d '{
-        "model": "deepseek-v3",
+        "model": "aliyun/kimi-k3",
         "max_tokens": 256,
         "messages": [
           {
