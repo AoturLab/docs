@@ -79,18 +79,23 @@ The response identifies each provider in `owned_by` and returns a provider-quali
 
 <Check>HTTP `200` and a non-empty `data` array confirm that authentication and model access work.</Check>
 
-## 4. Make a Responses request
+## 4. Make a Chat Completions request
 
-Responses is the default for new code. Use Chat Completions only when an existing client requires it.
+Most models currently available on HiLinkup support the OpenAI-compatible Chat Completions protocol first. Use this protocol for the initial connection test.
 
 <CodeGroup>
 ```bash cURL
-curl https://api.hilinkup.com/v1/responses \
+curl https://api.hilinkup.com/v1/chat/completions \
   -H "Authorization: Bearer $HILINKUP_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
     "model": "aliyun/kimi-k3",
-    "input": "Reply with: HiLinkup connected"
+    "messages": [
+      {
+        "role": "user",
+        "content": "Reply with: HiLinkup connected"
+      }
+    ]
   }'
 ```
 
@@ -105,13 +110,15 @@ client = OpenAI(
     timeout=60.0,
 )
 
-response = client.responses.create(
+completion = client.chat.completions.create(
     model="aliyun/kimi-k3",
-    input="Reply with: HiLinkup connected",
+    messages=[
+        {"role": "user", "content": "Reply with: HiLinkup connected"}
+    ],
 )
 
-print(response.output_text)
-print(response.usage)
+print(completion.choices[0].message.content)
+print(completion.usage)
 ```
 
 ```javascript Node.js
@@ -124,13 +131,15 @@ const client = new OpenAI({
   timeout: 60_000,
 });
 
-const response = await client.responses.create({
+const completion = await client.chat.completions.create({
   model: "aliyun/kimi-k3",
-  input: "Reply with: HiLinkup connected",
+  messages: [
+    { role: "user", content: "Reply with: HiLinkup connected" },
+  ],
 });
 
-console.log(response.output_text);
-console.log(response.usage);
+console.log(completion.choices[0].message.content);
+console.log(completion.usage);
 ```
 </CodeGroup>
 
@@ -139,9 +148,9 @@ console.log(response.usage);
 A successful response has:
 
 - HTTP status `200`
-- `status` set to `completed`
-- Typed items in `output`
-- Text in the SDK's `response.output_text` helper
+- At least one item in `choices`
+- Text in `choices[0].message.content`
+- A `finish_reason`, normally `stop`
 - Token counts in `usage`
 
 ## Troubleshooting
@@ -154,7 +163,7 @@ A successful response has:
     Check account status and model permissions. List models again and select an ID returned for this key.
   </Accordion>
   <Accordion title="404 Not Found">
-    The complete endpoint is `https://api.hilinkup.com/v1/responses`. The SDK base URL is `https://api.hilinkup.com/v1`.
+    The complete endpoint is `https://api.hilinkup.com/v1/chat/completions`. The SDK base URL is `https://api.hilinkup.com/v1`.
   </Accordion>
   <Accordion title="429 Too Many Requests">
     Reduce concurrency, check balance and limits, then retry with bounded exponential backoff.
@@ -164,7 +173,7 @@ A successful response has:
   </Accordion>
 </AccordionGroup>
 
-<Note>For a client that only supports the traditional OpenAI chat protocol, use [Chat Completions](/en/api-reference/chat-completions). The request body, output fields, streaming events, and tool format differ from Responses.</Note>
+<Note>This quickstart uses [Chat Completions](/en/api-reference/chat-completions) because most currently available models support it first. For a Responses-capable agent or client, see [Responses API](/en/api-reference/responses). The request body, output fields, and streaming events differ.</Note>
 
 <Columns cols={2}>
   <Card title="Migrate from OpenAI" href="/en/getting-started/openai-compatible" icon="refresh-cw">Reuse an existing OpenAI SDK integration.</Card>

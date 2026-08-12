@@ -131,19 +131,27 @@ curl https://api.hilinkup.com/v1/models \
   收到 HTTP `200`，并且 `data` 数组至少包含一个模型，表示鉴权和模型访问正常。
 </Check>
 
-## 第五步：发送第一次 Responses 请求
+## 第五步：发送第一次 Chat Completions 请求
 
-新项目默认使用 Responses。任选一种方式即可；如果你只是验证连接，建议先使用 cURL。
+当前平台的大多数模型优先支持 OpenAI-compatible Chat Completions。任选一种方式即可；如果你只是验证连接，建议先使用 cURL。
 
 <CodeGroup>
 ```bash cURL
-curl https://api.hilinkup.com/v1/responses \
+curl https://api.hilinkup.com/v1/chat/completions \
   -H "Authorization: Bearer $HILINKUP_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
     "model": "aliyun/kimi-k3",
-    "instructions": "你是一个回答简洁的技术助手。",
-    "input": "用三点说明 API 健康检查应该包含什么。"
+    "messages": [
+      {
+        "role": "system",
+        "content": "你是一个回答简洁的技术助手。"
+      },
+      {
+        "role": "user",
+        "content": "用三点说明 API 健康检查应该包含什么。"
+      }
+    ]
   }'
 ```
 
@@ -158,14 +166,16 @@ client = OpenAI(
     timeout=60.0,
 )
 
-response = client.responses.create(
+completion = client.chat.completions.create(
     model="aliyun/kimi-k3",
-    instructions="你是一个回答简洁的技术助手。",
-    input="用三点说明 API 健康检查应该包含什么。",
+    messages=[
+        {"role": "system", "content": "你是一个回答简洁的技术助手。"},
+        {"role": "user", "content": "用三点说明 API 健康检查应该包含什么。"},
+    ],
 )
 
-print(response.output_text)
-print("usage:", response.usage)
+print(completion.choices[0].message.content)
+print("usage:", completion.usage)
 ```
 
 ```javascript Node.js
@@ -178,14 +188,16 @@ const client = new OpenAI({
   timeout: 60_000,
 });
 
-const response = await client.responses.create({
+const completion = await client.chat.completions.create({
   model: "aliyun/kimi-k3",
-  instructions: "你是一个回答简洁的技术助手。",
-  input: "用三点说明 API 健康检查应该包含什么。",
+  messages: [
+    { role: "system", content: "你是一个回答简洁的技术助手。" },
+    { role: "user", content: "用三点说明 API 健康检查应该包含什么。" },
+  ],
 });
 
-console.log(response.output_text);
-console.log("usage:", response.usage);
+console.log(completion.choices[0].message.content);
+console.log("usage:", completion.usage);
 ```
 </CodeGroup>
 
@@ -195,43 +207,40 @@ console.log("usage:", response.usage);
 
 | 字段 | 用途 |
 | --- | --- |
-| `id` | 本次请求的响应标识 |
+| `id` | 本次 Chat Completion 的标识 |
 | `model` | 实际处理请求的模型 |
-| `status` | 响应是否完成 |
-| `output` | 消息、推理和工具调用等类型化输出项 |
+| `choices` | 模型生成结果列表；文本位于 `choices[0].message.content` |
+| `finish_reason` | 本次生成结束的原因，例如 `stop` |
 | `usage` | 输入、输出和总 Token 用量 |
 
 示意：
 
 ```json
 {
-  "id": "resp_example",
-  "object": "response",
-  "status": "completed",
+  "id": "chatcmpl_example",
+  "object": "chat.completion",
+  "created": 1786359000,
   "model": "aliyun/kimi-k3",
-  "output": [
+  "choices": [
     {
-      "type": "message",
-      "role": "assistant",
-      "status": "completed",
-      "content": [
-        {
-          "type": "output_text",
-          "text": "1. 可用性检查……"
-        }
-      ]
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "1. 可用性检查……"
+      },
+      "finish_reason": "stop"
     }
   ],
   "usage": {
-    "input_tokens": 35,
-    "output_tokens": 68,
+    "prompt_tokens": 35,
+    "completion_tokens": 68,
     "total_tokens": 103
   }
 }
 ```
 
 <Check>
-  HTTP 状态为 `200`、`status` 为 `completed`，并且 SDK 的 `response.output_text` 有内容，表示第一次调用完成。
+  HTTP 状态为 `200`，并且 `choices[0].message.content` 有内容，表示第一次调用完成。
 </Check>
 
 ## 第七步：启用流式响应
@@ -239,15 +248,17 @@ console.log("usage:", response.usage);
 普通请求成功后，再验证流式输出。
 
 ```python
-stream = client.responses.create(
+stream = client.chat.completions.create(
     model="aliyun/kimi-k3",
-    input="逐步解释什么是流式响应。",
+    messages=[{"role": "user", "content": "逐步解释什么是流式响应。"}],
     stream=True,
 )
 
-for event in stream:
-    if event.type == "response.output_text.delta":
-        print(event.delta, end="", flush=True)
+for chunk in stream:
+    if chunk.choices:
+        text = chunk.choices[0].delta.content
+        if text:
+            print(text, end="", flush=True)
 ```
 
 流式响应的完整处理方式见[流式响应](/guides/streaming)。
@@ -262,7 +273,7 @@ for event in stream:
     检查账户状态、密钥权限和所选模型是否对当前账户开放。重新调用 `/v1/models`，不要继续使用未返回的模型 ID。
   </Accordion>
   <Accordion title="404：请求地址错误">
-    Responses 的完整地址是 `https://api.hilinkup.com/v1/responses`。使用 SDK 时，Base URL 应为 `https://api.hilinkup.com/v1`。
+    Chat Completions 的完整地址是 `https://api.hilinkup.com/v1/chat/completions`。使用 SDK 时，Base URL 应为 `https://api.hilinkup.com/v1`。
   </Accordion>
   <Accordion title="429：请求过多或额度受限">
     降低并发，等待后使用指数退避重试。检查控制台中的余额、额度和使用情况。
@@ -276,8 +287,7 @@ for event in stream:
 </AccordionGroup>
 
 <Note>
-  如果你接入的是只支持传统 OpenAI 聊天协议的客户端，请改用
-  [Chat Completions](/api-reference/chat-completions)。不要只替换 URL；两种协议的请求体、输出字段、流式事件和工具调用结构不同。
+  本页优先使用 [Chat Completions](/api-reference/chat-completions)，因为当前平台的大多数模型先支持该协议。需要 Responses 的 Agent 或客户端可以单独参考 [Responses API](/api-reference/responses)；两种协议的请求体、输出字段和流式事件不同。
 </Note>
 
 ## 接下来做什么
