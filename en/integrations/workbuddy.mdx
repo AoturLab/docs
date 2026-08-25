@@ -1,11 +1,11 @@
 ---
 title: "WorkBuddy"
-description: "Add HiLinkup custom models to WorkBuddy through the Responses protocol."
-keywords: ["WorkBuddy", "custom model", "OpenAI compatible", "Responses API", "HiLinkup"]
+description: "Add HiLinkup custom models to WorkBuddy through the Chat Completions protocol."
+keywords: ["WorkBuddy", "custom model", "OpenAI compatible", "Chat Completions", "HiLinkup"]
 icon: "briefcase-business"
 ---
 
-WorkBuddy supports custom OpenAI-compatible models. Enter the HiLinkup Responses endpoint, an API key, and an exact model ID to make the model available in the WorkBuddy model menu.
+WorkBuddy supports custom OpenAI-compatible models. Enter the HiLinkup Chat Completions endpoint, an API key, and an exact model ID to make the model available in the WorkBuddy model menu.
 
 <Card title="Download WorkBuddy" icon="download" href="https://www.codebuddy.cn/work/">
   Download and install the WorkBuddy desktop app.
@@ -17,7 +17,7 @@ You need:
 
 - WorkBuddy installed and signed in.
 - A HiLinkup API key from the [HiLinkup console](https://hilinkup.com/console/token).
-- The Responses endpoint: `https://api.hilinkup.com/v1/responses`
+- The Chat Completions endpoint: `https://api.hilinkup.com/v1/chat/completions`
 - A currently available HiLinkup model ID.
 
 <Warning>
@@ -57,16 +57,16 @@ You need:
     | Field | Value |
     | --- | --- |
     | Provider | `Custom` |
-    | Endpoint | `https://api.hilinkup.com/v1/responses` |
+    | Endpoint | `https://api.hilinkup.com/v1/chat/completions` |
     | API Key | Your API key from the HiLinkup console |
     | Model Name | An exact model ID returned by HiLinkup, such as `aliyun/kimi-k3` |
 
-    <Frame caption="Select Custom and enter the HiLinkup endpoint, API key, and model name; replace the legacy URL in the screenshot with `/v1/responses`">
+    <Frame caption="Select Custom and enter the HiLinkup endpoint, API key, and model name; use the API domain and Chat Completions path shown in this guide">
       <img src="/images/workbuddy/03-add-custom-model.png" alt="HiLinkup endpoint, API key, and model name in the WorkBuddy custom model editor" />
     </Frame>
 
     <Warning>
-      The screenshot was captured with the legacy `/v1/chat/completions` URL. For the current setup, enter `https://api.hilinkup.com/v1/responses`.
+      The `/v1/chat/completions` path in the screenshot is correct, but the screenshot uses the old domain. Enter the current full endpoint: `https://api.hilinkup.com/v1/chat/completions`.
     </Warning>
 
     Tool calling, image input, reasoning, and the other advanced options depend on the selected model. Enable only capabilities that the model supports. Keep the defaults when you are unsure.
@@ -99,7 +99,7 @@ You need:
   </Accordion>
 
   <Accordion title="The request returns 404">
-    The Endpoint must be the full path `https://api.hilinkup.com/v1/responses`, not only `https://api.hilinkup.com/v1`.
+    The Endpoint must be the full path `https://api.hilinkup.com/v1/chat/completions`, not only `https://api.hilinkup.com/v1` and not `/v1/responses`.
   </Accordion>
 
   <Accordion title="The model name is invalid or unavailable">

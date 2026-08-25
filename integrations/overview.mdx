@@ -26,8 +26,8 @@ HiLinkup 可以接入 OpenAI、Anthropic/Claude 与 Gemini 风格客户端。先
 
 | 协议 | 适用场景 | Base URL / Endpoint | 鉴权方式 | 示例文档 |
 | --- | --- | --- | --- | --- |
-| OpenAI Responses | 新项目、Codex、WorkBuddy、支持 Responses 的 Agent | Base：`https://api.hilinkup.com/v1`；完整：`.../v1/responses` | `Authorization: Bearer $HILINKUP_API_KEY` | [Responses](/api-reference/responses) |
-| OpenAI Chat Completions | 传统聊天客户端、`ChatOpenAI` 与只支持聊天协议的插件 | Base：`https://api.hilinkup.com/v1`；完整：`.../v1/chat/completions` | `Authorization: Bearer $HILINKUP_API_KEY` | [Chat Completions](/api-reference/chat-completions) |
+| OpenAI Responses | Codex、支持 Responses 的 Agent 和明确要求该协议的客户端 | Base：`https://api.hilinkup.com/v1`；完整：`.../v1/responses` | `Authorization: Bearer $HILINKUP_API_KEY` | [Responses](/api-reference/responses) |
+| OpenAI Chat Completions | WorkBuddy、传统聊天客户端、`ChatOpenAI` 与只支持聊天协议的插件 | Base：`https://api.hilinkup.com/v1`；完整：`.../v1/chat/completions` | `Authorization: Bearer $HILINKUP_API_KEY` | [Chat Completions](/api-reference/chat-completions) |
 | Claude Messages | Claude Code、Anthropic SDK、Claude 风格客户端 | Base：`https://api.hilinkup.com`；完整：`.../v1/messages` | `x-api-key` + `anthropic-version: 2023-06-01` | [Claude Messages](/api-reference/claude-messages) |
 | Gemini generateContent | Gemini SDK、Google AI 风格客户端 | Base：`https://api.hilinkup.com`；完整：`.../v1beta/models/{model}:generateContent` | `x-goog-api-key: $HILINKUP_API_KEY` | [Gemini generateContent](/api-reference/gemini-generate-content) |
 
@@ -44,7 +44,7 @@ HiLinkup 可以接入 OpenAI、Anthropic/Claude 与 Gemini 风格客户端。先
 | 应用或配置方式 | 协议 | 地址填写方式 |
 | --- | --- | --- |
 | Codex CLI、Codex 客户端 | OpenAI Responses | Base URL `https://api.hilinkup.com/v1` |
-| WorkBuddy 自定义 Endpoint | OpenAI Responses | 完整 Endpoint `https://api.hilinkup.com/v1/responses` |
+| WorkBuddy 自定义 Endpoint | OpenAI Chat Completions | 完整 Endpoint `https://api.hilinkup.com/v1/chat/completions` |
 | Claude Code、CC Switch 的 Claude Code 模式 | Claude Messages | 确保最终请求为 `https://api.hilinkup.com/v1/messages` |
 | Cherry Studio、Chatbox、LobeChat、Open WebUI、NextChat、LibreChat、AnythingLLM | OpenAI Chat Completions | 通常填写 Base URL `https://api.hilinkup.com/v1` |
 | LangChain `ChatOpenAI`、LlamaIndex `OpenAILike`、Dify 当前 OpenAI-compatible 配置 | OpenAI Chat Completions | 通常填写 Base URL `https://api.hilinkup.com/v1` |
@@ -91,7 +91,7 @@ HiLinkup 可以接入 OpenAI、Anthropic/Claude 与 Gemini 风格客户端。先
     使用 CC Switch 图形化配置供应商和客户端模型菜单。
   </Card>
   <Card title="WorkBuddy" icon="briefcase-business" href="/integrations/workbuddy">
-    通过 Responses Endpoint 添加 HiLinkup 自定义模型。
+    通过 Chat Completions Endpoint 添加 HiLinkup 自定义模型。
   </Card>
   <Card title="Cursor" icon="mouse-pointer-2" href="/integrations/cursor">
     配置自定义 OpenAI Base URL 和模型。
