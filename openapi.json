@@ -1,0 +1,589 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "HiLinkup API",
+    "description": "HiLinkup 统一模型 API。兼容 OpenAI Responses、Chat Completions、Claude Messages、Gemini generateContent 协议。",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.hilinkup.com"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "在控制台创建的 API Key，格式为 `Authorization: Bearer HILINKUP_API_KEY`。"
+      },
+      "googApiKey": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-goog-api-key",
+        "description": "Gemini 兼容端点使用 `x-goog-api-key` 头携带 API Key。"
+      }
+    },
+    "schemas": {
+      "ImageUrl": {
+        "type": "object",
+        "properties": {
+          "created": {
+            "type": "integer",
+            "description": "生成结果的 Unix 时间戳。"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "url": {
+                  "type": "string",
+                  "description": "生成图像的临时 URL。"
+                },
+                "b64_json": {
+                  "type": "string",
+                  "description": "Base64 编码的图像数据，取决于模型的返回格式。"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/v1/models": {
+      "get": {
+        "summary": "获取当前密钥可用的模型",
+        "operationId": "listModels",
+        "description": "返回当前 API Key 可访问的模型 ID 列表。调用其他端点前，先用它确认可用模型。",
+        "responses": {
+          "200": {
+            "description": "模型列表",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "object": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "provider-qualified 模型 ID，例如 aliyun/kimi-k3。"
+                          },
+                          "object": {
+                            "type": "string"
+                          },
+                          "owned_by": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "object": "list",
+                  "data": [
+                    {
+                      "id": "aliyun/kimi-k3",
+                      "object": "model",
+                      "owned_by": "aliyun"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/chat/completions": {
+      "post": {
+        "summary": "创建对话补全",
+        "operationId": "createChatCompletion",
+        "description": "根据消息列表创建模型响应，兼容 OpenAI Chat Completions 协议。",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["model", "messages"],
+                "properties": {
+                  "model": {
+                    "type": "string",
+                    "description": "模型 ID。使用 GET /v1/models 获取当前可用值。"
+                  },
+                  "messages": {
+                    "type": "array",
+                    "description": "对话消息列表，每条消息至少包含 role 和 content。",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "role": {
+                          "type": "string",
+                          "enum": ["system", "user", "assistant", "tool"]
+                        },
+                        "content": {
+                          "type": "string"
+                        }
+                      },
+                      "required": ["role", "content"]
+                    }
+                  },
+                  "stream": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "是否通过 Server-Sent Events 流式返回内容。"
+                  },
+                  "temperature": {
+                    "type": "number",
+                    "description": "控制输出随机性。不同模型接受的范围可能不同。"
+                  },
+                  "max_tokens": {
+                    "type": "integer",
+                    "description": "限制本次生成的最大 Token 数。"
+                  }
+                }
+              },
+              "example": {
+                "model": "aliyun/kimi-k3",
+                "messages": [
+                  {
+                    "role": "user",
+                    "content": "用一句话介绍 HiLinkup。"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "对话补全结果",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "object": {
+                      "type": "string"
+                    },
+                    "created": {
+                      "type": "integer"
+                    },
+                    "model": {
+                      "type": "string"
+                    },
+                    "choices": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "index": {
+                            "type": "integer"
+                          },
+                          "message": {
+                            "type": "object",
+                            "properties": {
+                              "role": {
+                                "type": "string"
+                              },
+                              "content": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "finish_reason": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "usage": {
+                      "type": "object",
+                      "properties": {
+                        "prompt_tokens": {
+                          "type": "integer"
+                        },
+                        "completion_tokens": {
+                          "type": "integer"
+                        },
+                        "total_tokens": {
+                          "type": "integer"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/responses": {
+      "post": {
+        "summary": "创建 Responses 响应",
+        "operationId": "createResponse",
+        "description": "OpenAI Responses 兼容接口，新项目默认使用。",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["model", "input"],
+                "properties": {
+                  "model": {
+                    "type": "string",
+                    "description": "模型 ID。使用 GET /v1/models 获取当前可用值。"
+                  },
+                  "input": {
+                    "type": "string",
+                    "description": "发送给模型的输入内容。"
+                  },
+                  "stream": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "是否流式返回。"
+                  }
+                }
+              },
+              "example": {
+                "model": "aliyun/kimi-k3",
+                "input": "用一句话介绍 HiLinkup"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Responses 结果"
+          }
+        }
+      }
+    },
+    "/v1/messages": {
+      "post": {
+        "summary": "创建 Claude Messages 响应",
+        "operationId": "createMessage",
+        "description": "Anthropic Claude Messages 兼容接口。",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["model", "max_tokens", "messages"],
+                "properties": {
+                  "model": {
+                    "type": "string",
+                    "description": "模型 ID。"
+                  },
+                  "max_tokens": {
+                    "type": "integer",
+                    "description": "本次生成的最大 Token 数。"
+                  },
+                  "messages": {
+                    "type": "array",
+                    "description": "对话消息列表。",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "role": {
+                          "type": "string",
+                          "enum": ["user", "assistant"]
+                        },
+                        "content": {
+                          "type": "string"
+                        }
+                      },
+                      "required": ["role", "content"]
+                    }
+                  },
+                  "stream": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "是否流式返回。"
+                  }
+                }
+              },
+              "example": {
+                "model": "aliyun/kimi-k3",
+                "max_tokens": 512,
+                "messages": [
+                  {
+                    "role": "user",
+                    "content": "用一句话介绍 HiLinkup。"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Claude Messages 结果"
+          }
+        }
+      }
+    },
+    "/v1beta/models/{model}:generateContent": {
+      "post": {
+        "summary": "Gemini 兼容生成内容",
+        "operationId": "geminiGenerateContent",
+        "description": "Gemini generateContent 兼容接口。API Key 通过 x-goog-api-key 头传递。",
+        "security": [
+          {
+            "googApiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "model",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "provider-qualified 模型 ID，例如 aliyun/kimi-k3。"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["contents"],
+                "properties": {
+                  "contents": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "parts": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "text": {
+                                "type": "string"
+                              }
+                            },
+                            "required": ["text"]
+                          }
+                        }
+                      },
+                      "required": ["parts"]
+                    }
+                  }
+                }
+              },
+              "example": {
+                "contents": [
+                  {
+                    "parts": [
+                      {
+                        "text": "用一句话介绍 HiLinkup。"
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Gemini generateContent 结果"
+          }
+        }
+      }
+    },
+    "/v1/embeddings": {
+      "post": {
+        "summary": "创建向量",
+        "operationId": "createEmbeddings",
+        "description": "将文本转换为向量，可用于语义检索、聚类和 RAG。",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["model", "input"],
+                "properties": {
+                  "model": {
+                    "type": "string",
+                    "description": "支持 Embeddings 的模型 ID。"
+                  },
+                  "input": {
+                    "type": "string",
+                    "description": "要转换的单条文本或文本数组。"
+                  }
+                }
+              },
+              "example": {
+                "model": "BAAI/bge-m3",
+                "input": "HiLinkup 提供 OpenAI 兼容 API。"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "向量结果"
+          }
+        }
+      }
+    },
+    "/v1/images/generations": {
+      "post": {
+        "summary": "生成图像",
+        "operationId": "createImage",
+        "description": "根据文本提示生成新图像。支持的尺寸、数量、返回格式由具体模型决定。",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["model", "prompt"],
+                "properties": {
+                  "model": {
+                    "type": "string",
+                    "description": "支持图像生成的模型 ID。"
+                  },
+                  "prompt": {
+                    "type": "string",
+                    "description": "描述目标图像的文本提示。"
+                  },
+                  "n": {
+                    "type": "integer",
+                    "default": 1,
+                    "description": "要生成的图像数量。部分模型只支持 1。"
+                  },
+                  "size": {
+                    "type": "string",
+                    "description": "图像尺寸，例如 1024x1024。可用值由模型决定。"
+                  }
+                }
+              },
+              "example": {
+                "model": "aliyun/qwen-image-3.0",
+                "prompt": "一只橘猫坐在窗边，午后阳光，写实摄影风格。",
+                "n": 1,
+                "size": "1024x1024"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "图像生成结果",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageUrl"
+                },
+                "example": {
+                  "created": 1782972000,
+                  "data": [
+                    {
+                      "url": "https://api.hilinkup.com/v1/images/files/img_8f3c1a2b.png"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/images/edits": {
+      "post": {
+        "summary": "编辑图像",
+        "operationId": "editImage",
+        "description": "基于已有图像和文本提示生成修改后的图像。请求使用 multipart/form-data 提交。",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": ["model", "prompt", "image"],
+                "properties": {
+                  "model": {
+                    "type": "string",
+                    "description": "支持图像编辑的模型 ID。并非所有图像生成模型都支持编辑。"
+                  },
+                  "prompt": {
+                    "type": "string",
+                    "description": "描述修改目标的文本提示。"
+                  },
+                  "image": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "要编辑的原图文件。支持的格式和大小由模型决定。"
+                  },
+                  "n": {
+                    "type": "integer",
+                    "default": 1,
+                    "description": "要生成的图像数量。部分模型只支持 1。"
+                  },
+                  "size": {
+                    "type": "string",
+                    "description": "输出图像尺寸。可用值由模型决定。"
+                  }
+                }
+              },
+              "encoding": {
+                "image": {
+                  "contentType": "image/png, image/jpeg, image/webp"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "图像编辑结果",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageUrl"
+                },
+                "example": {
+                  "created": 1782972000,
+                  "data": [
+                    {
+                      "url": "https://api.hilinkup.com/v1/images/files/img_2c7d91f0.png"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
