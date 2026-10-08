@@ -105,7 +105,8 @@
                   "api-reference/claude-messages",
                   "api-reference/gemini-generate-content",
                   "api-reference/embeddings",
-                  "api-reference/images"
+                  "api-reference/images",
+                  "api-reference/image-edits"
                 ]
               }
             ]
@@ -269,7 +270,8 @@
                   "en/api-reference/claude-messages",
                   "en/api-reference/gemini-generate-content",
                   "en/api-reference/embeddings",
-                  "en/api-reference/images"
+                  "en/api-reference/images",
+                  "en/api-reference/image-edits"
                 ]
               }
             ]

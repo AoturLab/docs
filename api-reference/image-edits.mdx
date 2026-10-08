@@ -1,0 +1,148 @@
+---
+title: "编辑图像"
+description: "使用 POST /v1/images/edits 基于原图和提示词生成修改后的图像。"
+keywords: ["图像编辑", "图生图", "Images API", "multipart"]
+api: "POST /v1/images/edits"
+---
+
+基于已有图像和文本提示生成修改后的图像。请求使用 `multipart/form-data` 提交，原图放在 `image` 字段。
+
+<Info>
+  下面的代码块是完整请求，可以直接复制运行。先把 `HILINKUP_API_KEY` 设为你的真实密钥，并把 `model` 替换为 `GET /v1/models` 返回的、支持图像编辑的模型 ID。
+</Info>
+
+## 请求参数
+
+<ParamField body="model" type="string" required>
+  支持图像编辑的模型 ID。并非所有图像生成模型都支持编辑。
+</ParamField>
+
+<ParamField body="prompt" type="string" required>
+  描述修改目标的文本提示。描述得越具体，保留原图特征的效果越稳定。
+</ParamField>
+
+<ParamField body="image" type="file" required>
+  要编辑的原图文件。支持的格式和大小由模型决定。
+</ParamField>
+
+<ParamField body="n" type="integer" default="1">
+  要生成的图像数量。部分模型只支持 `1`。
+</ParamField>
+
+<ParamField body="size" type="string">
+  输出图像尺寸。可用值由模型决定。
+</ParamField>
+
+## 请求示例
+
+<CodeGroup>
+```bash cURL
+curl https://api.hilinkup.com/v1/images/edits \
+  -H "Authorization: Bearer $HILINKUP_API_KEY" \
+  -F "model=aliyun/qwen-image-3.0" \
+  -F "prompt=给图中的猫戴上红色围巾，保持背景和构图不变。" \
+  -F "image=@input.png"
+```
+
+```python Python
+import os
+
+import requests
+
+API_KEY = os.environ["HILINKUP_API_KEY"]
+BASE_URL = "https://api.hilinkup.com/v1"
+
+with open("input.png", "rb") as image:
+    response = requests.post(
+        f"{BASE_URL}/images/edits",
+        headers={"Authorization": f"Bearer {API_KEY}"},
+        data={
+            "model": "aliyun/qwen-image-3.0",
+            "prompt": "给图中的猫戴上红色围巾，保持背景和构图不变。",
+        },
+        files={"image": ("input.png", image, "image/png")},
+        timeout=300,
+    )
+response.raise_for_status()
+
+result = response.json()
+print(result["data"][0]["url"])
+```
+
+```javascript Node.js
+import { openAsBlob } from "node:fs";
+
+const apiKey = process.env.HILINKUP_API_KEY;
+
+const form = new FormData();
+form.append("model", "aliyun/qwen-image-3.0");
+form.append("prompt", "给图中的猫戴上红色围巾，保持背景和构图不变。");
+form.append("image", await openAsBlob("input.png"), "input.png");
+
+const response = await fetch("https://api.hilinkup.com/v1/images/edits", {
+  method: "POST",
+  headers: { Authorization: `Bearer ${apiKey}` },
+  body: form,
+});
+
+if (!response.ok) {
+  throw new Error(`请求失败 ${response.status}: ${await response.text()}`);
+}
+
+const result = await response.json();
+console.log(result.data[0].url);
+```
+</CodeGroup>
+
+## 响应
+
+<ResponseExample>
+```json
+{
+  "created": 1782972000,
+  "data": [
+    {
+      "url": "https://api.hilinkup.com/v1/images/files/img_2c7d91f0.png"
+    }
+  ]
+}
+```
+</ResponseExample>
+
+<ResponseField name="created" type="integer">
+  生成结果的 Unix 时间戳。
+</ResponseField>
+
+<ResponseField name="data" type="array">
+  图像结果列表，每项包含 `url` 或 `b64_json`。
+</ResponseField>
+
+<Note>
+  返回值可能是临时 URL，也可能是 Base64 数据（通常为 `b64_json` 字段）。请在有效期内下载并保存结果。
+</Note>
+
+## 保存生成结果
+
+```python
+import requests
+
+image_url = result["data"][0]["url"]
+
+image = requests.get(image_url, timeout=60)
+image.raise_for_status()
+
+with open("output.png", "wb") as file:
+    file.write(image.content)
+```
+
+<Warning>
+  示例中的模型 ID、响应字段和 URL 仅用于说明请求格式。请先通过模型列表或控制台确认当前账户可用的图像编辑模型、输入图限制和输出尺寸。
+</Warning>
+
+<Note>
+  提示词里明确说明「保持不变」的部分（背景、构图、人物特征）通常能减少无关改动，但不同模型的遵循程度不同。
+</Note>
+
+## 下一步
+
+只需要从文本生成新图像时，使用[生成图像](/api-reference/images)。

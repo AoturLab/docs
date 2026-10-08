@@ -1,20 +1,18 @@
 ---
-title: "Image generation and editing"
-description: "Generate or edit images with POST /v1/images/generations and POST /v1/images/edits."
-keywords: ["images", "generation", "editing", "API"]
+title: "Generate images"
+description: "Generate images from a text prompt with POST /v1/images/generations."
+keywords: ["images", "text to image", "generation", "API"]
 api: "POST /v1/images/generations"
 icon: "image"
 ---
 
-Generate a new image from a text prompt, or edit an existing image. Available sizes, image counts, and response formats depend on the selected model.
+Generate a new image from a text prompt. Available sizes, image counts, and response formats depend on the selected model.
 
 <Info>
   The snippets below are complete requests. Set `HILINKUP_API_KEY` to your real key first, and replace `model` with an image model ID returned by `GET /v1/models`.
 </Info>
 
-## `POST /v1/images/generations`
-
-Create a new image from a text prompt.
+## Request parameters
 
 <ParamField body="model" type="string" required>
   An image-capable model ID. Use `GET /v1/models` to list current values.
@@ -32,7 +30,7 @@ Create a new image from a text prompt.
   Image size, for example `1024x1024`. Valid values depend on the model.
 </ParamField>
 
-### Request examples
+## Request examples
 
 <CodeGroup>
 ```bash cURL
@@ -98,94 +96,7 @@ console.log(result.data[0].url);
 ```
 </CodeGroup>
 
-## `POST /v1/images/edits`
-
-Edit an existing image with a text prompt. Submit the request as `multipart/form-data` with the source file in the `image` field.
-
-<ParamField body="model" type="string" required>
-  An image model ID that supports editing. Not every generation model supports edits.
-</ParamField>
-
-<ParamField body="prompt" type="string" required>
-  A text description of the requested change.
-</ParamField>
-
-<ParamField body="image" type="file" required>
-  The source image file. Format and size limits depend on the model.
-</ParamField>
-
-<ParamField body="n" type="integer" default="1">
-  Number of images to generate. Some models only support `1`.
-</ParamField>
-
-<ParamField body="size" type="string">
-  Output image size. Valid values depend on the model.
-</ParamField>
-
-### Request examples
-
-<CodeGroup>
-```bash cURL
-curl https://api.hilinkup.com/v1/images/edits \
-  -H "Authorization: Bearer $HILINKUP_API_KEY" \
-  -F "model=aliyun/qwen-image-3.0" \
-  -F "prompt=Add a red scarf to the cat, keep the background and composition unchanged." \
-  -F "image=@input.png"
-```
-
-```python Python
-import os
-
-import requests
-
-API_KEY = os.environ["HILINKUP_API_KEY"]
-BASE_URL = "https://api.hilinkup.com/v1"
-
-with open("input.png", "rb") as image:
-    response = requests.post(
-        f"{BASE_URL}/images/edits",
-        headers={"Authorization": f"Bearer {API_KEY}"},
-        data={
-            "model": "aliyun/qwen-image-3.0",
-            "prompt": "Add a red scarf to the cat, keep the background and composition unchanged.",
-        },
-        files={"image": ("input.png", image, "image/png")},
-        timeout=300,
-    )
-response.raise_for_status()
-
-result = response.json()
-print(result["data"][0]["url"])
-```
-
-```javascript Node.js
-import { openAsBlob } from "node:fs";
-
-const apiKey = process.env.HILINKUP_API_KEY;
-
-const form = new FormData();
-form.append("model", "aliyun/qwen-image-3.0");
-form.append("prompt", "Add a red scarf to the cat, keep the background and composition unchanged.");
-form.append("image", await openAsBlob("input.png"), "input.png");
-
-const response = await fetch("https://api.hilinkup.com/v1/images/edits", {
-  method: "POST",
-  headers: { Authorization: `Bearer ${apiKey}` },
-  body: form,
-});
-
-if (!response.ok) {
-  throw new Error(`Request failed ${response.status}: ${await response.text()}`);
-}
-
-const result = await response.json();
-console.log(result.data[0].url);
-```
-</CodeGroup>
-
-## Response format
-
-Both endpoints return the same structure.
+## Response
 
 <ResponseExample>
 ```json
@@ -193,7 +104,7 @@ Both endpoints return the same structure.
   "created": 1782972000,
   "data": [
     {
-      "url": "https://example-cdn.invalid/generated-image.png"
+      "url": "https://api.hilinkup.com/v1/images/files/img_8f3c1a2b.png"
     }
   ]
 }
@@ -214,8 +125,6 @@ Both endpoints return the same structure.
 
 ## Saving the result
 
-When the response returns a temporary URL, download it before it expires.
-
 ```python
 import requests
 
@@ -229,9 +138,9 @@ with open("output.png", "wb") as file:
 ```
 
 <Warning>
-  The model IDs in these examples illustrate the request format only. Confirm in the model catalog or console that your account can access the model, and that it supports editing, the target size, and your `n` value.
+  The model IDs, response fields, and URLs in these examples illustrate the request format only. Confirm in the model catalog or console that your account can access the model, and which sizes and `n` values it supports.
 </Warning>
 
-<Warning>
-  The example response illustrates the field structure. Timestamps, URLs, and image content depend on the actual request.
-</Warning>
+## Next steps
+
+To modify an existing image instead, use [Edit images](/en/api-reference/image-edits).
