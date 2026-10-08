@@ -70,7 +70,8 @@ Content-Type: application/json
 | `POST` | `/v1beta/models/{model}:generateContent` | 使用 Gemini 兼容格式生成内容 |
 | `GET` | `/models` | 获取当前密钥可用的模型 |
 | `POST` | `/embeddings` | 创建向量表示 |
-| `POST` | `/images/generations` | 创建图像 |
+| `POST` | `/images/generations` | 根据提示词创建图像 |
+| `POST` | `/images/edits` | 基于原图修改图像 |
 
 <Note>
   端点和参数是否可用取决于模型、账户和上游渠道。调用能力端点前，先确认模型列表与控制台展示。
